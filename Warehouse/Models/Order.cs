@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,5 +15,9 @@ namespace Warehouse.Models
         public string ProductId { get; set; }
         public string CustomerId { get; set; }
         public string UserId { get; set; }
+        public Product Product { get; set; }
+        public Customer Customer { get; set; }
+        public IdentityUser<string> User { get; set; }
+        
     }
 }
