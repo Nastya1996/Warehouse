@@ -7,7 +7,7 @@ namespace Warehouse.Models
 {
     public class Order
     {
-        public string OrderId { get; set; }
+        public string Id { get; set; }
         public uint Count { get; set; }
         public decimal Sum { get; set; }
         public DateTime Date { get; set; }

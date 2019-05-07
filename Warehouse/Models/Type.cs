@@ -7,7 +7,7 @@ namespace Warehouse.Models
 {
     public class Type
     {
-        public string TypeId { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
     }
 }

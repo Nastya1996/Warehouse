@@ -7,7 +7,7 @@ namespace Warehouse.Models
 {
     public class ProductManager
     {
-        public string ProductId { get; set; }
+        public string Id { get; set; }
         public uint Count { get; set; }
         public uint CurrentCount { get; set; }
         public decimal ReceiptPrice { get; set; }
