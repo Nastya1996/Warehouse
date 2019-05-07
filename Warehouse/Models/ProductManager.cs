@@ -16,5 +16,6 @@ namespace Warehouse.Models
         public DateTime AddedDate { get; set; }
         public string UserId { get; set; }
         public string WareHouseId { get; set; }
+
     }
 }

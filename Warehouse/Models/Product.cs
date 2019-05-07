@@ -10,7 +10,9 @@ namespace Warehouse.Models
         public string Id { get; set; }
         public string Name { set; get; }
         public int Barcode { set; get; }
-        public string TypeId { set; get; }
+        public string ProductTypeId { set; get; }
         public string UnitId { set; get; }
+        public ProductType ProductType { set; get; }
+        public Unit Unit { set; get; }
     }
 }
