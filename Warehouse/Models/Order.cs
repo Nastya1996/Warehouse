@@ -18,6 +18,7 @@ namespace Warehouse.Models
         public Product Product { get; set; }
         public Customer Customer { get; set; }
         public IdentityUser<string> User { get; set; }
+        public IList<ProductOrder> ProductOrders { get; set; }
         
     }
 }
