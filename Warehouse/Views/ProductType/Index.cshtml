@@ -1,0 +1,29 @@
+﻿
+@{
+    ViewData["Title"] = "Index";
+}
+@model IEnumerable<ProductType>
+<h2>Index</h2>
+<a asp-action="Create">Create New</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var pt in Model)
+        {
+            <tr>
+                <td>@pt.Id</td>
+                <td>@pt.Name</td>
+                <td><a asp-action="Edit" asp-route-id="@pt.Id">Edit</a></td>
+                <td><a asp-action="Delete" asp-route-id="@pt.Id">Delete</a></td>
+            </tr>
+        }
+        </tbody>
+</table>
