@@ -1,0 +1,15 @@
+﻿@model Warehouse.Models.Customer
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+<form asp-action="Edit" asp-controller="Customer">
+    <label asp-for="Name">Name</label>
+    <input asp-for="Name" type="text" /><br />
+    <label asp-for="Surname">Surname</label>
+    <input asp-for="Surname" type="text" /><br />
+    <label asp-for="Phone">Phone</label>
+    <input asp-for="Phone" type="text" /><br />
+    <input type="submit" value="Edit" />
+</form>

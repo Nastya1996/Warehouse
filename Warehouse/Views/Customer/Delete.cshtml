@@ -1,0 +1,13 @@
+﻿@model Warehouse.Models.Customer
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete</h2>
+<p>Are you sureto delete it?</p>
+<p>@Html.DisplayFor(i => Model.Name)</p>
+<p>@Html.DisplayFor(i => Model.Surname)</p>
+<p>@Html.DisplayFor(i => Model.Phone)</p>
+
+<a asp-action="DeleteCustomer" asp-route-id="@Model.Id">Delete</a>
+<a asp-action="Back">Back to list</a>

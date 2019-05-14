@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Warehouse.Models.Customer>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Customer</h2>
+<a asp-action="Create" asp-controller="Customer">Create new</a>
+
+<table class="cust">
+    <tr>
+        <th @Html.DisplayNameFor(Customer => Customer.Id)>Id</th>
+        <th @Html.DisplayNameFor(Customer => Customer.Name)>Name</th>
+        <th @Html.DisplayNameFor(Customer => Customer.Surname)>Surname</th>
+        <th @Html.DisplayNameFor(Customer => Customer.Phone)>Phone</th>
+        <th></th>
+    </tr>
+    @foreach(var i in Model){
+        <tr>
+            <td>@Html.DisplayFor(x => i.Id)</td>
+            <td>@Html.DisplayFor(x => i.Name)</td>
+            <td>@Html.DisplayFor(x => i.Surname)</td>
+            <td>@Html.DisplayFor(x => i.Phone)</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@i.Id">Edit</a>
+                <a asp-action="Delete" asp-route-id="@i.Id">Delete</a>
+                <a asp-action="Detalls" asp-route-id="@i.Id">Detalls</a>
+            </td>
+        </tr>
+    }
+</table>
