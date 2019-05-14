@@ -1,0 +1,37 @@
+﻿@model IEnumerable<Warehouse.Models.Unit>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Unit</h2>
+<a asp-action="Create" asp-controller="Unit">Create New</a>
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(m => m.Id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(m => m.Name)
+        </th>
+        <th>
+
+        </th>
+    </tr>
+ @{
+     foreach (var unit in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(item => unit.Id)
+        </td>
+        <td>
+            @Html.DisplayFor(item => unit.Name)
+        </td>
+        <td>
+            <a asp-action="Edit" asp-route-id="@unit.Id">Edit</a>
+            <a asp-action="Delete" asp-route-id="@unit.Id">Delete</a>
+            <a asp-action="Details" asp-route-id="@unit.Id">Details</a>
+        </td>
+    </tr>
+     }
+ } 
+</table>

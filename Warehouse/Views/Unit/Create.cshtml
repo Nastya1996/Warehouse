@@ -1,0 +1,12 @@
+﻿@model Warehouse.Models.Unit
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<form asp-action="Create" asp-controller="Unit" method="post">
+    <label asp-for="Name">Name</label>
+    <input asp-for="Name" type="text" />
+    <input type="submit" value="Create" />
+</form>
