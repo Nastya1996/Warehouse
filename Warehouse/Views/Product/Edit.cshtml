@@ -1,13 +1,17 @@
-﻿@model Product
-
-<form asp-action="Create">
+﻿
+@{
+    ViewData["Title"] = "Edit";
+}
+@model Product
+<h2>Edit</h2>
+<form asp-action="Edit">
     <label asp-for="Name">Name</label>
     <input asp-for="Name" type="text" /><br />
     <label asp-for="Barcode">Bar Code</label>
-    <input asp-for="Barcode" type="text"/><br />
+    <input asp-for="Barcode" type="text" /><br />
     <label asp-for="ProductTypeId">Product Type</label>
     <select asp-for="ProductTypeId" asp-items="ViewBag.ProductTypes"></select><br />
     <label asp-for="UnitId">Unit</label>
     <select asp-for="UnitId" asp-items="ViewBag.Units"></select><br />
-    <input type="submit" value="Create" />
+    <input type="submit" value="Edit" />
 </form>
