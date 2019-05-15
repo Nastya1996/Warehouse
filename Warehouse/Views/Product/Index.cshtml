@@ -3,5 +3,29 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Product</h2>
-<a asp-action="">Create New</a>
+@model IEnumerable<Product> 
+<a asp-action="Create">Create New</a>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Bar Code</th>
+            <th>Product Type</th>
+            <th>Unit</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var pt in Model)
+        {
+        <tr>
+            <td>@pt.Name</td>
+            <td>@pt.Barcode</td>
+            <td>@pt.ProductType?.Name</td>
+            <td>@pt.Unit?.Name</td>
+            <td><a asp-action="Edit" asp-route-id="@pt.Id">Edit</a></td>
+            <td><a asp-action="Delete" asp-route-id="@pt.Id">Delete</a></td>
+        </tr>
+        }
+    </tbody>
+</table>
