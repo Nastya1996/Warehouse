@@ -1,0 +1,14 @@
+﻿@model Warehouse.Models.WareHouse
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h2>Edit</h2>
+
+<form asp-action="Edit" asp-controller="WareHouse" method="post">
+    <label asp-for="Number">Number of warehouse</label>
+    <input type="number" asp-for="Number" />
+    <label asp-for="Address">Address</label>
+    <input asp-for="Address" type="text" />
+    <input type="submit" value="Edit" />
+</form>

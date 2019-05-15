@@ -1,0 +1,14 @@
+﻿@model Warehouse.Models.WareHouse
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<form asp-action="create" asp-controller="WareHouse" method="post">
+    <label asp-for="Number">Number of warehouse</label>
+    <input type="number" asp-for="Number" />
+    <label asp-for="Address">Address</label>
+    <input asp-for="Address" type="text" />
+    <input type="submit" value="Create" />
+</form>

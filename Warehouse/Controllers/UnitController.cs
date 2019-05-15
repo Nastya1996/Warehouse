@@ -25,13 +25,15 @@ namespace Warehouse.Controllers
             return View();
         }
         
-
         [HttpPost]
-        public IActionResult Create(Unit UnitCreateData)
+        public IActionResult Create(Unit unit)
         {
-            _context.Add(UnitCreateData);
-            _context.SaveChanges();
-            return RedirectToAction("Index");
+            if (ModelState.IsValid) {
+                _context.Add(unit);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View();
         }
         public IActionResult Edit(string id)
         {
@@ -41,19 +43,28 @@ namespace Warehouse.Controllers
         [HttpPost]
         public IActionResult Edit(Unit unit)
         {
-            _context.Units.Update(unit);
-            _context.SaveChanges();
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                _context.Units.Update(unit);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View();
         }
         public IActionResult Delete(string id)
         {
             return View(_context.Units.Find(id));
         }
-        public IActionResult DeleteHa(string id)
+        public IActionResult DeleteYes(string id)
         {
             _context.Units.Remove(_context.Units.Find(id));
             _context.SaveChanges();
             return RedirectToAction("Index");
+        }
+        public IActionResult Details(string id)
+        {
+            var obj = _context.Units.Find(id);
+            return View(obj);
         }
     }
 }
