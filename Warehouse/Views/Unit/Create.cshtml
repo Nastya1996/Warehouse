@@ -7,6 +7,9 @@
 
 <form asp-action="Create" asp-controller="Unit" method="post">
     <label asp-for="Name">Name</label>
+    <br />
     <input asp-for="Name" type="text" />
+    <span class="text-danger" asp-validation-for="Name"></span>
+    <br />
     <input type="submit" value="Create" />
 </form>
