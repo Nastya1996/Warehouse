@@ -64,5 +64,9 @@ namespace Warehouse.Controllers
         {
             return RedirectToAction("Index");
         }
+        public IActionResult Details(string id) {
+            var customer = _context.Customers.Find(id);
+            return View(customer);
+        }
     }
 }
