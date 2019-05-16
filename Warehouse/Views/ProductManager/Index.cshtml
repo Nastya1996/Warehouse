@@ -1,0 +1,41 @@
+﻿@model IEnumerable<ProductManager>
+@{
+    ViewData["Title"] = "Index";
+}
+<a asp-action="Create">Create new</a>
+<table class="table table-hover table-bordered">
+    <thead>
+        <tr>
+            <th>Count</th>
+            <th>Current count</th>
+            <th>Receipt price</th>
+            <th>Sale price</th>
+            <th>Receipt date</th>
+            <th>Added date</th>
+            <th>User</th>
+            <th>Warehouse</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var pm in Model)
+        {
+        <tr>
+            <td>@pm.Count</td>
+            <td>@pm.CurrentCount</td>
+            <td>@pm.ReceiptPrice</td>
+            <td>@pm.SalePrice</td>
+            <td>@pm.ReceiptDate</td>
+            <td>@pm.AddedDate</td>
+            <td>@pm.UserId</td>
+            <td>@pm.WareHouse?.Number</td>
+            <td><a asp-action="Edit" asp-route-id="@pm.Id">Edit</a></td>
+            <td><a asp-action="Delete" asp-route-id="@pm.Id">Delete</a></td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+
+
