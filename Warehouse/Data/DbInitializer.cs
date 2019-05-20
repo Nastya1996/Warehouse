@@ -25,8 +25,7 @@ namespace Warehouse.Data
 					SurName = "Administrator",
 					Email = "warehouseadmin@gmail.com",
 					UserName = "warehouseadmin@gmail.com",
-					LockoutEnabled = false,
-					LockoutEnd = DateTime.Now
+					LockoutEnabled = false
 				};
 				IdentityResult res =  userManager.CreateAsync(user, pass).Result;
 				if (res.Succeeded)
