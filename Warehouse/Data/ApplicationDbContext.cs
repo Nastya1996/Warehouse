@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Warehouse.Models;
 namespace Warehouse.Data
 {
-    public class ApplicationDbContext : IdentityDbContext
+    public class ApplicationDbContext : IdentityDbContext<AppUser>
     {
         public DbSet<ProductType> Types { get; set; }
         public DbSet<ProductManager> ProductManagers {get;set;}
