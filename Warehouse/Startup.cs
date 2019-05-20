@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Warehouse.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Warehouse.Models;
 
 namespace Warehouse
 {
@@ -37,8 +38,10 @@ namespace Warehouse
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            services.AddIdentity<AppUser, IdentityRole>()
+				   .AddDefaultTokenProviders()
+					   .AddDefaultUI()
+						   .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

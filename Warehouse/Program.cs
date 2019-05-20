@@ -7,6 +7,10 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
+using Warehouse.Models;
+using Warehouse.Data;
 
 namespace Warehouse
 {
@@ -14,7 +18,22 @@ namespace Warehouse
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+			IWebHost host = CreateWebHostBuilder(args).Build();
+			using (IServiceScope scope = host.Services.CreateScope())
+			{
+				try
+				{
+					var userScope = scope.ServiceProvider.GetRequiredService<UserManager<AppUser>>();
+					var roleScope = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+					DbInitializer.Initialize(roleScope, userScope);
+				}
+				catch(Exception e)
+				{
+					throw e;
+				}
+			}
+
+			host.Run();
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
