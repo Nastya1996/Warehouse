@@ -8,7 +8,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
 using Microsoft.Extensions.Logging;
+using Warehouse.Data;
 using Warehouse.Models;
 
 namespace Warehouse.Areas.Identity.Pages.Account
@@ -20,17 +23,19 @@ namespace Warehouse.Areas.Identity.Pages.Account
         private readonly UserManager<AppUser> _userManager;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-
+		private readonly ApplicationDbContext _context;
         public RegisterModel(
             UserManager<AppUser> userManager,
             SignInManager<AppUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+			ApplicationDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+			_context = context;
         }
 
         [BindProperty]
@@ -40,7 +45,27 @@ namespace Warehouse.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
+			[Required]
+			[Display(Name = "Name")]
+			public string Name { get; set; }
+			
+			[Required]
+			[Display(Name = "Surname")]
+			public string Surname { get; set; }
+
+			[Required]
+			[Display(Name ="Birthdate")]
+			public DateTime Birthdate { get; set; }
+
+			[Required]
+			[Display(Name = "Warehouse")]
+			public WareHouse Warehouse { get; set; }
+
+			[Required]
+			[Display(Name ="Role")]
+			public string Role { get; set; }
+
+			[Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
@@ -60,6 +85,8 @@ namespace Warehouse.Areas.Identity.Pages.Account
         public void OnGet(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
+			ViewBag.Warehouse = new SelectList(_context.Warehouses, nameof(WareHouse.Id), nameof(WareHouse.Number));
+			ViewBag.AspNetRoles = new SelectList(_context.Roles, "Id", "Name");
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -90,10 +117,33 @@ namespace Warehouse.Areas.Identity.Pages.Account
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
-            }
+			
 
-            // If we got this far, something failed, redisplay form
-            return Page();
+			}
+			//string role = null;
+
+			//if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(User), "Admin"))
+			//{
+			//	if (Input.Role == "Admin")
+			//		role = Input.Role;
+			//}
+
+			// If we got this far, something failed, redisplay form
+			return Page();
         }
-    }
+
+		private DynamicViewData _viewBag;
+
+		public dynamic ViewBag
+		{
+			get
+			{
+				if (_viewBag == null)
+				{
+					_viewBag = new DynamicViewData(() => ViewData);
+				}
+				return _viewBag;
+			}
+		}
+	}
 }
