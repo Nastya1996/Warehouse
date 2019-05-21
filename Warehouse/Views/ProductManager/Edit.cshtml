@@ -1,24 +1,23 @@
 ﻿
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Edit";
 }
+<h1>Edit</h1>
 @model ProductManager
-<h1>Create</h1>
-<form asp-action="Create">
+<form asp-action="Edit">
     <label asp-for="Count">Count</label>
-    <input asp-for="Count"/><br />
+    <input asp-for="Count" /><br />
     <label asp-for="CurrentCount">Current count</label>
-    <input asp-for="CurrentCount"/><br />
+    <input asp-for="CurrentCount" /><br />
     <label asp-for="ReceiptPrice">Receipt price</label>
-    <input asp-for="ReceiptPrice"/><br />
+    <input asp-for="ReceiptPrice" /><br />
     <label asp-for="SalePrice">Sale price</label>
-    <input asp-for="SalePrice"/><br />
+    <input asp-for="SalePrice" /><br />
     <label asp-for="ReceiptDate">Receipt date</label>
-    <input asp-for="ReceiptDate"/><br />
+    <input asp-for="ReceiptDate" /><br />
     <label asp-for="UserId">User</label>
     <select asp-for="UserId" asp-items="ViewBag.Users"></select><br />
     <label asp-for="WareHouseId">Warehouse</label>
     <select asp-for="WareHouseId" asp-items="ViewBag.WareHouse"></select><br />
-    <input type="submit" value="Create"/>
+    <input type="submit" value="Edit" />
 </form>
-

@@ -17,6 +17,9 @@ namespace Warehouse.Controllers
         {
             return View(_context.Products.Include(x=>x.ProductType).Include(x=>x.Unit).ToList());
         }
+
+
+        //Create
         [HttpGet]
         public IActionResult Create()
         {
@@ -33,10 +36,13 @@ namespace Warehouse.Controllers
         }
 
 
+        //Delete
+        [HttpGet]
         public IActionResult Delete(string id)
         {
             return View(_context.Products.FirstOrDefault(x => x.Id == id));
         }
+        [HttpGet]
         public IActionResult DeleteProduct(string id)
         {
             var data = _context.Products.Find(id);
@@ -46,6 +52,9 @@ namespace Warehouse.Controllers
             return RedirectToAction("Index");
         }
 
+
+
+        //Edit
         [HttpGet]
         public IActionResult Edit(string id)
         {
@@ -60,6 +69,14 @@ namespace Warehouse.Controllers
             _context.Update(product);
             _context.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+
+        //Details
+        [HttpGet]
+        public IActionResult Details(string id)
+        {
+            return View(_context.Products.Include(x=>x.ProductType).Include(x=>x.Unit).FirstOrDefault(x => x.Id == id));
         }
     }
 }

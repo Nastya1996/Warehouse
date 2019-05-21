@@ -1,0 +1,10 @@
+﻿
+@{
+    ViewData["Title"] = "Delete";
+}
+@model  ProductManager
+<h1>Delete</h1>
+<p>Are you sure?</p>
+<ins>@Model.Product.Name</ins>
+<a asp-action="DeleteProductManager" asp-route-id="@Model.Id">Delete</a>
+<a asp-action="Index">Go back</a>

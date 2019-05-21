@@ -6,6 +6,7 @@
 <table class="table table-hover table-bordered">
     <thead>
         <tr>
+            <th>Name</th>
             <th>Count</th>
             <th>Current count</th>
             <th>Receipt price</th>
@@ -22,6 +23,7 @@
         @foreach(var pm in Model)
         {
         <tr>
+            <td>@pm.Product.Name</td>
             <td>@pm.Count</td>
             <td>@pm.CurrentCount</td>
             <td>@pm.ReceiptPrice</td>
@@ -32,6 +34,7 @@
             <td>@pm.WareHouse?.Number</td>
             <td><a asp-action="Edit" asp-route-id="@pm.Id">Edit</a></td>
             <td><a asp-action="Delete" asp-route-id="@pm.Id">Delete</a></td>
+            <td><a asp-action="Details" asp-route-id="@pm.Id">Details</a></td>
         </tr>
         }
     </tbody>

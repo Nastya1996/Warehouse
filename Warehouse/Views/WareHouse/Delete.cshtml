@@ -1,0 +1,13 @@
+﻿@model Warehouse.Models.WareHouse
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<h2>Delete Page</h2>
+
+<p>Delete? </p>
+<p>@Model.Number</p>
+<p>@Model.Address</p>
+
+<a asp-action="DeleteYes" asp-controller="WareHouse" asp-route-id="@Model.Id">Yes!</a>
+<a asp-action="Index" asp-controller="WareHouse">No!</a>

@@ -5,13 +5,16 @@
 
 @model IEnumerable<Product> 
 <a asp-action="Create">Create New</a>
-<table>
+<table class="table table-hover table-bordered">
     <thead>
         <tr>
             <th>Name</th>
             <th>Bar Code</th>
             <th>Product Type</th>
             <th>Unit</th>
+            <th></th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -25,6 +28,7 @@
             <td>@pt.Unit?.Name</td>
             <td><a asp-action="Edit" asp-route-id="@pt.Id">Edit</a></td>
             <td><a asp-action="Delete" asp-route-id="@pt.Id">Delete</a></td>
+            <td><a asp-action="Details" asp-route-id="@pt.Id">Details</a></td>
         </tr>
         }
     </tbody>

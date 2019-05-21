@@ -4,8 +4,7 @@
 }
 
 <h2>Delete</h2>
-<p>Hastat hse sta ozums jinjis? @Model.Name</p>
-<p>Hastat hse sta ozums jinjis? @Html.DisplayFor(model => model.Name)/p>
+<p>Are you sure to delete? @Model.Name</p>
 
-<a asp-action="DeleteHa" asp-controller="Unit" asp-route-id="@Model.Id">Ha</a>
-<a asp-action="Index" asp-controller="Unit">Gidumchum</a>
+<a asp-action="DeleteYes" asp-controller="Unit" asp-route-id="@Model.Id">Yes!</a>
+<a asp-action="Index" asp-controller="Unit">No!</a>
