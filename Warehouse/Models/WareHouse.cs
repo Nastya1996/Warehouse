@@ -12,6 +12,7 @@ namespace Warehouse.Models
         [Required]
         public int Number { get; set; }
         [Required]
+        [RegularExpression("[a-zA-Z]{3,}", ErrorMessage = "Only symbols")]
         public string Address { get; set; }
 
     }
