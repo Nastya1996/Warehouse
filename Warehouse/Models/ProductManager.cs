@@ -15,8 +15,10 @@ namespace Warehouse.Models
         public decimal SalePrice { get; set; }
         public DateTime ReceiptDate { get; set; }
         public DateTime AddedDate { get; } = DateTime.Now;
-        public string UserId { get; set; }
 
+
+        public string UserId { get; set; }
+        public AppUser User { get; set; }
         public string WareHouseId { get; set; }
         public WareHouse WareHouse { get; set; }
         public string ProductId { get; set; }
