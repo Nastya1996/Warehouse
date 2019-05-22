@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Warehouse.Models.Basket>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+<table class="table table-striped">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(m => m.ProductManager.Product.Name)
+        </th>
+        <th>
+            Count
+        </th>
+        <th>
+            @Html.DisplayNameFor(m => m.ProductManager.CurrentCount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(m => m.ProductManager.Product.Unit.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(m => m.ProductManager.SalePrice)
+        </th>
+        <th>
+            Sale
+        </th>
+        <th>
+            Finnaly Price
+        </th>
+        <th>
+            Delete
+        </th>
+    </tr>
+    @{
+        foreach (var wh in Model)
+        {
+    <tr>
+        <td>
+            @Html.DisplayFor(item => wh.ProductManager.Product.Name)
+        </td>
+        <td>
+            "Count?"
+        </td>
+        <td>
+            @Html.DisplayFor(item => wh.ProductManager.CurrentCount)
+        </td>
+        <td>
+            @Html.DisplayFor(item => wh.ProductManager.Product.Unit.Name)
+        </td>
+        <td>
+            @Html.DisplayFor(item => wh.ProductManager.SalePrice)
+        </td>
+        <td>
+            <input type="type" name="sale" value="0%" />
+        </td>
+        <td>
+            5000
+        </td>
+        <td>
+            <a asp-action="Delete" asp-route-id="@wh.Id">Delete</a>
+        </td>
+    </tr>
+        }
+    }
+</table>
