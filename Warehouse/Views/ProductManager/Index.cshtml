@@ -6,7 +6,8 @@
 <table class="table table-hover table-bordered">
     <thead>
         <tr>
-            <th>Name</th>
+            <th>Product name</th>
+            <th>Product type</th>
             <th>Count</th>
             <th>Current count</th>
             <th>Receipt price</th>
@@ -17,24 +18,26 @@
             <th>Warehouse</th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach(var pm in Model)
+        @foreach(var productManager in Model)
         {
         <tr>
-            <td>@pm.Product.Name</td>
-            <td>@pm.Count</td>
-            <td>@pm.CurrentCount</td>
-            <td>@pm.ReceiptPrice</td>
-            <td>@pm.SalePrice</td>
-            <td>@pm.ReceiptDate</td>
-            <td>@pm.AddedDate</td>
-            <td>@pm.UserId</td>
-            <td>@pm.WareHouse?.Number</td>
-            <td><a asp-action="Edit" asp-route-id="@pm.Id">Edit</a></td>
-            <td><a asp-action="Delete" asp-route-id="@pm.Id">Delete</a></td>
-            <td><a asp-action="Details" asp-route-id="@pm.Id">Details</a></td>
+            <td>@productManager.Product?.Name</td>
+            <td>@(productManager.Product?.ProductType?.Name??"Unknown")</td>
+            <td>@productManager.Count</td>
+            <td>@productManager.CurrentCount</td>
+            <td>@productManager.ReceiptPrice</td>
+            <td>@productManager.SalePrice</td>
+            <td>@productManager.ReceiptDate</td>
+            <td>@productManager.AddedDate</td>
+            <td>@productManager.User.Name</td>
+            <td>@productManager.WareHouse?.Number</td>
+            <td><a asp-action="Edit" asp-route-id="@productManager.Id">Edit</a></td>
+            <td><a asp-action="Delete" asp-route-id="@productManager.Id">Delete</a></td>
+            <td><a asp-action="Details" asp-route-id="@productManager.Id">Details</a></td>
         </tr>
         }
     </tbody>

@@ -17,7 +17,8 @@ namespace Warehouse.Controllers
         //Index
         public IActionResult Index()
         {
-            return View(_context.ProductManagers.Include(x=>x.WareHouse).ToList());
+            var list  = _context.ProductManagers.Include(x => x.Product).Include(x => x.WareHouse).Include(x => x.User).ToList();
+            return View(list);
         }
 
         //Create
@@ -25,14 +26,18 @@ namespace Warehouse.Controllers
         public IActionResult Create()
         {
             ViewBag.WareHouse = new SelectList(_context.Warehouses, "Id", "Number");
-            ViewBag.Product = new SelectList(_context.ProductCustomers, "Id", "Name");
+            ViewBag.Products = new SelectList(_context.Products, "Id", "Name");
+            ViewBag.ProductTypes = new SelectList(_context.Types, "Id", "Name");
+            ViewBag.Users = new SelectList(_context.Users, nameof(AppUser.Id), nameof(AppUser.Name));
             return View();
         }
         [HttpPost]
         public IActionResult Create(ProductManager productManager)
         {
-            ViewBag.Warehouses = new SelectList(_context.Warehouses,"Id","Number");
-            ViewBag.Product = new SelectList(_context.ProductCustomers, "Id", "Name");
+            ViewBag.Warehouses = new SelectList(_context.Warehouses, "Id", "Number");
+            ViewBag.Products = new SelectList(_context.Products, "Id", "Name");
+            ViewBag.ProductTypes = new SelectList(_context.Types, "Id", "Name");
+            ViewBag.Users = new SelectList(_context.Users, nameof(AppUser.Id), nameof(AppUser.Name));
             _context.Add(productManager);
             _context.SaveChanges();
             return RedirectToAction("Index");
@@ -44,7 +49,7 @@ namespace Warehouse.Controllers
         public IActionResult Edit(string id)
         {
             ViewBag.WareHouse = new SelectList(_context.Warehouses, "Id", "Number");
-            ViewBag.Product = new SelectList(_context.ProductCustomers, "Id", "Name");
+            ViewBag.Product = new SelectList(_context.Products, "Id", "Name");
             var pm = _context.ProductManagers.Include(x => x.WareHouse).FirstOrDefault(x => x.Id == id);
             return View(pm);//.Include(x=>x.UserId)
         }
