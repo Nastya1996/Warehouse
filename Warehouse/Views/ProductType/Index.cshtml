@@ -6,11 +6,12 @@
 <h2>Index</h2>
 <a asp-action="Create">Create New</a>
 
-<table>
+<table class="table table-hover table-bordered">
     <thead>
         <tr>
-            <th>Id</th>
             <th>Name</th>
+            <th></th>
+            <th></th>
             <th></th>
         </tr>
     </thead>
@@ -18,12 +19,12 @@
 
         @foreach (var pt in Model)
         {
-            <tr>
-                <td>@pt.Id</td>
-                <td>@pt.Name</td>
-                <td><a asp-action="Edit" asp-route-id="@pt.Id">Edit</a></td>
-                <td><a asp-action="Delete" asp-route-id="@pt.Id">Delete</a></td>
-            </tr>
+        <tr>
+            <td>@pt.Name</td>
+            <td><a asp-action="Edit" asp-route-id="@pt.Id">Edit</a></td>
+            <td><a asp-action="Delete" asp-route-id="@pt.Id">Delete</a></td>
+            <td><a asp-action="Details" asp-route-id="@pt.Id">Details</a></td>
+        </tr>
         }
         </tbody>
 </table>

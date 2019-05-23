@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Warehouse.Data;
 
 namespace Warehouse.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190520144052_test")]
+    partial class test
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -287,11 +289,11 @@ namespace Warehouse.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("AddedDate");
+
                     b.Property<long>("Count");
 
                     b.Property<long>("CurrentCount");
-
-                    b.Property<string>("ProductId");
 
                     b.Property<DateTime>("ReceiptDate");
 
@@ -304,8 +306,6 @@ namespace Warehouse.Data.Migrations
                     b.Property<string>("WareHouseId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
 
                     b.HasIndex("WareHouseId");
 
@@ -464,10 +464,6 @@ namespace Warehouse.Data.Migrations
 
             modelBuilder.Entity("Warehouse.Models.ProductManager", b =>
                 {
-                    b.HasOne("Warehouse.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId");
-
                     b.HasOne("Warehouse.Models.WareHouse", "WareHouse")
                         .WithMany()
                         .HasForeignKey("WareHouseId");

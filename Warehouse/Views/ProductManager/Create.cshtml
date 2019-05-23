@@ -1,0 +1,36 @@
+﻿
+@{
+    ViewData["Title"] = "Create";
+}
+@model ProductManager
+<h1>Create</h1>
+<form asp-action="Create">
+    <label>Product type</label>
+    <select  asp-items="ViewBag.ProductTypes"></select><br />
+
+    <label asp-for="ProductId">Product name</label>
+    <select asp-for="ProductId" asp-items="ViewBag.Products"></select><br />
+
+    <label asp-for="Count">Count</label>
+    <input asp-for="Count"/><br />
+
+    <label asp-for="CurrentCount">Current count</label>
+    <input asp-for="CurrentCount"/><br />
+
+    <label asp-for="ReceiptPrice">Receipt price</label>
+    <input asp-for="ReceiptPrice"/><br />
+
+    <label asp-for="SalePrice">Sale price</label>
+    <input asp-for="SalePrice"/><br />
+
+    <label asp-for="ReceiptDate">Receipt date</label>
+    <input asp-for="ReceiptDate"/><br />
+
+    <label asp-for="UserId">User</label>
+    <select asp-for="UserId" asp-items="ViewBag.Users"></select><br />
+
+    <label asp-for="WareHouseId">Warehouse</label>
+    <select asp-for="WareHouseId" asp-items="ViewBag.WareHouse"></select><br />
+    <input type="submit" value="Create"/>
+</form>
+

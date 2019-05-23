@@ -1,7 +1,7 @@
 @using Microsoft.AspNetCore.Identity
 
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
 
 @if (SignInManager.IsSignedIn(User))
 {
@@ -13,13 +13,19 @@
             <li>
                 <button type="submit" class="btn btn-link navbar-btn navbar-link">Logout</button>
             </li>
+            @if (User.IsInRole("Admin"))
+            {
+            <li>
+                <a asp-area="Identity" asp-page="/Account/Register">Register</a>
+            </li>
+            }
         </ul>
     </form>
 }
 else
 {
     <ul class="nav navbar-nav navbar-right">
-        <li><a asp-area="Identity" asp-page="/Account/Register">Register</a></li>
+       
         <li><a asp-area="Identity" asp-page="/Account/Login">Login</a></li>
     </ul>
 }

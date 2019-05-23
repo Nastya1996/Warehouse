@@ -10,7 +10,7 @@ namespace Warehouse.Controllers
 {
     public class UnitController : Controller
     {
-        public readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
         public UnitController(ApplicationDbContext context)
         {
             _context = context;

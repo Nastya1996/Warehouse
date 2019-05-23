@@ -19,6 +19,10 @@ namespace Warehouse.Controllers
         {
             return View(_context.Types.ToList());
         }
+
+
+        //Create
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
@@ -30,11 +34,13 @@ namespace Warehouse.Controllers
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
+
+
+        //Edit
         [HttpGet]
         public IActionResult Edit(string id)
         {
-            var pt = _context.Types.FirstOrDefault(x => x.Id == id);
-            return View(pt);
+            return View(_context.Types.FirstOrDefault(x => x.Id == id));
         }
         [HttpPost]
         public IActionResult Edit(ProductType productType)
@@ -43,20 +49,30 @@ namespace Warehouse.Controllers
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
+
+
+        //Delete
         [HttpGet]
         public IActionResult Delete(string id)
         {
-            var pt = _context.Types.FirstOrDefault(x => x.Id == id);
-            return View(pt);
+            return View(_context.Types.FirstOrDefault(x => x.Id == id));
         }
+        [HttpGet]
         public IActionResult Deleted(string id)
         {
             var obj = _context.Types.Find(id);
-            if (obj == null)
-                return NotFound();
+            if (obj == null) return NotFound();
             _context.Remove(_context.Types.Find(id));
             _context.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+
+        //Details
+        [HttpGet]
+        public IActionResult Details(string id)
+        {
+            return View(_context.Types.FirstOrDefault(x=>x.Id==id));
         }
     }
 }

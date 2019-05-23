@@ -10,7 +10,7 @@ namespace Warehouse.Models
     {
         public string Id { set; get; }
         [Required(ErrorMessage = "Не указано имя")]
-        [RegularExpression("[a-zA-Z]{1,}")]
+        [RegularExpression("[a-zA-Z]{1,}", ErrorMessage = "Only symbols")]
         public string Name { set; get; }
     }
 }
