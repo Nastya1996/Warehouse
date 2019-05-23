@@ -5,8 +5,8 @@
 @model ProductManager
 <h1>Create</h1>
 <form asp-action="Create">
-    <label asp-for="Product.ProductTypeId">Product type</label>
-    <select asp-for="Product.ProductTypeId" asp-items="ViewBag.ProductTypes"></select><br />
+    <label>Product type</label>
+    <select  asp-items="ViewBag.ProductTypes"></select><br />
 
     <label asp-for="ProductId">Product name</label>
     <select asp-for="ProductId" asp-items="ViewBag.Products"></select><br />

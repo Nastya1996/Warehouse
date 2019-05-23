@@ -17,7 +17,7 @@ namespace Warehouse.Controllers
         //Index
         public IActionResult Index()
         {
-            var list  = _context.ProductManagers.Include(x => x.Product).Include(x => x.WareHouse).Include(x => x.User).ToList();
+            var list  = _context.ProductManagers.Include(x => x.Product).Include(p=>p.Product.ProductType).Include(x => x.WareHouse).Include(x => x.User).ToList();
             return View(list);
         }
 
@@ -86,7 +86,10 @@ namespace Warehouse.Controllers
         [HttpGet]
         public IActionResult Details(string id)
         {
-            return View(_context.ProductManagers.Include(x => x.WareHouse).FirstOrDefault(x => x.Id == id));//.Include(x=>x.UserId))
+            return View(_context.ProductManagers.Include(x => x.WareHouse).Include(u=>u.User).FirstOrDefault(x => x.Id == id));
         }
+
+
+        
     }
 }

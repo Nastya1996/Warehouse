@@ -8,14 +8,16 @@
         <tr>
             <th>Product name</th>
             <th>Product type</th>
-            <th>Count</th>
-            <th>Current count</th>
             <th>Receipt price</th>
             <th>Sale price</th>
             <th>Receipt date</th>
             <th>Added date</th>
             <th>User</th>
             <th>Warehouse</th>
+            <th>Count</th>
+            <th>Current count</th>
+            <th>Select quantity</th>
+            <th>Add to Basket</th>
             <th></th>
             <th></th>
             <th></th>
@@ -25,16 +27,18 @@
         @foreach(var productManager in Model)
         {
         <tr>
-            <td>@productManager.Product?.Name</td>
-            <td>@(productManager.Product?.ProductType?.Name??"Unknown")</td>
-            <td>@productManager.Count</td>
-            <td>@productManager.CurrentCount</td>
+            <td>@productManager.Product.Name</td>
+            <td>@productManager.Product.ProductType.Name</td>
             <td>@productManager.ReceiptPrice</td>
             <td>@productManager.SalePrice</td>
             <td>@productManager.ReceiptDate</td>
             <td>@productManager.AddedDate</td>
             <td>@productManager.User.Name</td>
-            <td>@productManager.WareHouse?.Number</td>
+            <td>@productManager.WareHouse.Number</td>
+            <td>@productManager.Count</td>
+            <td>@productManager.CurrentCount</td> 
+            <td><input type="number"  min="0" style="width:50px" /></td>
+            <td><a asp-action="Create" asp-controller="Basket" asp-route-id="@productManager.Id">Add</a></td>
             <td><a asp-action="Edit" asp-route-id="@productManager.Id">Edit</a></td>
             <td><a asp-action="Delete" asp-route-id="@productManager.Id">Delete</a></td>
             <td><a asp-action="Details" asp-route-id="@productManager.Id">Details</a></td>

@@ -5,61 +5,33 @@
 
 <h2>Index</h2>
 <table class="table table-striped">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(m => m.ProductManager.Product.Name)
-        </th>
-        <th>
-            Count
-        </th>
-        <th>
-            @Html.DisplayNameFor(m => m.ProductManager.CurrentCount)
-        </th>
-        <th>
-            @Html.DisplayNameFor(m => m.ProductManager.Product.Unit.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(m => m.ProductManager.SalePrice)
-        </th>
-        <th>
-            Sale
-        </th>
-        <th>
-            Finnaly Price
-        </th>
-        <th>
-            Delete
-        </th>
-    </tr>
-    @{
-        foreach (var wh in Model)
-        {
-    <tr>
-        <td>
-            @Html.DisplayFor(item => wh.ProductManager.Product.Name)
-        </td>
-        <td>
-            "Count?"
-        </td>
-        <td>
-            @Html.DisplayFor(item => wh.ProductManager.CurrentCount)
-        </td>
-        <td>
-            @Html.DisplayFor(item => wh.ProductManager.Product.Unit.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(item => wh.ProductManager.SalePrice)
-        </td>
-        <td>
-            <input type="type" name="sale" value="0%" />
-        </td>
-        <td>
-            5000
-        </td>
-        <td>
-            <a asp-action="Delete" asp-route-id="@wh.Id">Delete</a>
-        </td>
-    </tr>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Current count</th>
+            <th>Unit</th>
+            <th>Price</th>
+            <th>Sale</th>
+            <th>Finally price</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (var wh in Model)
+            {
+                <tr>
+                    <td>@wh.ProductManager.Product.Name</td>
+                    <td>@wh.ProductManager.CurrentCount</td>
+                    <td>@wh.ProductManager.Product.Unit.Name</td>
+                    <td>@wh.ProductManager.SalePrice</td>
+                    <td>%</td>
+                    <td>$</td>
+                    <td><a asp-action="Delete" asp-route-id="@wh.Id">Delete</a></td>
+                </tr>
+            }
         }
-    }
+    </tbody>
+    
+   
 </table>
