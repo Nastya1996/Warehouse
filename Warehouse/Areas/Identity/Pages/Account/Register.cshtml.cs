@@ -55,6 +55,7 @@ namespace Warehouse.Areas.Identity.Pages.Account
 
 			[Required]
 			[Display(Name ="Birthdate")]
+			[DisplayFormat(DataFormatString = "{yyyy-MM-dd}")]
 			public DateTime Birthdate { get; set; }
 
 			[Required]
@@ -91,7 +92,18 @@ namespace Warehouse.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+			string role = null;
+
+			if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(User), "Admin"))
+			{
+				if (Input.Role == "Worker" || Input.Role == "Storekeeper" || Input.Role == "Report")
+					role = Input.Role;
+			}
+
+			if (role == null)
+				return Page();
+
+			returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
                 var user = new AppUser { UserName = Input.Email, Email = Input.Email };
@@ -120,13 +132,7 @@ namespace Warehouse.Areas.Identity.Pages.Account
 			
 
 			}
-			//string role = null;
-
-			//if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(User), "Admin"))
-			//{
-			//	if (Input.Role == "Admin")
-			//		role = Input.Role;
-			//}
+			
 
 			// If we got this far, something failed, redisplay form
 			return Page();
