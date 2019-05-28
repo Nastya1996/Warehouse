@@ -14,12 +14,26 @@ namespace Warehouse.Controllers
         private readonly ApplicationDbContext _context;
         public ProductManagerController(ApplicationDbContext context) => _context = context;
 
-        //Index
-        public IActionResult Index()
+        public async Task<IActionResult> Index(SortState sortOrder = SortState.ProductNameAsc)
         {
-            var list  = _context.ProductManagers.Include(x => x.Product).Include(p=>p.Product.ProductType).Include(x => x.WareHouse).Include(x => x.User).ToList();
-            return View(list);
+            IQueryable<ProductManager> products = _context.ProductManagers.Include(x => x.Product).Include(p => p.Product.ProductType).Include(x => x.WareHouse).Include(x => x.User);
+            ViewBag.ProductNameSort = sortOrder == SortState.ProductNameAsc ? SortState.ProductNameDesc : SortState.ProductNameAsc;
+
+            switch (sortOrder)
+            {
+                case SortState.ProductNameDesc:
+                    products = products.OrderByDescending(s => s.Product.Name);
+                    break;
+            }
+            return View(await products.AsNoTracking().ToListAsync());
         }
+
+        //Index
+        //public IActionResult Index()
+        //{
+        //    var list  = _context.ProductManagers.Include(x => x.Product).Include(p=>p.Product.ProductType).Include(x => x.WareHouse).Include(x => x.User).ToList();
+        //    return View(list);
+        //}
 
         //Create
         [HttpGet]
