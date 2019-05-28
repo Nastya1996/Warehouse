@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures.Internal;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Warehouse.Data;
 using Warehouse.Models;
@@ -55,10 +57,13 @@ namespace Warehouse.Areas.Identity.Pages.Account
 
 			[Required]
 			[Display(Name ="Birthdate")]
-			public DateTime Birthdate { get; set; }
+			//[DisplayFormat(DataFormatString = "{yyyy-MM-dd}")]
+            [DataType(DataType.Date)]
+            public DateTime Birthdate { get; set; }
 
 			[Required]
 			[Display(Name = "Warehouse")]
+            public string WarehouseId { get; set; }
 			public WareHouse Warehouse { get; set; }
 
 			[Required]
@@ -85,16 +90,33 @@ namespace Warehouse.Areas.Identity.Pages.Account
         public void OnGet(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
-			ViewBag.Warehouse = new SelectList(_context.Warehouses, nameof(WareHouse.Id), nameof(WareHouse.Number));
+			ViewBag.Warehouse = new SelectList(_context.Warehouses, "Id", "Number");
 			ViewBag.AspNetRoles = new SelectList(_context.Roles, "Id", "Name");
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            returnUrl = returnUrl ?? Url.Content("~/");
+            string role = null;
+
+			if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(User), "Admin"))
+			{
+				if (Input.Role == "Worker" || Input.Role == "Storekeeper" || Input.Role == "Report")
+					role = Input.Role;
+			}
+
+			if (role == null)
+				return Page();
+
+			returnUrl = returnUrl ?? Url.Content("~/");
             if (ModelState.IsValid)
             {
-                var user = new AppUser { UserName = Input.Email, Email = Input.Email };
+                var user = new AppUser {
+                    BirthDate = Input.Birthdate,
+                    Warehouse = (WareHouse)Input.Warehouse,
+                    UserName = Input.Email,
+                    Email = Input.Email
+                };
+                
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
@@ -120,16 +142,10 @@ namespace Warehouse.Areas.Identity.Pages.Account
 			
 
 			}
-			//string role = null;
 
-			//if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(User), "Admin"))
-			//{
-			//	if (Input.Role == "Admin")
-			//		role = Input.Role;
-			//}
-
-			// If we got this far, something failed, redisplay form
-			return Page();
+            ViewBag.Warehouse = new SelectList(_context.Warehouses, nameof(WareHouse.Id), nameof(WareHouse.Number));
+            // If we got this far, something failed, redisplay form
+            return Page();
         }
 
 		private DynamicViewData _viewBag;
