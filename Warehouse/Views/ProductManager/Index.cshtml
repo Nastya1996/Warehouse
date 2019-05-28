@@ -1,19 +1,13 @@
-﻿@model IEnumerable<ProductManager>
+﻿@model IEnumerable<Warehouse.Models.ProductManager>
 @{
     ViewData["Title"] = "Index";
 }
 <a asp-action="Create">Create new</a>
-<table class="table table-hover table-bordered">
-    <thead>
+<table id="pmTable" class="table table-hover table-bordered">
+    <thead class="bg-primary">
         <tr>
-            <th>Product name</th>
             <th>Product type</th>
-            <th>Receipt price</th>
-            <th>Sale price</th>
-            <th>Receipt date</th>
-            <th>Added date</th>
-            <th>User</th>
-            <th>Warehouse</th>
+            <th>Product name</th>
             <th>Count</th>
             <th>Current count</th>
             <th>Select quantity</th>
@@ -24,28 +18,50 @@
         </tr>
     </thead>
     <tbody>
-        @foreach(var productManager in Model)
+        @foreach (var productManager in Model)
         {
-        <tr>
-            <td>@productManager.Product.Name</td>
-            <td>@productManager.Product.ProductType.Name</td>
-            <td>@productManager.ReceiptPrice</td>
-            <td>@productManager.SalePrice</td>
-            <td>@productManager.ReceiptDate</td>
-            <td>@productManager.AddedDate</td>
-            <td>@productManager.User.Name</td>
-            <td>@productManager.WareHouse.Number</td>
-            <td>@productManager.Count</td>
-            <td>@productManager.CurrentCount</td> 
-            <td><input type="number"  min="0" style="width:50px" /></td>
-            <td><a asp-action="Create" asp-controller="Basket" asp-route-id="@productManager.Id">Add</a></td>
-            <td><a asp-action="Edit" asp-route-id="@productManager.Id">Edit</a></td>
-            <td><a asp-action="Delete" asp-route-id="@productManager.Id">Delete</a></td>
-            <td><a asp-action="Details" asp-route-id="@productManager.Id">Details</a></td>
-        </tr>
+            <tr>
+                <td hidden><input id="id" type="hidden" value="@productManager.Id"/></td>
+                <td>@productManager.Product.ProductType.Name</td>
+                <td>@productManager.Product.Name</td>
+                <td>@productManager.Count</td>
+                <td class="currentCount">@productManager.CurrentCount</td>
+                <td><input type="number" min="0" style="width:50px" name="quantity" value="0"/></td>
+                <td><input type="button" value="Add" name="Add"/></td>
+                <td><a asp-action="Edit" asp-route-id="@productManager.Id">Edit</a></td>
+                <td><a asp-action="Delete" asp-route-id="@productManager.Id">Delete</a></td>
+                <td><a asp-action="Details" asp-route-id="@productManager.Id">Details</a></td>
+            </tr>
         }
     </tbody>
 </table>
 
 
 
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+   <script>
+       $(() => {
+           //Before adding to the cart check the quantity of product
+           $("input[name='Add']").on("click", function () {
+               $(this).parent().parent().addClass("select");
+               let $inputQuantity = $(".select").children().find("input[name='quantity']");
+               let $id = $(".select").children().children().val();
+               let $currentCount = $(".select td.currentCount").html();
+               let $quantity = $inputQuantity.val();
+               $(this).parent().parent().removeClass();
+               if (parseInt($quantity) <= parseInt($currentCount)) {
+                   $.ajax({
+                       type: 'GET',
+                       url: '/ProductManager/Add/' + $id + '/' + $quantity,
+                   });
+                   $inputQuantity.val(0);
+               }
+               else $inputQuantity.css("border", "1px solid coral");
+           });
+           $("input[name='quantity']").blur(function () {
+               $(this).css("border", "1px solid #92a8d1");
+           });
+       });
+    </script>
+}

@@ -4,7 +4,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Warehouse</title>
-
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
@@ -71,7 +70,7 @@
     </environment>
 
     @RenderSection("Scripts", required: false)
-    @section scripts{
+    @*@section scripts{
 
         <environment names="Development">
             <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
@@ -87,6 +86,6 @@
                     asp-fallback-test="window.jQuery && window.jQuery.validator && window.jQuery.validator.unobtrusive">
             </script>
         </environment>
-    }
+    }*@
 </body>
 </html>

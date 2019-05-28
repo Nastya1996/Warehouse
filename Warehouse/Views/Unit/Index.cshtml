@@ -3,35 +3,28 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>Unit</h2>
+<h1>Unit</h1>
 <a asp-action="Create" asp-controller="Unit">Create New</a>
-<table class="table table-striped">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(m => m.Id)
-        </th>
-        <th>
-            @Html.DisplayNameFor(m => m.Name)
-        </th>
-        <th>
-
-        </th>
-    </tr>
- @{
-     foreach (var unit in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(item => unit.Id)
-        </td>
-        <td>
-            @Html.DisplayFor(item => unit.Name)
-        </td>
-        <td>
-            <a asp-action="Edit" asp-route-id="@unit.Id">Edit</a>
-            <a asp-action="Delete" asp-route-id="@unit.Id">Delete</a>
-            <a asp-action="Details" asp-route-id="@unit.Id">Details</a>
-        </td>
-    </tr>
-     }
- } 
+<table class="table table-bordered table-hover">
+    <thead class="bg-primary">
+        <tr>
+            <th>@Html.DisplayNameFor(m => m.Name)</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{
+            foreach (var unit in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(item => unit.Name)</td>
+                    <td><a asp-action="Edit" asp-route-id="@unit.Id">Edit</a></td>
+                    <td><a asp-action="Delete" asp-route-id="@unit.Id">Delete</a></td>
+                    <td><a asp-action="Details" asp-route-id="@unit.Id">Details</a></td>
+                </tr>
+            }
+        }
+    </tbody>
 </table>

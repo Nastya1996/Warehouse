@@ -3,13 +3,26 @@
     ViewData["Title"] = "Create";
 }
 
-<h2>Create</h2>
+<h1>Create WareHouse</h1>
 
-<form asp-action="create" asp-controller="WareHouse" method="post">
-    <label asp-for="Number">Number of warehouse</label>
-    <input type="number" asp-for="Number" />
-    <label asp-for="Address">Address</label>
-    <input asp-for="Address" type="text" />
-    <span class="text-danger" asp-validation-for="Address"></span>
-    <input type="submit" value="Create" />
+<form asp-action="create" asp-controller="WareHouse" method="post" asp-antiforgery="true">
+    <div>
+        <div asp-validation-summary="ModelOnly"></div>
+        <div class="form-group">
+            <label asp-for="Number">Number of warehouse</label>
+            <input type="number" asp-for="Number" class="form-control" min="0"/>
+            <span asp-validation-for="Number"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Address">Address</label>
+            <input asp-for="Address" type="text" class="form-control" />
+            <span asp-validation-for="Address"></span>
+        </div>
+        <div>
+            <input type="submit" value="Create" class="btn-primary" />
+        </div>
+    </div>
 </form>
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

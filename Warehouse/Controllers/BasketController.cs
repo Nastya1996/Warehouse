@@ -35,20 +35,5 @@ namespace Warehouse.Controllers
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
-
-
-        //Add to Basket action
-        public IActionResult Create(string id)
-        {
-            if (_context.ProductManagers.Find(id) == null) return NotFound();
-            Basket basket = new Basket
-            {
-                ProductManagerId = id,
-                UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value,
-            };
-            _context.Add(basket);
-            _context.SaveChanges();
-            return RedirectToAction("Index","ProductManager");
-        }
     }
 }

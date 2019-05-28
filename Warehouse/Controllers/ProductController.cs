@@ -51,7 +51,7 @@ namespace Warehouse.Controllers
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
-
+        
 
 
         //Edit

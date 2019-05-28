@@ -30,9 +30,22 @@ namespace Warehouse.Controllers
         [HttpPost]
         public IActionResult Create(ProductType productType)
         {
-            _context.Types.Add(productType);
-            _context.SaveChanges();
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                var pType = _context.Types.FirstOrDefault(pt => pt.Name == productType.Name);
+                if (pType == null)
+                {
+                    _context.Types.Add(productType);
+                    _context.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    ModelState.AddModelError("","*A product with the same name already exists");
+                    return Create();
+                }
+            }
+            return Create();
         }
 
 
