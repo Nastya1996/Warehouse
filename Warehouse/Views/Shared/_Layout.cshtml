@@ -1,5 +1,4 @@
-﻿<!DOCTYPE html>
-<html>
+﻿<html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -30,9 +29,39 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                    <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li>
+                            <a asp-area="Identity" asp-page="/Account/Register">Create new account</a>
+                        </li>
+                        <li><a asp-controller="Admin" asp-action="Index">Show Users</a></li>
+                        <li><a asp-controller="WareHouse" asp-action="Create">Create Warehouses</a></li>
+                        <li><a asp-controller="WareHouse" asp-action="Index">Show Warehouses</a></li>
+                        <li><a asp-controller="ProductManager" asp-action="Index">Products</a></li>
+                    }
+                    else if (User.IsInRole("Worker"))
+                    {
+                        <li><a asp-controller="ProductManager" asp-action="Index">Products</a></li>
+                        @*<li>Basket</li>*@
+                    }
+                    else if (User.IsInRole("Storekeeper"))
+                    {
+                        <li><a asp-controller="ProductManager" asp-action="Index">Products</a></li>
+
+                    }
+                    else if (User.IsInRole("Report"))
+                    {
+                        <li><a asp-controller="Admin" asp-action="CreateAdmin">Create new account</a></li>
+                        <li><a asp-controller="Admin" asp-action="Index">Show Users</a></li>
+                        <li><a asp-controller="Admin" asp-action="CreateAdmin">Create Warehouses</a></li>
+                        <li><a asp-controller="Admin" asp-action="Index">Show Warehouses</a></li>
+                        <li><a asp-controller="Admin" asp-action="Index">Products</a></li>
+                    }
+                    else
+                    {
+                        <p>Welcom to Warehouse!</p>
+                    }
+
                 </ul>
                 <partial name="_LoginPartial" />
             </div>

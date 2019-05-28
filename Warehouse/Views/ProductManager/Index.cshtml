@@ -2,11 +2,14 @@
 @{
     ViewData["Title"] = "Index";
 }
+<br /><br />
 <a asp-action="Create">Create new</a>
 <table class="table table-hover table-bordered">
     <thead>
         <tr>
-            <th>Product name</th>
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.ProductNameSort">Name</a>
+            </th>
             <th>Product type</th>
             <th>Receipt price</th>
             <th>Sale price</th>
