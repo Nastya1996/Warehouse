@@ -111,8 +111,10 @@ namespace Warehouse.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = new AppUser {
+                    Name = Input.Name,
+                    SurName = Input.Surname,
                     BirthDate = Input.Birthdate,
-                    Warehouse = (WareHouse)Input.Warehouse,
+                    WarehouseId = Input.WarehouseId,
                     UserName = Input.Email,
                     Email = Input.Email
                 };
