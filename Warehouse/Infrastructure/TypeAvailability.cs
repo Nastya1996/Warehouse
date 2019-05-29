@@ -14,6 +14,7 @@ namespace Warehouse.Infrastructure
             string name = value?.ToString() ?? null;
             if (name != null)
             {
+                name = name.Trim();
                 ApplicationDbContext _context = (ApplicationDbContext)validationContext.GetService(typeof(ApplicationDbContext));
                 var typeName = _context.Types.FirstOrDefault(t => t.Name == name);
                 if (typeName != null)

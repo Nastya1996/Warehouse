@@ -78,12 +78,11 @@ namespace Warehouse.Controllers
         {
             return View(_context.Types.FirstOrDefault(x=>x.Id==id));
         }
-
-
         //Type availability
-        public JsonResult TypeAvailability(string typeName)
+        public JsonResult TypeAvailability(string Name)
         {
-            if (_context.Types.FirstOrDefault(t => t.Name == typeName) == null)
+            Name = Name.Trim();
+            if (_context.Types.FirstOrDefault(pt => pt.Name == Name)!=null)
                 return Json(" * This type of product is available in the database");
             return Json(true);
         }
