@@ -17,8 +17,7 @@ namespace Warehouse.Controllers
         private readonly ApplicationDbContext _context;
         public ProductManagerController(ApplicationDbContext context) => _context = context;
 
-        //Index
-        public IActionResult Index()
+        public async Task<IActionResult> Index(SortState sortOrder = SortState.ProductNameAsc)
         {
             var user=_context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var productManagersByGroup = _context.ProductManagers.Where(pm => pm.WareHouseId == user.WarehouseId)
@@ -33,7 +32,16 @@ namespace Warehouse.Controllers
 
                 })
                 .Select(c => c.ToExpando());
-           
+            IQueryable<ProductManager> products = _context.ProductManagers.Include(x => x.Product).Include(p => p.Product.ProductType).Include(x => x.WareHouse).Include(x => x.User);
+            ViewBag.ProductNameSort = sortOrder == SortState.ProductNameAsc ? SortState.ProductNameDesc : SortState.ProductNameAsc;
+
+            switch (sortOrder)
+            {
+                case SortState.ProductNameDesc:
+                    products = products.OrderByDescending(s => s.Product.Name);
+                    break;
+            }
+
             return View(productManagersByGroup.ToList());
         }
         

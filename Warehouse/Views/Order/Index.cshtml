@@ -1,0 +1,29 @@
+﻿@model Warehouse.Models.Order
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Sum</th>
+            <th>Date</th>
+            <th>CustomerId</th>
+            <th>UserId</th>
+            <th>Customer</th>
+            <th>Product Orders</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.Sum</td>
+            <td>@Model.Date</td>
+            <td>@Model.Customer</td>
+            <td>@Model.ProductOrders</td>
+            <td>%</td>
+            <td>$</td>
+        </tr>
+    </tbody>
+</table>
