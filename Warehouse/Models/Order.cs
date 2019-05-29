@@ -10,12 +10,10 @@ namespace Warehouse.Models
     public class Order
     {
         public string Id { get; set; }
-
-        [Required(ErrorMessage = "*The field is not filled")]
-        [Range(0, double.MaxValue, ErrorMessage = "*Price goes beyond what is permitted")]
-        [RegularExpression(@"^[1-9]{1}\d*$", ErrorMessage = "Unacceptable symbols")]
-        public decimal Sum { get; set; }
-
+    
+        public decimal Price { get; set; }
+        public decimal Sale { get; set; }
+        public decimal FinallPrice { get; set; }
         public DateTime Date { get; set; }
         public string UserId { get; set; }
         public AppUser User { get; set; }

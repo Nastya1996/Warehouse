@@ -13,9 +13,20 @@ namespace Warehouse.Controllers
     {
         private readonly ApplicationDbContext _context;
         public ProductController(ApplicationDbContext context) => _context = context;
-        public IActionResult Index()
+        public async Task<IActionResult> Index(SortState sortOrder = SortState.ProductNameAsc)
         {
-            return View(_context.Products.Include(x=>x.ProductType).Include(x=>x.Unit).ToList());
+            IQueryable<Product> products = _context.Products.Include(x => x.ProductType).Include(x => x.Unit);
+
+            ViewBag.ProductNameSort = sortOrder == SortState.ProductNameAsc ? SortState.ProductNameDesc : SortState.ProductNameAsc;
+
+            switch (sortOrder)
+            {
+                case SortState.ProductNameDesc:
+                    products = products.OrderByDescending(s => s.Name);
+                    break;
+            }
+
+            return View(await products.AsNoTracking().ToListAsync());
         }
 
 
