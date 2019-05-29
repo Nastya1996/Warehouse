@@ -27,7 +27,7 @@
             <td>@product.SalePrice</td>
             <td>@product.ReceiptDate.ToString("d")</td>
             <td>@product.AddDate</td>
-            <td><a asp-action="Edit" asp-route-id="@product.ProductId">Edit</a></td>
+            <td><a asp-action="Edit" asp-route-id="@(product.Id)">Edit</a></td>
         </tr>
         }
     </tbody>

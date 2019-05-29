@@ -17,7 +17,7 @@ namespace Warehouse.Controllers
         private readonly ApplicationDbContext _context;
         public ProductManagerController(ApplicationDbContext context) => _context = context;
 
-        public async Task<IActionResult> Index(SortState sortOrder = SortState.ProductNameAsc)
+        public IActionResult Index( )
         {
             var user=_context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var productManagersByGroup = _context.ProductManagers.Where(pm => pm.WareHouseId == user.WarehouseId)
@@ -32,16 +32,6 @@ namespace Warehouse.Controllers
 
                 })
                 .Select(c => c.ToExpando());
-            IQueryable<ProductManager> products = _context.ProductManagers.Include(x => x.Product).Include(p => p.Product.ProductType).Include(x => x.WareHouse).Include(x => x.User);
-            ViewBag.ProductNameSort = sortOrder == SortState.ProductNameAsc ? SortState.ProductNameDesc : SortState.ProductNameAsc;
-
-            switch (sortOrder)
-            {
-                case SortState.ProductNameDesc:
-                    products = products.OrderByDescending(s => s.Product.Name);
-                    break;
-            }
-
             return View(productManagersByGroup.ToList());
         }
         
@@ -80,28 +70,20 @@ namespace Warehouse.Controllers
         [HttpGet]
         public IActionResult Edit(string id)
         {
-            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var productManager = _context.ProductManagers
-                .Include(p => p.Product)
-                .FirstOrDefault(x => x.Id == id);
-            //ViewBag.WareHouses = new SelectList(_context.Warehouses, "Id", "Number");
-            //ViewBag.Products = new SelectList(_context.Products, "Id", "Name");
-            //ViewBag.ProductTypes = new SelectList(_context.Types, "Id", "Name", productManager.Product.ProductTypeId);
-            //ViewBag.Users = new SelectList(_context.Users, nameof(AppUser.Id), nameof(AppUser.Name));
-            //return View();
-            //return View(productManager);
-            return RedirectToAction("Index", "ProductInfo",new {id=id });
+            var productManager = _context.ProductManagers.Find(id.ToString());
+            if(productManager!=null)
+                return View(productManager);
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
         public IActionResult Edit(ProductManager productManager)
         {
-            var prodManager = _context.ProductManagers
-                .AsNoTracking()
-                .FirstOrDefault(x => x.Id == productManager.Id);
-            //productManager.AddedDate = prodManager.AddedDate;
-            productManager.CurrentCount = productManager.Count;
-            _context.Update(productManager);
+            var prodManager = _context.ProductManagers.AsNoTracking()
+                .FirstOrDefault(pm => pm.Id == productManager.Id);
+            prodManager.ReceiptPrice = productManager.ReceiptPrice;
+            prodManager.SalePrice = productManager.SalePrice;
+            _context.Update(prodManager);
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
