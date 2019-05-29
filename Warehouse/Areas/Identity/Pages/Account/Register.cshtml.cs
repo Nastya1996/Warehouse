@@ -70,7 +70,15 @@ namespace Warehouse.Areas.Identity.Pages.Account
 			[Display(Name ="Role")]
 			public string Role { get; set; }
 
-			[Required]
+            [Phone]
+            [Display(Name = "Phone")]
+            [DataType(DataType.PhoneNumber)]
+            [Required(ErrorMessage = "Phone Number Required!")]
+            [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{3})$",
+                   ErrorMessage = "Entered phone format is not valid.")]
+            public string PhoneNumber { get; set; }
+
+            [Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
@@ -116,7 +124,8 @@ namespace Warehouse.Areas.Identity.Pages.Account
                     BirthDate = Input.Birthdate,
                     WarehouseId = Input.WarehouseId,
                     UserName = Input.Email,
-                    Email = Input.Email
+                    Email = Input.Email,
+                    PhoneNumber = Input.PhoneNumber
                 };
                 
                 var result = await _userManager.CreateAsync(user, Input.Password);
