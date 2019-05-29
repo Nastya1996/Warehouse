@@ -1,0 +1,35 @@
+﻿
+@{
+    ViewData["Title"] = "Show";
+}
+@model  IEnumerable<ProductManager>
+<table class="table table-bordered table-hover">
+    <thead class="bg-primary">
+        <tr>
+            <th>Name</th>
+            <th>Count</th>
+            <th>Current count</th>
+            <th>Receipt price</th>
+            <th>Sale price</th>
+            <th>Receipt date</th>
+            <th>Added date</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var product in Model)
+        {
+        <tr>
+            <td>@product.Product.Name</td>
+            <td>@product.Count</td>
+            <td>@product.CurrentCount</td>
+            <td>@product.ReceiptPrice</td>
+            <td>@product.SalePrice</td>
+            <td>@product.ReceiptDate.ToString("d")</td>
+            <td>@product.AddDate</td>
+            <td><a asp-action="Edit" asp-route-id="@product.ProductId">Edit</a></td>
+        </tr>
+        }
+    </tbody>
+</table>
+

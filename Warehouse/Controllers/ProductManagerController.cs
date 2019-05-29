@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Warehouse.Data;
+using Warehouse.HtmlHelper;
 using Warehouse.Models;
 namespace Warehouse.Controllers
 {
@@ -20,22 +21,22 @@ namespace Warehouse.Controllers
         public IActionResult Index()
         {
             var user=_context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var productManagers = new List<ProductManager>();
             var productManagersByGroup = _context.ProductManagers.Where(pm => pm.WareHouseId == user.WarehouseId)
-                .Include(p=>p.Product)
-                .Include(p=>p.Product.ProductType)
-                .GroupBy(pm => pm.Product,(key, value)=> new { Product = key , ProductManager = value});
-            foreach(var p in productManagersByGroup)
-            {
-                productManagers.Add(new ProductManager
+                .Include(p => p.Product)
+                .Include(p => p.Product.ProductType)
+                .GroupBy(pm => pm.Product)
+                .Select(item => new
                 {
-                    Product = p.Product,
-                    Count = Convert.ToUInt32(p.ProductManager.Sum(pm => pm.Count)),
-                    CurrentCount = Convert.ToUInt32(p.ProductManager.Sum(pm => pm.CurrentCount))
-                });
-            }
-            return View(productManagers);
+                    Product = item.Key,
+                    Count = item.Sum(p => p.Count),
+                    CurrentCount = item.Sum(p => p.CurrentCount)
+
+                })
+                .Select(c => c.ToExpando());
+           
+            return View(productManagersByGroup.ToList());
         }
+        
         //Create
         [HttpGet]
         public IActionResult Create()
@@ -55,6 +56,15 @@ namespace Warehouse.Controllers
             _context.Add(productManager);
             _context.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+
+        //Show Product
+        public IActionResult Show(string id)
+        {
+            var products = _context.ProductManagers.Where(p => p.ProductId == id)
+                .Include(p=>p.Product).ToList();
+            return View(products);
         }
 
 

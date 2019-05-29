@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Warehouse.Models.ProductManager>
+﻿@model IEnumerable<dynamic>
 @{
     ViewData["Title"] = "Index";
 }
@@ -13,25 +13,21 @@
             <th>Select quantity</th>
             <th>Add to Basket</th>
             <th></th>
-            <th></th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var productManager in Model)
+        @foreach (dynamic productManager in Model)
         {
-            <tr>
-                <td hidden><input id="id" type="hidden" value="@productManager.Id"/></td>
-                <td>@productManager.Product.ProductType.Name</td>
-                <td>@productManager.Product.Name</td>
-                <td>@productManager.Count</td>
-                <td class="currentCount">@productManager.CurrentCount</td>
-                <td><input type="number" min="0" style="width:50px" name="quantity" value="0"/></td>
-                <td><input type="button" value="Add" name="Add"/></td>
-                <td><a asp-action="Edit" asp-route-id="@productManager.Id">Edit</a></td>
-                <td><a asp-action="Delete" asp-route-id="@productManager.Id">Delete</a></td>
-                <td><a asp-action="Details" asp-route-id="@productManager.Id">Details</a></td>
-            </tr>
+        <tr>
+            @*<td hidden><input id="id" type="hidden" value="@productManager.Id" /></td>*@
+            <td>@productManager.Product.ProductType.Name</td>
+            <td>@productManager.Product.Name</td>
+            <td>@productManager.Count</td>
+            <td>@productManager.CurrentCount</td>
+            <td><input type="number" min="0" style="width:50px" name="quantity" value="0" /></td>
+            <td><input type="button" value="Add" name="Add" /></td>
+            <td><a asp-action="Show" asp-route-id="@productManager.Product.Id">Show</a></td>
+        </tr>
         }
     </tbody>
 </table>

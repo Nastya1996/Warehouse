@@ -32,18 +32,9 @@ namespace Warehouse.Controllers
         {
             if (ModelState.IsValid)
             {
-                var pType = _context.Types.FirstOrDefault(pt => pt.Name == productType.Name);
-                if (pType == null)
-                {
-                    _context.Types.Add(productType);
-                    _context.SaveChanges();
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                    ModelState.AddModelError("","*A product with the same name already exists");
-                    return Create();
-                }
+                _context.Types.Add(productType);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
             }
             return Create();
         }
@@ -86,6 +77,15 @@ namespace Warehouse.Controllers
         public IActionResult Details(string id)
         {
             return View(_context.Types.FirstOrDefault(x=>x.Id==id));
+        }
+
+
+        //Type availability
+        public JsonResult TypeAvailability(string typeName)
+        {
+            if (_context.Types.FirstOrDefault(t => t.Name == typeName) == null)
+                return Json(" * This type of product is available in the database");
+            return Json(true);
         }
     }
 }
