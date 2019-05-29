@@ -30,6 +30,7 @@ namespace Warehouse.Controllers
         [HttpPost]
         public IActionResult Create(Product product)
         {
+            product.IsActive = true; 
             _context.Add(product);
             _context.SaveChanges();
             return RedirectToAction("Index");

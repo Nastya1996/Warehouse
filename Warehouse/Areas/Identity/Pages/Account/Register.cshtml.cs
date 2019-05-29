@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -143,7 +144,7 @@ namespace Warehouse.Areas.Identity.Pages.Account
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+                   // await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);
                 }
                 foreach (var error in result.Errors)
@@ -157,6 +158,8 @@ namespace Warehouse.Areas.Identity.Pages.Account
             ViewBag.Warehouse = new SelectList(_context.Warehouses, nameof(WareHouse.Id), nameof(WareHouse.Number));
             // If we got this far, something failed, redisplay form
             return Page();
+            
+           
         }
 
 		private DynamicViewData _viewBag;
@@ -172,5 +175,6 @@ namespace Warehouse.Areas.Identity.Pages.Account
 				return _viewBag;
 			}
 		}
+
 	}
 }
