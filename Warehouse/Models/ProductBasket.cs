@@ -5,14 +5,12 @@ using System.Threading.Tasks;
 
 namespace Warehouse.Models
 {
-    public class ProductOrder
+    public class ProductBasket
     {
-        public string Id { get; set;}
+        public string Id { get; set; }
         public uint Count { get; set; }
-        public decimal Price { get; set; }
-        public decimal Sale { get; set; }
-        public decimal FinallyPrice { get; set; }
-
+        public DateTime AddDate { get; set; }
+        
         public string ProductId { get; set; }
         public Product Product { get; set; }
     }
