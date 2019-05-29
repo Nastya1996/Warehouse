@@ -22,5 +22,7 @@ namespace Warehouse.Models
         public string UnitId { set; get; }
         public ProductType ProductType { set; get; }
         public Unit Unit { set; get; }
+
+        public bool IsActive { set; get; }
     }
 }
