@@ -1,4 +1,4 @@
-﻿@*@model IEnumerable<Warehouse.Models.Basket>*@
+﻿@model Warehouse.Models.Basket
 @{
     ViewData["Title"] = "Index";
 }
@@ -8,32 +8,22 @@
     <thead class="bg-primary">
         <tr>
             <th>Name</th>
-            <th>Current count</th>
-            <th>Unit</th>
-            <th>Price</th>
-            <th>Quantity</th>
-            <th>Sale</th>
-            <th>Finally price</th>
+            <th>Count</th>
             <th>Delete</th>
         </tr>
     </thead>
     <tbody>
         @{
-            foreach (var wh in Model)
+            foreach (var pb in Model.ProductBaskets)
             {
                 <tr>
-                    <td>@*@wh.ProductManager.Product.Name*@</td>
-                    <td>@*@wh.ProductManager.CurrentCount*@</td>
-                    <td>@*@wh.ProductManager.Product.Unit.Name*@</td>
-                    <td>@*@wh.ProductManager.SalePrice*@</td>
-                    <td>@*@wh.Quantity*@</td>
-                    <td>%</td>
-                    <td>$</td>
-                    <td><a asp-action="Delete" asp-route-id="@wh.Id">Delete</a></td>
+                    <td>@pb.Product.Name</td>
+                    <td>@pb.Count</td>
+                    <td><a asp-action="Delete" asp-route-id="@pb.Id">Delete</a></td>
                 </tr>
             }
         }
     </tbody>
-    
-   @*<a asp-controller="Order" asp-action="Add" asp-route-basketData="@Model"></a>*@
-</table>
+</table> 
+   <a asp-controller="Order" asp-action="Add" asp-route-basketData="@Model"></a>
+

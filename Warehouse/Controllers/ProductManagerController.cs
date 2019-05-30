@@ -132,31 +132,28 @@ namespace Warehouse.Controllers
         [HttpGet]
         public IActionResult Add(string id, string quantity)
         {
-            Basket basket;
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             uint count = Convert.ToUInt32(quantity);
             var product = _context.ProductManagers.Find(id);
             if (product != null)
             {
-                var productInBasket = _context.Baskets;//.FirstOrDefault(pm => pm.ProductManagerId == id);
-                if (productInBasket==null)
+                var basket = _context.Baskets.FirstOrDefault(b => b.UserId ==user.Id );
+                if (basket == null)
                 {
                     basket = new Basket
                     {
-                        //Quantity = count,
-                        //ProductManagerId = product.Id,
                         UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value,
                     };
-                    _context.Baskets.Add(basket);
-                    _context.SaveChanges();
                 }
-                else
+                basket.ProductBaskets.Add(new ProductBasket
                 {
-                    //if (productInBasket.Quantity + count <= product.Count) 
-                    //     productInBasket.Quantity += count;
-                    //else productInBasket.Quantity = product.Count;
-                    _context.Update(productInBasket);
-                    _context.SaveChanges();
-                }
+                    Count = count,
+                    ProductId = id,
+                    AddDate = DateTime.Now
+                });
+
+                _context.Baskets.Add(basket);
+                _context.SaveChanges();
             }
             return new JsonResult("");
         }

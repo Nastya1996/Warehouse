@@ -66,7 +66,7 @@ namespace Warehouse.Controllers
                 FinallPrice = productOrderList.Sum(p=>p.FinallyPrice),
                 Price = productOrderList.Sum(p => p.FinallyPrice),
                 ProductOrders = productOrderList,
-                UserId = user.Id
+                UserId = user.Id  
             };
             return View(order);
         }
