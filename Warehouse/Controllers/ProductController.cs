@@ -41,10 +41,14 @@ namespace Warehouse.Controllers
         [HttpPost]
         public IActionResult Create(Product product)
         {
-            product.IsActive = true; 
-            _context.Add(product);
-            _context.SaveChanges();
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                product.IsActive = true;
+                _context.Add(product);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(product);
         }
 
 

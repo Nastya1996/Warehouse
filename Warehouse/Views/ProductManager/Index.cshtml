@@ -20,11 +20,11 @@
         @foreach (dynamic productManager in Model)
         {
         <tr>
-            @*<td hidden><input id="id" type="hidden" value="@productManager.Id" /></td>*@
+            <td hidden="hidden"><input id="id" type="hidden" value="@productManager.Product.Id" /></td>
             <td>@productManager.Product.ProductType.Name</td>
             <td>@productManager.Product.Name</td>
             <td>@productManager.Count</td>
-            <td>@productManager.CurrentCount</td>
+            <td class="currentCount">@productManager.CurrentCount</td>
             <td>@productManager.Product.Unit.Name</td>
             <td><input type="number" min="0" style="width:50px" name="quantity" value="0" /></td>
             <td><input type="button" value="Add" name="Add" /></td>
@@ -46,6 +46,7 @@
                let $inputQuantity = $(".select").children().find("input[name='quantity']");
                let $id = $(".select").children().children().val();
                let $currentCount = $(".select td.currentCount").html();
+               alert($currentCount);
                let $quantity = $inputQuantity.val();
                $(this).parent().parent().removeClass();
                if (parseInt($quantity) <= parseInt($currentCount)) {
