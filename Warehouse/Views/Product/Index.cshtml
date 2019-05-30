@@ -5,8 +5,8 @@
 
 @model IEnumerable<Product>
 <a asp-action="Create">Create New</a>
-<table class="table table-hover table-bordered">
-    <thead class="bg-primary">
+<table>
+    <thead class="table table-bordered table-hover">
         <tr>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewBag.ProductNameSort">
@@ -16,10 +16,14 @@
             <th>Bar Code</th>
             <th>Product Type</th>
             <th>Unit</th>
-            <th></th>
-            <th></th>
-            <th></th>
-        </tr>
+            <th>Edit</th>
+            <th>Delete</th>
+            <th>Details</th>
+            @if (User.IsInRole("Admin"))
+            {
+                <td>Disable</td>
+            }
+            </tr>
     </thead>
     <tbody>
 
