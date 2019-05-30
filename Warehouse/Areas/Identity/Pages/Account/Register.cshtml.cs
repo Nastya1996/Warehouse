@@ -107,13 +107,13 @@ namespace Warehouse.Areas.Identity.Pages.Account
         {
             string role = null;
 
-			if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(User), "Admin"))
-			{
-				if (Input.Role == "Worker" || Input.Role == "Storekeeper" || Input.Role == "Report")
-					role = Input.Role;
-			}
+            if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(User), "Admin"))
+            {
+                if (Input.Role == "Worker" || Input.Role == "Storekeeper" || Input.Role == "Report")
+                    role = Input.Role;
+            }
 
-			if (role == null)
+            if (role == null)
 				return Page();
 
 			returnUrl = returnUrl ?? Url.Content("~/");
@@ -143,6 +143,7 @@ namespace Warehouse.Areas.Identity.Pages.Account
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    await _userManager.AddToRoleAsync(user, role);
 
                    // await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);
@@ -151,8 +152,7 @@ namespace Warehouse.Areas.Identity.Pages.Account
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
-			
-
+		        
 			}
 
             ViewBag.Warehouse = new SelectList(_context.Warehouses, nameof(WareHouse.Id), nameof(WareHouse.Number));
