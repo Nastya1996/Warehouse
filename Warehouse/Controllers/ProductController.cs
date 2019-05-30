@@ -90,5 +90,15 @@ namespace Warehouse.Controllers
         {
             return View(_context.Products.Include(x=>x.ProductType).Include(x=>x.Unit).FirstOrDefault(x => x.Id == id));
         }
+
+
+        //Product Availability
+        public JsonResult ProductAvailability(string Name)
+        {
+            Name = Name.Trim();
+            if (_context.Products.FirstOrDefault(p => p.Name == Name) != null)
+                return Json("*The name of product is available in the database");
+            return Json(true);
+        }
     }
 }

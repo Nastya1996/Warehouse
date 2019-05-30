@@ -10,6 +10,7 @@
             <th>Product name</th>
             <th>Count</th>
             <th>Current count</th>
+            <th>Unit</th>
             <th>Select quantity</th>
             <th>Add to Basket</th>
             <th></th>
@@ -24,6 +25,7 @@
             <td>@productManager.Product.Name</td>
             <td>@productManager.Count</td>
             <td>@productManager.CurrentCount</td>
+            <td>@productManager.Product.Unit.Name</td>
             <td><input type="number" min="0" style="width:50px" name="quantity" value="0" /></td>
             <td><input type="button" value="Add" name="Add" /></td>
             <td><a asp-action="Show" asp-route-id="@productManager.Product.Id">Show</a></td>

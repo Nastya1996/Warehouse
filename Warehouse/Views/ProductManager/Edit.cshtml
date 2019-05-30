@@ -8,13 +8,14 @@
         <div asp-validation-summary="ModelOnly"></div>
         <div class="form-group">
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ProductId"/>
             <label asp-for="ReceiptPrice">Receipt Price</label>
-            <input asp-for="ReceiptPrice" class="form-control" />
+            <input asp-for="ReceiptPrice" asp-format="{0:#}" class="form-control" />
             <span asp-validation-for="ReceiptPrice"></span>
         </div>
         <div class="form-group">
             <label asp-for="SalePrice">Sale price</label>
-            <input asp-for="SalePrice" class="form-control" />
+            <input asp-for="SalePrice" asp-format="{0:#}" class="form-control" />
             <span asp-validation-for="SalePrice"></span>
         </div>
         <div><input type="submit" class="btn-primary" /></div>

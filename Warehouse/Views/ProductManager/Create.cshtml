@@ -10,42 +10,74 @@
 <form asp-action="Create" asp-antiforgery="true">
     <div>
         <div asp-validation-summary="ModelOnly"></div>
-        <div class="form-group">
+        <div id="dd" class="form-group">
             <label>Product type</label>
-            <select asp-items="ViewBag.ProductTypes" class="form-control"></select>
+            <select id="type" data-search="true" asp-items="ViewBag.ProductTypes" class="custom-select form-control">
+                <option >Select type</option>
+            </select>
         </div>
         <div class="form-group">
             <label asp-for="ProductId">Product name</label>
-            <select asp-for="ProductId" asp-items="ViewBag.Products" class="form-control"></select>
+            <select asp-for="ProductId" data-search="true" asp-items="ViewBag.Products" class="custom-select form-control" disabled>
+                <option >Select product name</option>
+            </select>
         </div>
         <div class="form-group">
             <label asp-for="Count">Count</label>
-            <input asp-for="Count" type="number" class="form-control" value="0"/>
+            <input asp-for="Count" type="number" class="form-control" placeholder="0" />
             <span asp-validation-for="Count"></span>
         </div>
         <div class="form-group">
             <label asp-for="ReceiptPrice">Receipt price</label>
-            <input asp-for="ReceiptPrice" class="form-control"/>
+            <input asp-for="ReceiptPrice" class="form-control" placeholder="0" />
             <span asp-validation-for="ReceiptPrice"></span>
         </div>
         <div class="form-group">
             <label asp-for="SalePrice">Sale price</label>
-            <input asp-for="SalePrice" class="form-control"/>
+            <input asp-for="SalePrice" class="form-control" placeholder="0" />
             <span asp-validation-for="SalePrice"></span>
         </div>
         <div class="form-group">
             <label asp-for="ReceiptDate">Receipt date</label>
-            <input type="date" asp-for="ReceiptDate" value="@date" max="@date" class="form-control"/>
+            <input type="date" asp-for="ReceiptDate" value="@date" max="@date" class="form-control" />
             <span asp-validation-for="ReceiptDate"></span>
         </div>
         <div class="form-group">
             <label asp-for="WareHouseId">Warehouse</label>
-            <select asp-for="WareHouseId" asp-items="ViewBag.WareHouses" class="form-control"></select>
+            <select asp-for="WareHouseId" asp-items="ViewBag.WareHouses" class="form-control">
+                <option hidden="hidden">Select warehouse</option>
+            </select>
         </div>
-        <div><input type="submit" value="Create" class="btn-primary"/></div>
+        <div><input type="submit" value="Create" class="btn-primary" /></div>
     </div>
 </form>
 
 @section Scripts{
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(() => {
+            $("#type").customselect({ search: true, hoveropen: false });
+            $("li:contains('Select type')").remove();
+            $("#type").on("change", function () {
+                $("#ProductId li.active").remove();
+                var selected = $(this).children("option:selected").val();
+                $("li:contains('Select')").remove();
+                $.ajax({
+                    url: '/Products/Get',
+                    type: "POST",
+                    data: JSON.stringify(selected),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        $("#ProductId").empty();
+                        $("#ProductId").attr("disabled", false);
+                        data.forEach(function (element) {
+                            $("#ProductId").append("<option value=" + element.id + ">" + element.name + "</option>");
+                        });
+                        $("#ProductId").customselect({ search: true, hoveropen: false });
+                    }
+                })
+            });
+        });
+    </script>
 }

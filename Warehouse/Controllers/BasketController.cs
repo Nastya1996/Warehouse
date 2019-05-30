@@ -23,7 +23,7 @@ namespace Warehouse.Controllers
         }
         public IActionResult Index()
         {
-            return View(_context.Baskets.Include(x=>x.ProductManager.Product.Unit));
+            return View(_context.Baskets.Include(x=>x.ProductBaskets));//..ProductManager.Product.Unit
         }
         public IActionResult Delete(string id)
         {

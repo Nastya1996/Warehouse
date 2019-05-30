@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Warehouse.Models.Basket>
+﻿@*@model IEnumerable<Warehouse.Models.Basket>*@
 @{
     ViewData["Title"] = "Index";
 }
@@ -22,11 +22,11 @@
             foreach (var wh in Model)
             {
                 <tr>
-                    <td>@wh.ProductManager.Product.Name</td>
-                    <td>@wh.ProductManager.CurrentCount</td>
-                    <td>@wh.ProductManager.Product.Unit.Name</td>
-                    <td>@wh.ProductManager.SalePrice</td>
-                    <td>@wh.Quantity</td>
+                    <td>@*@wh.ProductManager.Product.Name*@</td>
+                    <td>@*@wh.ProductManager.CurrentCount*@</td>
+                    <td>@*@wh.ProductManager.Product.Unit.Name*@</td>
+                    <td>@*@wh.ProductManager.SalePrice*@</td>
+                    <td>@*@wh.Quantity*@</td>
                     <td>%</td>
                     <td>$</td>
                     <td><a asp-action="Delete" asp-route-id="@wh.Id">Delete</a></td>
@@ -35,5 +35,5 @@
         }
     </tbody>
     
-   <a asp-controller="Order" asp-action="Add" asp-route-basketData="@Model"></a>
+   @*<a asp-controller="Order" asp-action="Add" asp-route-basketData="@Model"></a>*@
 </table>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
@@ -17,12 +18,13 @@ namespace Warehouse.Controllers
         private readonly ApplicationDbContext _context;
         public ProductManagerController(ApplicationDbContext context) => _context = context;
 
-        public IActionResult Index( )
+        public IActionResult Index()
         {
             var user=_context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var productManagersByGroup = _context.ProductManagers.Where(pm => pm.WareHouseId == user.WarehouseId)
                 .Include(p => p.Product)
                 .Include(p => p.Product.ProductType)
+                .Include(p=>p.Product.Unit)
                 .GroupBy(pm => pm.Product)
                 .Select(item => new
                 {
@@ -48,9 +50,11 @@ namespace Warehouse.Controllers
         [HttpPost]
         public IActionResult Create(ProductManager productManager)
         {
+            var product = _context.Products.Include(u=>u.Unit).FirstOrDefault(p=>p.Id==productManager.ProductId);
             productManager.AddDate = DateTime.Now;
             productManager.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             productManager.CurrentCount = productManager.Count;
+            productManager.Product = product;
             _context.Add(productManager);
             _context.SaveChanges();
             return RedirectToAction("Index");
@@ -61,7 +65,7 @@ namespace Warehouse.Controllers
         public IActionResult Show(string id)
         {
             var products = _context.ProductManagers.Where(p => p.ProductId == id)
-                .Include(p=>p.Product).ToList();
+                .Include(p=>p.Product).Include(u=>u.Product.Unit).ToList();
             return View(products);
         }
 
@@ -79,13 +83,15 @@ namespace Warehouse.Controllers
         [HttpPost]
         public IActionResult Edit(ProductManager productManager)
         {
+            var data= _context.ProductManagers.AsNoTracking().Where(p => p.ProductId == productManager.ProductId)
+                .Include(p => p.Product).ToList();
             var prodManager = _context.ProductManagers.AsNoTracking()
                 .FirstOrDefault(pm => pm.Id == productManager.Id);
             prodManager.ReceiptPrice = productManager.ReceiptPrice;
             prodManager.SalePrice = productManager.SalePrice;
             _context.Update(prodManager);
             _context.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Show", new Dictionary<string, string> { { "id", prodManager.ProductId} });
         }
 
 
@@ -131,13 +137,13 @@ namespace Warehouse.Controllers
             var product = _context.ProductManagers.Find(id);
             if (product != null)
             {
-                var productInBasket = _context.Baskets.FirstOrDefault(pm => pm.ProductManagerId == id);
+                var productInBasket = _context.Baskets;//.FirstOrDefault(pm => pm.ProductManagerId == id);
                 if (productInBasket==null)
                 {
                     basket = new Basket
                     {
-                        Quantity = count,
-                        ProductManagerId = product.Id,
+                        //Quantity = count,
+                        //ProductManagerId = product.Id,
                         UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value,
                     };
                     _context.Baskets.Add(basket);
@@ -145,14 +151,23 @@ namespace Warehouse.Controllers
                 }
                 else
                 {
-                    if (productInBasket.Quantity + count <= product.Count) 
-                         productInBasket.Quantity += count;
-                    else productInBasket.Quantity = product.Count;
+                    //if (productInBasket.Quantity + count <= product.Count) 
+                    //     productInBasket.Quantity += count;
+                    //else productInBasket.Quantity = product.Count;
                     _context.Update(productInBasket);
                     _context.SaveChanges();
                 }
             }
             return new JsonResult("");
+        }
+
+
+        [HttpPost]
+        [Route("Products/Get")]
+        //Get Products
+        public JsonResult GetProduct([FromBody]string selected)
+        {
+            return Json(_context.Products.Where(p => p.ProductTypeId == selected).ToList());
         }
     }
 }
