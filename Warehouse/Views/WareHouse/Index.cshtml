@@ -14,19 +14,27 @@
             <th></th>
             <th></th>
             <th></th>
+            @if (User.IsInRole("Admin"))
+            {
+                <td>Disable</td>
+            }
         </tr>
     </thead>
     <tbody >
         @{
             foreach (var wh in Model)
             {
-                <tr>
-                    <td>@Html.DisplayFor(item => wh.Number)</td>
-                    <td>@Html.DisplayFor(item => wh.Address)</td>
-                    <td><a asp-action="Edit" asp-route-id="@wh.Id">Edit</a></td>
-                    <td><a asp-action="Delete" asp-route-id="@wh.Id">Delete</a></td>
-                    <td><a asp-action="Details" asp-route-id="@wh.Id">Details</a></td>
-                </tr>
+            <tr>
+                <td>@Html.DisplayFor(item => wh.Number)</td>
+                <td>@Html.DisplayFor(item => wh.Address)</td>
+                <td><a asp-action="Edit" asp-route-id="@wh.Id">Edit</a></td>
+                <td><a asp-action="Delete" asp-route-id="@wh.Id">Delete</a></td>
+                <td><a asp-action="Details" asp-route-id="@wh.Id">Details</a></td>
+                @if (User.IsInRole("Admin"))
+                {
+                    <td>Disable</td>
+                }
+            </tr>
             }
         }
     </tbody>
