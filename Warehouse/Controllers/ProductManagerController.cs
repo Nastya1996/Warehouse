@@ -134,26 +134,32 @@ namespace Warehouse.Controllers
         {
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             uint count = Convert.ToUInt32(quantity);
-            var product = _context.ProductManagers.Find(id);
+            var product = _context.ProductManagers.FirstOrDefault(pm => pm.ProductId == id);
             if (product != null)
             {
-                var basket = _context.Baskets.FirstOrDefault(b => b.UserId ==user.Id );
+                var basket = _context.Baskets.Include(p=>p.ProductBaskets).FirstOrDefault(b => b.UserId == user.Id);
                 if (basket == null)
                 {
                     basket = new Basket
                     {
                         UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value,
                     };
+                    _context.Baskets.Add(basket);
+                    _context.SaveChanges();
                 }
-                basket.ProductBaskets.Add(new ProductBasket
+                var productInBasket = basket.ProductBaskets.FirstOrDefault(pb => pb.ProductId == id);
+                if (productInBasket == null)
+                    basket.ProductBaskets.Add(new ProductBasket
                 {
                     Count = count,
                     ProductId = id,
                     AddDate = DateTime.Now
                 });
-
-                _context.Baskets.Add(basket);
+                else
+                    productInBasket.Count += count;
+                _context.Baskets.Update(basket);
                 _context.SaveChanges();
+
             }
             return new JsonResult("");
         }

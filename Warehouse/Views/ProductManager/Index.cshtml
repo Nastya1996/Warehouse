@@ -46,15 +46,16 @@
                let $inputQuantity = $(".select").children().find("input[name='quantity']");
                let $id = $(".select").children().children().val();
                let $currentCount = $(".select td.currentCount").html();
-               alert($currentCount);
                let $quantity = $inputQuantity.val();
                $(this).parent().parent().removeClass();
                if (parseInt($quantity) <= parseInt($currentCount)) {
                    $.ajax({
                        type: 'GET',
                        url: '/ProductManager/Add/' + $id + '/' + $quantity,
+                       success: function () {
+                           $inputQuantity.val(0);
+                       }
                    });
-                   $inputQuantity.val(0);
                }
                else $inputQuantity.css("border", "1px solid coral");
            });
