@@ -40,12 +40,20 @@
                     }
                     else if (User.IsInRole("Worker"))
                     {
-                        <li><a asp-controller="ProductManager" asp-action="Index">Products</a></li>
+                        <li><a asp-controller="ProductManager" asp-action="Index">Product Manager</a></li>
+                        <li><a asp-controller="Basket" asp-action="Index">Basket</a></li>
+                        <li><a asp-controller="Order" asp-action="Index">Order</a></li>
+                        <li><a asp-controller="Customer" asp-action="Create">Customer Create</a></li>
                         @*<li>Basket</li>*@
                     }
                     else if (User.IsInRole("Storekeeper"))
                     {
-                        <li><a asp-controller="ProductManager" asp-action="Index">Products</a></li>
+                        <li><a asp-controller="ProductType" asp-action="Index">ProductType</a></li>
+                        <li><a asp-controller="ProductType" asp-action="Create">ProductType Create</a></li>
+                        <li><a asp-controller="Product" asp-action="Index">Products</a></li>
+                        <li><a asp-controller="Product" asp-action="Create">Create Product</a></li>
+                        <li><a asp-controller="ProductManager" asp-action="Index">Product Manager</a></li>
+                        <li><a asp-controller="ProductManager" asp-action="Create">Create Product Manager</a></li>
 
                     }
                     else if (User.IsInRole("Report"))

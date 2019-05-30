@@ -7,34 +7,26 @@
 
 <a asp-action="Create" asp-controller="WareHouse">Create New</a>
 <table class="table table-bordered table-hover">
-    <thead class="bg-primary">
+    <thead>
         <tr>
             <th>@Html.DisplayNameFor(m => m.Number)</th>
             <th>@Html.DisplayNameFor(m => m.Address)</th>
-            <th></th>
-            <th></th>
-            <th></th>
-            @if (User.IsInRole("Admin"))
-            {
-                <td>Disable</td>
-            }
+            <td>Edit</td>
+            <th>Delete</th>
+            <th>Disable</th>
         </tr>
     </thead>
     <tbody >
         @{
             foreach (var wh in Model)
             {
-            <tr>
-                <td>@Html.DisplayFor(item => wh.Number)</td>
-                <td>@Html.DisplayFor(item => wh.Address)</td>
-                <td><a asp-action="Edit" asp-route-id="@wh.Id">Edit</a></td>
-                <td><a asp-action="Delete" asp-route-id="@wh.Id">Delete</a></td>
-                <td><a asp-action="Details" asp-route-id="@wh.Id">Details</a></td>
-                @if (User.IsInRole("Admin"))
-                {
-                    <td>Disable</td>
-                }
-            </tr>
+        <tr>
+            <td>@Html.DisplayFor(item => wh.Number)</td>
+            <td>@Html.DisplayFor(item => wh.Address)</td>
+            <td><a asp-action="Edit" asp-route-id="@wh.Id">Edit</a></td>
+            <td><a asp-action="Delete" asp-route-id="@wh.Id">Delete</a></td>
+            <td><a asp-action="" asp-route-id="@wh.Id">Disable</a></td>
+        </tr>
             }
         }
     </tbody>
