@@ -11,6 +11,6 @@ namespace Warehouse.Models
         public string Id { set; get; }
         public string UserId { set; get; }
         public AppUser AppUser { get; set; }
-        public IList<ProductBasket> ProductBaskets { get; set; }
+        public IList<ProductBasket> ProductBaskets { get; set; } = new List<ProductBasket>();
     }
 }

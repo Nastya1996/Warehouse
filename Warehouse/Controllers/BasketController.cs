@@ -23,7 +23,9 @@ namespace Warehouse.Controllers
         }
         public IActionResult Index()
         {
-            return View(_context.Baskets.Include(x=>x.ProductManager.Product.Unit));
+            //todo
+            return View(_context.Baskets.Include(b=>b.ProductBaskets));
+            //return View();
         }
         public IActionResult Delete(string id)
         {
