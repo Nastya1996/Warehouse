@@ -9,6 +9,7 @@
             <th>Name</th>
             <th>Count</th>
             <th>Current count</th>
+            <th>Unit</th>
             <th>Receipt price</th>
             <th>Sale price</th>
             <th>Receipt date</th>
@@ -23,11 +24,12 @@
             <td>@product.Product.Name</td>
             <td>@product.Count</td>
             <td>@product.CurrentCount</td>
+            <td>@product.Product.Unit.Name</td>
             <td>@product.ReceiptPrice</td>
             <td>@product.SalePrice</td>
             <td>@product.ReceiptDate.ToString("d")</td>
             <td>@product.AddDate</td>
-            <td><a asp-action="Edit" asp-route-id="@product.ProductId">Edit</a></td>
+            <td><a asp-action="Edit" asp-route-id="@(product.Id)">Edit</a></td>
         </tr>
         }
     </tbody>

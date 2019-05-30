@@ -83,7 +83,7 @@ namespace Warehouse.Controllers
         {
             Name = Name.Trim();
             if (_context.Types.FirstOrDefault(pt => pt.Name == Name)!=null)
-                return Json(" * This type of product is available in the database");
+                return Json("*This type of product is available in the database");
             return Json(true);
         }
     }

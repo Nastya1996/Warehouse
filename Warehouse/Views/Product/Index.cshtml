@@ -5,14 +5,14 @@
 
 @model IEnumerable<Product>
 <a asp-action="Create">Create New</a>
-<table class="table table-bordered table-hover">
-    <thead class="table table-bordered table-hover">
+<table  class="table table-bordered table-hover">
+    <thead class="bg-info">
         <tr>
-            <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.ProductNameSort">
+            <th>Name</th>
+                @*<a asp-action="Index" asp-route-sortOrder="@ViewBag.ProductNameSort">
                     Name
-                </a>
-            </th>
+                </a>*@
+            
             <th>Bar Code</th>
             <th>Product Type</th>
             <th>Unit</th>

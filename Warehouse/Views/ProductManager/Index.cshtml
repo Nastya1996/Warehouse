@@ -10,6 +10,7 @@
             <th>Product name</th>
             <th>Count</th>
             <th>Current count</th>
+            <th>Unit</th>
             <th>Select quantity</th>
             <th>Add to Basket</th>
             <th></th>
@@ -19,11 +20,12 @@
         @foreach (dynamic productManager in Model)
         {
         <tr>
-            @*<td hidden><input id="id" type="hidden" value="@productManager.Id" /></td>*@
+            <td hidden="hidden"><input id="id" type="hidden" value="@productManager.Product.Id" /></td>
             <td>@productManager.Product.ProductType.Name</td>
             <td>@productManager.Product.Name</td>
             <td>@productManager.Count</td>
-            <td>@productManager.CurrentCount</td>
+            <td class="currentCount">@productManager.CurrentCount</td>
+            <td>@productManager.Product.Unit.Name</td>
             <td><input type="number" min="0" style="width:50px" name="quantity" value="0" /></td>
             <td><input type="button" value="Add" name="Add" /></td>
             <td><a asp-action="Show" asp-route-id="@productManager.Product.Id">Show</a></td>
@@ -50,8 +52,10 @@
                    $.ajax({
                        type: 'GET',
                        url: '/ProductManager/Add/' + $id + '/' + $quantity,
+                       success: function () {
+                           $inputQuantity.val(0);
+                       }
                    });
-                   $inputQuantity.val(0);
                }
                else $inputQuantity.css("border", "1px solid coral");
            });

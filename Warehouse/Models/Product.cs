@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Warehouse.Infrastructure;
 
 namespace Warehouse.Models
 {
@@ -11,7 +13,9 @@ namespace Warehouse.Models
         public string Id { get; set; }
 
         [Required(ErrorMessage = "*The field is not filled")]
-        [StringLength(20,MinimumLength =3,ErrorMessage = "The product name must be between 3 and 20 characters")]
+        [StringLength(20,MinimumLength =3,ErrorMessage = "*The product name must be between 3 and 20 characters")]
+        [Remote("ProductAvailability","Product")]
+        [ProductAvailability]
         public string Name { set; get; }
 
         [Required(ErrorMessage = "*The field is not filled")]
