@@ -12,7 +12,6 @@ namespace Warehouse.Models
         public uint Count { get; set; }
         public DateTime AddDate { get; set; }
 
-        public string BasketId { get; set; }
         public string ProductId { get; set; }
         public Product Product { get; set; }
 

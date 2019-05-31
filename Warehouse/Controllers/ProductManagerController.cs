@@ -105,29 +105,25 @@ namespace Warehouse.Controllers
             var product = _context.ProductManagers.FirstOrDefault(pm => pm.ProductId == id);
             if (product != null)
             {
-                //todo
-                //todo
-                //todo
-                //var basket = _context.Baskets.Include(p=>p.Product).Where(b => b.UserId == user.Id);
-                //if (basket == null)
-                //{
-                //    basket = new Basket
-                //    {
-                //        UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value,
-                //    };
-                //    _context.Baskets.Add(basket);
-                //    _context.SaveChanges();
-                //}
-                //var productInBasket = basket.ProductBaskets.FirstOrDefault(pb => pb.ProductId == id);
-                //if (productInBasket == null) basket.ProductBaskets.Add(new ProductBasket
-                //{
-                //    Count = count,
-                //    ProductId = id,
-                //    AddDate = DateTime.Now
-                //});
-                //else productInBasket.Count += count;
-                //_context.Baskets.Update(basket);
-                //_context.SaveChanges();
+                var basket = _context.Baskets.Include(p=>p.Product).FirstOrDefault(b => b.UserId == user.Id && b.ProductId == id);
+                if (basket == null)
+                {
+                    basket = new Basket
+                    {
+                        UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                        AddDate = DateTime.Now,
+                        Count = count,
+                        ProductId = id,
+                    };
+                    _context.Baskets.Add(basket);
+                    _context.SaveChanges();
+                }
+                else
+                {
+                    basket.Count += count;
+                    _context.Baskets.Update(basket);
+                    _context.SaveChanges();
+                }
 
             }
             return new JsonResult("");
