@@ -93,40 +93,8 @@ namespace Warehouse.Controllers
             _context.SaveChanges();
             return RedirectToAction("Show", new Dictionary<string, string> { { "id", prodManager.ProductId} });
         }
-
-
-        //Delete
-        //[HttpGet]
-        //public IActionResult Delete(string id)
-        //{
-        //    var productManager = _context.ProductManagers.Find(id);
-        //    if (productManager == null) return NotFound();
-        //    return View(productManager);
-        //}
-
-        //[HttpGet]
-        //public IActionResult DeleteProductManager(string id)
-        //{
-        //    var productManager = _context.ProductManagers.Find(id);
-        //    if (productManager == null) return NotFound();
-        //    _context.Remove(productManager);
-        //    _context.SaveChanges();
-        //    return RedirectToAction("Index");
-        //}
-
-
-        //Details
-        [HttpGet]
-        public IActionResult Details(string id)
-        {
-            //var productManager = _context.ProductManagers.Include(pt => pt.Product).
-            //    Include(w => w.WareHouse).Include(u => u.User).FirstOrDefault(x => x.Id == id);
-            //if (productManager == null) return NotFound();
-            //return View(productManager);
-            return View();
-        }
-
-
+        
+        
 
         [Route("ProductManager/Add/{id}/{quantity}")]
         [HttpGet]
@@ -148,15 +116,13 @@ namespace Warehouse.Controllers
                     _context.SaveChanges();
                 }
                 var productInBasket = basket.ProductBaskets.FirstOrDefault(pb => pb.ProductId == id);
-                if (productInBasket == null)
-                    basket.ProductBaskets.Add(new ProductBasket
+                if (productInBasket == null) basket.ProductBaskets.Add(new ProductBasket
                 {
                     Count = count,
                     ProductId = id,
                     AddDate = DateTime.Now
                 });
-                else
-                    productInBasket.Count += count;
+                else productInBasket.Count += count;
                 _context.Baskets.Update(basket);
                 _context.SaveChanges();
 

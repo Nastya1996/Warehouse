@@ -9,6 +9,7 @@ namespace Warehouse.Models
 {
     public class ProductType
     {
+        [Required]
         public string Id { get; set; }
 
         [Required(ErrorMessage = "*The field is not filled")]
