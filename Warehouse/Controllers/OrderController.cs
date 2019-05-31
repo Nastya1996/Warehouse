@@ -26,10 +26,10 @@ namespace Warehouse.Controllers
         public IActionResult Create()
         {
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var basket = _context.Baskets.Include(pb => pb.ProductBaskets).FirstOrDefault(b=>b.UserId == user.Id);
+            var basket = _context.Baskets.Include(pb => pb.Product).Where(b=>b.UserId == user.Id);
 
             var productOrderList = new List<ProductOrder>();
-            foreach (var item in basket.ProductBaskets)
+            foreach (var item in basket)
             {
 
                 var productManager = _context.ProductManagers.Where(p => p.WareHouseId == user.WarehouseId && p.ProductId == item.ProductId).OrderBy(pm=>pm.AddDate).ToList();

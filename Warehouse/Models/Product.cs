@@ -10,7 +10,7 @@ namespace Warehouse.Models
 {
     public class Product
     {
-        [Required]
+        
         public string Id { get; set; }
 
         [Required(ErrorMessage = "*The field is not filled")]

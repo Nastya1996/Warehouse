@@ -1,4 +1,4 @@
-﻿@model Warehouse.Models.Basket
+﻿@model IEnumerable<Warehouse.Models.Basket>
 @{
     ViewData["Title"] = "Index";
 }
@@ -13,16 +13,24 @@
         </tr>
     </thead>
     <tbody>
-        @{
-            foreach (var pb in Model.ProductBaskets)
+        @{if (Model != null)
             {
+
+                foreach (var pb in Model)
+                {
                 <tr>
                     <td>@pb.Product.Name</td>
                     <td>@pb.Count</td>
                     <td><a asp-action="Delete" asp-route-id="@pb.Id">Delete</a></td>
                 </tr>
+                }
             }
-        }
+            else
+            {
+                <p>No products to show!</p>
+            }
+
+            }
     </tbody>
 </table> 
    <a asp-controller="Order" asp-action="Add" asp-route-basketData="@Model"></a>
