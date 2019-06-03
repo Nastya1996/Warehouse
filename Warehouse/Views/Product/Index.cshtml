@@ -17,7 +17,6 @@
             <th>Product Type</th>
             <th>Unit</th>
             <th>Edit</th>
-            <th>Delete</th>
             <th>Details</th>
             @if (User.IsInRole("Admin"))
             {
@@ -34,8 +33,7 @@
             <td>@pt.Barcode</td>
             <td>@pt.ProductType?.Name</td>
             <td>@pt.Unit?.Name</td>
-            <td><a asp-action="Edit" asp-route-id="@pt.Id">Edit</a></td>
-            <td><a asp-action="Delete" asp-route-id="@pt.Id">Delete</a></td>
+            <td><a asp-action="Edit" asp-route-id="@pt.Id">Edit</a></td> 
             <td><a asp-action="Details" asp-route-id="@pt.Id">Details</a></td>
             @if (User.IsInRole("Admin"))
             {

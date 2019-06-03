@@ -12,7 +12,6 @@
             <th>@Html.DisplayNameFor(m => m.Number)</th>
             <th>@Html.DisplayNameFor(m => m.Address)</th>
             <td>Edit</td>
-            <th>Delete</th>
             <th>Disable</th>
         </tr>
     </thead>
@@ -24,7 +23,6 @@
             <td>@Html.DisplayFor(item => wh.Number)</td>
             <td>@Html.DisplayFor(item => wh.Address)</td>
             <td><a asp-action="Edit" asp-route-id="@wh.Id">Edit</a></td>
-            <td><a asp-action="Delete" asp-route-id="@wh.Id">Delete</a></td>
             <td><a asp-action="" asp-route-id="@wh.Id">Disable</a></td>
         </tr>
             }
