@@ -37,9 +37,15 @@
             <td><a asp-action="Details" asp-route-id="@pt.Id">Details</a></td>
             @if (User.IsInRole("Admin"))
             {
-                <td><a asp-action="" asp-route-id="@pt.Id">Disable</a></td>
+                <td><a asp-for="link" asp-action="Disable" asp-route-id="@pt.Id" onclick="disable(this)">Disable</a></td>
             }
         </tr>
         }
     </tbody>
 </table>
+@section scripts{ 
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial.cshtml");}
+    <script>
+        $("link").css("");
+    </script>
+}

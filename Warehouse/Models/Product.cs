@@ -10,6 +10,7 @@ namespace Warehouse.Models
 {
     public class Product
     {
+        
         public string Id { get; set; }
 
         [Required(ErrorMessage = "*The field is not filled")]
@@ -21,7 +22,7 @@ namespace Warehouse.Models
         [Required(ErrorMessage = "*The field is not filled")]
         [StringLength(13,MinimumLength =13,ErrorMessage = "*The barcode length should be 13 characters")]
         public string Barcode { get; set; }
-
+        [Required]
         public string ProductTypeId { set; get; }
         public string UnitId { set; get; }
         public ProductType ProductType { set; get; }

@@ -95,6 +95,17 @@ namespace Warehouse.Controllers
             return View(_context.Products.Include(x=>x.ProductType).Include(x=>x.Unit).FirstOrDefault(x => x.Id == id));
         }
 
+        //Disable
+        [HttpGet]
+        public IActionResult Disable(string id)
+        {
+            var str = _context.Products.FirstOrDefault(x => x.Id == id);
+            str.IsActive = false;
+
+            return RedirectToAction("Index");
+
+        }
+
 
         //Product Availability
         public JsonResult ProductAvailability(string Name)

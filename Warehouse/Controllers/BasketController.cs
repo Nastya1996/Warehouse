@@ -23,8 +23,11 @@ namespace Warehouse.Controllers
         }
         public IActionResult Index()
         {
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             //todo
-            return View(_context.Baskets.Include(b=>b.ProductBaskets));
+            var baskets = _context.Baskets.Include(p => p.Product).Where(p=>p.UserId == user.Id);
+
+            return View(baskets);
             //return View();
         }
         public IActionResult Delete(string id)

@@ -8,6 +8,7 @@ namespace Warehouse.Models
 {
     public class ProductManager
     {
+        
         public string Id { get; set; }
         [RegularExpression(@"^[1-9]{1}\d*$", ErrorMessage = "*Unacceptable symbols")]
         [Range(0, int.MaxValue, ErrorMessage = "*The amount goes beyond what is permitted")]
@@ -27,6 +28,7 @@ namespace Warehouse.Models
         public AppUser User { get; set; }
         public string WareHouseId { get; set; }
         public WareHouse WareHouse { get; set; }
+        [Required]
         public string ProductId { get; set; }
         public Product Product { get; set; }
     }
