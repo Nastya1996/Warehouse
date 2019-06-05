@@ -14,7 +14,7 @@
                 async: false,
                 success: function (data) {
                     if (data) {
-                        $link.text("Disable");
+                        $link.text("Disable").css("color","red");
                         $row.removeClass();
                     }
                 }
@@ -30,7 +30,7 @@
                 async: false,
                 success: function (data) {
                     if (data) {
-                        $link.text("Enable");
+                        $link.text("Enable").css("color","green");
                         $row.removeClass();
                     }
                 }
