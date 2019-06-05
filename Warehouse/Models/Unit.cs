@@ -11,7 +11,7 @@ namespace Warehouse.Models
         public string Id { set; get; }
 
         [Required(ErrorMessage = "*The field is not filled")]
-        [StringLength(10, MinimumLength =1,ErrorMessage = "*The unit name must be up to 10 characters long")]
+        [StringLength(10,ErrorMessage = "*The unit name must be up to 10 characters long")]
         public string Name { set; get; }
     }
 }

@@ -68,3 +68,10 @@ input[type="checkbox"].input-validation-error {
     width:200px;
     height:200px;
 }
+
+
+
+/*Tag Select class*/
+.SelectError {
+    color: #b94a48;
+}

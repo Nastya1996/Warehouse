@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -10,15 +11,20 @@ namespace Warehouse.Models
     {
         
         public string Id { get; set; }
-        [RegularExpression(@"^[1-9]{1}\d*$", ErrorMessage = "*Unacceptable symbols")]
-        [Range(0, int.MaxValue, ErrorMessage = "*The amount goes beyond what is permitted")]
+        [Required(ErrorMessage = "*The field is not filled")]
+        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "*Invalid value")]
+        [MaxLength(9,ErrorMessage = "*Count goes beyond what is permitted")]
         public uint Count { get; set; }
         public uint CurrentCount { get; set; }
-        [RegularExpression(@"^[1-9]{1}\d*$", ErrorMessage = "*Unacceptable symbols")]
-        [Range(0, double.MaxValue, ErrorMessage = "*Price goes beyond what is permitted")]
+
+        [Required(ErrorMessage = "*The field is not filled")]
+        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "*Invalid value")]
+        [MaxLength(17,ErrorMessage = "*Price goes beyond what is permitted")]
         public decimal ReceiptPrice { get; set; }
-        [RegularExpression(@"^[1-9]{1}\d*$", ErrorMessage = "*Unacceptable symbols")]
-        [Range(0, double.MaxValue, ErrorMessage = "*Price goes beyond what is permitted")]
+
+        [Required(ErrorMessage = "*The field is not filled")]
+        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "*Invalid value")]
+        [MaxLength(17,ErrorMessage = "*Price goes beyond what is permitted")]
         public decimal SalePrice { get; set; }
         public DateTime ReceiptDate { get; set; }
         public DateTime AddDate { get; set; }

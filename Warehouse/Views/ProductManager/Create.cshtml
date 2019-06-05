@@ -10,16 +10,16 @@
 <form onsubmit="return Stop()" asp-action="Create" asp-antiforgery="true">
     <div>
         <div asp-validation-summary="ModelOnly"></div>
-        <div class="form-group">
+        <div id="TypeDiv" class="form-group">
             <label>Product type</label>
             <select id="type" class="form-control" asp-items="ViewBag.ProductTypes">
-                <option selected disabled value="0">Select type...</option>
+                <option selected disabled value="">Select type...</option>
             </select>
         </div>
-        <div class="form-group">
+        <div id="NameDiv" class="form-group">
             <label asp-for="ProductId">Product name</label>
-            <select asp-for="ProductId"  class="form-control" disabled>
-                <option value="0">Select name...</option>
+            <select asp-for="ProductId"  class="form-control" asp-items="ViewBag.Products">
+                <option value="">Select name...</option>
             </select>
         </div>
         <div class="form-group">
@@ -39,13 +39,13 @@
         </div>
         <div class="form-group">
             <label asp-for="ReceiptDate">Receipt date</label>
-            <input type="date" asp-for="ReceiptDate" value="@date" max="@date" class="form-control" />
+            <input type="date" asp-for="ReceiptDate" value="@date" min="2000-01-01" max="@date" class="form-control" />
             <span asp-validation-for="ReceiptDate"></span>
         </div>
-        <div class="form-group">
+        <div id="HouseDiv" class="form-group">
             <label asp-for="WareHouseId">Warehouse</label>
             <select asp-for="WareHouseId" asp-items="ViewBag.WareHouses" class="form-control">
-                <option selected disabled>Select warehouse</option>
+                <option selected disabled value="">Select warehouse</option>
             </select>
         </div>
         <div><input id="create" type="submit" value="Create" class="btn-primary" /></div>
@@ -54,40 +54,5 @@
 
 @section Scripts{
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-    <script>
-        $("#type").chosen();
-        $("#ProductId").chosen();
-        $("#WareHouseId").chosen();
-        $(() => {
-            $("#type").on("change", function () {
-                var selected = $(this).children("option:selected").val();
-                $("li:contains('Select')").remove();
-                $.ajax({
-                    url: '/Products/Get',
-                    type: "POST",
-                    data: JSON.stringify(selected),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    success: function (data) {
-                        $("#ProductId").empty();
-                        $("#ProductId").attr("disabled", false);
-                        $("#ProductId").append("<option selected disabled value='0'>Select name...</select>");
-                        data.forEach(function (element) {
-                            $("#ProductId").append("<option value=" + element.id + ">" + element.name + "</option>");
-                        });
-                        $("#ProductId").trigger("chosen:updated");
-                    }
-                })
-            });
-        });
-        function Stop() {
-            let type = $("#type").children("option:selected");
-            let name = $("#ProductId").children("option:selected");
-            if (type.val() == 0 || name.val() == 0) {
-                type.next("div").css("border", "1px red solid");
-                name.addClass("form-control input-validation-error");
-                return false;
-            }
-        };
-    </script>
+    <script src="~/js/productManager.js"></script>
 }

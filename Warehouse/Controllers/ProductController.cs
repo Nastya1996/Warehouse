@@ -51,24 +51,7 @@ namespace Warehouse.Controllers
             return View(product);
         }
 
-
-        //Delete
-        [HttpGet]
-        public IActionResult Delete(string id)
-        {
-            return View(_context.Products.FirstOrDefault(x => x.Id == id));
-        }
-        [HttpGet]
-        public IActionResult DeleteProduct(string id)
-        {
-            var data = _context.Products.Find(id);
-            if (data == null) return NotFound();
-            _context.Remove(data);
-            _context.SaveChanges();
-            return RedirectToAction("Index");
-        }
         
-
 
         //Edit
         [HttpGet]
@@ -95,18 +78,41 @@ namespace Warehouse.Controllers
             return View(_context.Products.Include(x=>x.ProductType).Include(x=>x.Unit).FirstOrDefault(x => x.Id == id));
         }
 
-        //Disable
-        [HttpGet]
-        public IActionResult Disable(string id)
+        //Disable product
+        [HttpPost]
+        [Route("Products/Disable/")]
+        public JsonResult Disable([FromBody]string productId)
         {
-            var str = _context.Products.FirstOrDefault(x => x.Id == id);
-            str.IsActive = false;
-
-            return RedirectToAction("Index");
-
+            var product = _context.Products.Find(productId);
+            if(product == null)
+                return Json(false);
+            else if(product.IsActive==true)
+            {
+                product.IsActive = false;
+                _context.Update(product);
+                _context.SaveChanges();
+                return Json(true);
+            }
+            return Json(false);
         }
-
-
+        //Enable product
+        [HttpPost]
+        [Route("Products/Enable/")]
+        public JsonResult Enable([FromBody]string productId)
+        {
+            var product = _context.Products.Find(productId);
+            if (product == null)
+                return Json(false);
+            else if (product.IsActive == false)
+            {
+                product.IsActive = true;
+                _context.Update(product);
+                _context.SaveChanges();
+                return Json(true);
+            }
+            return Json(false);
+        }
+        
         //Product Availability
         public JsonResult ProductAvailability(string Name)
         {
