@@ -21,7 +21,8 @@ namespace Warehouse.Controllers
         public IActionResult Index()
         {
             var user=_context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var productManagersByGroup = _context.ProductManagers.Where(pm => pm.WareHouseId == user.WarehouseId)
+            var productManagersByGroup = _context.ProductManagers
+                .Where(pm => pm.WareHouseId == user.WarehouseId && pm.Product.IsActive!=false)
                 .Include(p => p.Product)
                 .Include(p => p.Product.ProductType)
                 .Include(p=>p.Product.Unit)
@@ -41,25 +42,40 @@ namespace Warehouse.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            ViewBag.WareHouses = new SelectList(_context.Warehouses, "Id", "Number");
-            ViewBag.Products = new SelectList(_context.Products, "Id", "Name");
-            ViewBag.ProductTypes = new SelectList(_context.Types, "Id", "Name");
-            ViewBag.Users = new SelectList(_context.Users, nameof(AppUser.Id), nameof(AppUser.Name));
+            SelectInitial();
             return View();
         }
         [HttpPost]
         public IActionResult Create(ProductManager productManager)
         {
-            var product = _context.Products.Include(u=>u.Unit).FirstOrDefault(p=>p.Id==productManager.ProductId);
-            productManager.AddDate = DateTime.Now;
-            productManager.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            productManager.CurrentCount = productManager.Count;
-            productManager.Product = product;
-            _context.Add(productManager);
-            _context.SaveChanges();
-            return RedirectToAction("Index");
+            SelectInitial();
+            if (string.IsNullOrEmpty(productManager.ProductId))
+            {
+                ModelState.AddModelError("","The product type or product name not selected");
+            }
+            if(string.IsNullOrEmpty(productManager.WareHouseId))
+            {
+                ModelState.AddModelError("", "WareHouse not selected");
+            }
+            if (ModelState.IsValid)
+            {
+                var product = _context.Products.Include(u => u.Unit).FirstOrDefault(p => p.Id == productManager.ProductId);
+                productManager.AddDate = DateTime.Now;
+                productManager.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                productManager.CurrentCount = productManager.Count;
+                productManager.Product = product;
+                _context.Add(productManager);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(productManager);
         }
-
+        void SelectInitial()
+        {
+            ViewBag.WareHouses = new SelectList(_context.Warehouses, "Id", "Number");
+            ViewBag.Products = new SelectList(_context.Products, "Id", "Name");
+            ViewBag.ProductTypes = new SelectList(_context.Types, "Id", "Name");
+        }
 
         //Show Product
         public IActionResult Show(string id)
@@ -137,5 +153,6 @@ namespace Warehouse.Controllers
         {
             return Json(_context.Products.Where(p => p.ProductTypeId == selected).ToList());
         }
+        
     }
 }
