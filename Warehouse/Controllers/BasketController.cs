@@ -8,9 +8,11 @@ using Warehouse.Data;
 using Warehouse.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Warehouse.Controllers
 {
+    [Authorize(Roles = "Worker")]
     public class BasketController : Controller
     {
         private readonly ApplicationDbContext _context;

@@ -1,0 +1,57 @@
+﻿@using Warehouse.Models
+@using Warehouse.ViewModels
+@using System.Linq
+
+@model Order
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Index</h2>
+
+<form asp-action="Create" method="post" asp-controller="Order">
+    <input hidden="hidden" asp-for="@Model.Id" />
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Count</th>
+                <th>Price</th>
+                <th>Sale</th>
+                <th>Finally Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.ProductOrders.Count; ++i)
+            {
+                <tr>
+                    
+                    <input hidden="hidden" asp-for="@Model.ProductOrders[i].Id" />
+                    <td>@Model.ProductOrders[i].Product.Name</td>
+                    <td>@Model.ProductOrders[i].Count</td>
+                    <td>@Model.ProductOrders[i].Price</td>
+                    <td><input type="number" max="100" min="0" asp-for="@Model.ProductOrders[i].Sale" /></td>
+                    <td>@Model.ProductOrders[i].FinallyPrice</td>
+
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td></td>
+                <td>Yndameny</td>
+                <td asp-for="@Model.Price">@Model.Price</td>
+                <td><input type="number" max="100" min="0" asp-for="@Model.Sale" /></td>
+                <td>@Model.FinallPrice</td>
+            </tr>
+        </tfoot>
+
+
+    </table>
+    <input type="submit" value="Check Out" />
+</form>
+@if (ViewBag.Baskets.Count > 0)
+{
+    <h2>Aydqan apranq chunenq</h2>
+    <partial name="../Basket/_Index" model="@ViewBag.Baskets"/>
+}

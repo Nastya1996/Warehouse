@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Warehouse.Models;
 using Warehouse.Data;
+using Microsoft.AspNetCore.Authorization;
+
 namespace Warehouse.Controllers
 {
+    [Authorize(Roles = "Storekeeper")]
     public class ProductTypeController : Controller
     {
         private readonly ApplicationDbContext _context;
