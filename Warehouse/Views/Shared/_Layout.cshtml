@@ -33,7 +33,7 @@
                         <li>
                             <a asp-area="Identity" asp-page="/Account/Register">Create new account</a>
                         </li>
-                        <li><a asp-controller="Admin" asp-action="Index">Show Users</a></li>
+                        <li><a asp-controller="Admin" asp-action="ShowUsers">Show Users</a></li>
                         <li><a asp-controller="WareHouse" asp-action="Create">Create Warehouses</a></li>
                         <li><a asp-controller="WareHouse" asp-action="Index">Show Warehouses</a></li>
                         <li><a asp-controller="Product" asp-action="Index">Products</a></li>
@@ -41,9 +41,9 @@
                     else if (User.IsInRole("Worker"))
                     {
                         <li><a asp-controller="ProductManager" asp-action="Index">Product Manager</a></li>
-                        <li><a asp-controller="Basket" asp-action="Index">Basket</a></li>
                         <li><a asp-controller="Order" asp-action="Index">Order</a></li>
                         <li><a asp-controller="Customer" asp-action="Create">Customer Create</a></li>
+                        <li><a asp-controller="Basket" asp-action="_Index"><img src="https://cdn4.iconfinder.com/data/icons/is_beta_accounting/png/400/basket.png" width="20px" alt="Alternate Text" /></a></li>
                         @*<li>Basket</li>*@
                     }
                     else if (User.IsInRole("Storekeeper"))

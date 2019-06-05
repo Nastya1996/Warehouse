@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <Folder Include="Areas\Identity\Services\" />
+    <Folder Include="Views\ProductOrder\" />
   </ItemGroup>
 
 </Project>

@@ -6,12 +6,12 @@
 @model IEnumerable<Product>
 <a asp-action="Create">Create New</a>
 <table  class="table table-bordered table-hover">
-    <thead class="bg-info">
+    <thead>
         <tr>
             <th>Name</th>
-                @*<a asp-action="Index" asp-route-sortOrder="@ViewBag.ProductNameSort">
+               <a asp-action="Index" asp-route-sortOrder="@ViewBag.ProductNameSort">
                     Name
-                </a>*@
+                </a>
             
             <th>Bar Code</th>
             <th>Product Type</th>

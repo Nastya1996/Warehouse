@@ -1,0 +1,26 @@
+﻿@model IEnumerable<Warehouse.Models.AppUser>
+@{
+    ViewData["Title"] = "ShowUsers";
+}
+
+<h2>ShowUsers</h2>
+
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Phone</th>
+        <th>Disable</th>
+    </tr>
+    @{
+        foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Name</td>
+                <td>@user.SurName</td>
+                <td>@user.PhoneNumber</td>
+                <td><a asp-action="" asp-route-id="@user.Id">Disable</a></td>
+            </tr>
+        }
+    }
+</table>
