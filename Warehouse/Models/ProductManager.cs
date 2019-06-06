@@ -12,19 +12,16 @@ namespace Warehouse.Models
         
         public string Id { get; set; }
         [Required(ErrorMessage = "*The field is not filled")]
-        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "*Invalid value")]
-        [MaxLength(9,ErrorMessage = "*Count goes beyond what is permitted")]
+        [RegularExpression("([1-9][0-9]{1,15})", ErrorMessage = "*Invalid value")]
         public uint Count { get; set; }
         public uint CurrentCount { get; set; }
 
         [Required(ErrorMessage = "*The field is not filled")]
-        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "*Invalid value")]
-        [MaxLength(17,ErrorMessage = "*Price goes beyond what is permitted")]
+        [RegularExpression("([1-9][0-9]{1,15})", ErrorMessage = "*Invalid value")]
         public decimal ReceiptPrice { get; set; }
 
         [Required(ErrorMessage = "*The field is not filled")]
-        [RegularExpression("([1-9][0-9]*)", ErrorMessage = "*Invalid value")]
-        [MaxLength(17,ErrorMessage = "*Price goes beyond what is permitted")]
+        [RegularExpression("([1-9][0-9]{1,15})", ErrorMessage = "*Invalid value")]
         public decimal SalePrice { get; set; }
         public DateTime ReceiptDate { get; set; }
         public DateTime AddDate { get; set; }

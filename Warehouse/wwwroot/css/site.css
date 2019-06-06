@@ -75,3 +75,11 @@ input[type="checkbox"].input-validation-error {
 .SelectError {
     color: #b94a48;
 }
+
+
+.Disable{
+    color:red;
+}
+.Enable{
+    color:green;
+}
