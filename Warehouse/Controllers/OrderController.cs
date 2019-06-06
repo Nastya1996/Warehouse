@@ -35,7 +35,7 @@ namespace Warehouse.Controllers
             {
                 var count = item.Count;
 
-                var productManager = _context.ProductManagers.Where(p => p.WareHouseId == user.WarehouseId && p.ProductId == item.ProductId).OrderBy(pm => pm.AddDate).ToList();
+                var productManager = _context.ProductManagers.Where(p => p.WareHouseId == user.WarehouseId && p.ProductId == item.ProductId && p.CurrentCount!=0).OrderBy(pm => pm.AddDate).ToList();
                 if (productManager.Sum(p => p.CurrentCount) < count)
                 {
                     baskets.Add(item);
@@ -127,6 +127,7 @@ namespace Warehouse.Controllers
 
             orderDb.Price = order.ProductOrders.Sum(p => p.FinallyPrice);
             orderDb.FinallPrice = orderDb.Price * order.Sale;
+            orderDb.IsSelled = true;
 
             _context.ProductManagers.UpdateRange(productManagers);
             _context.Orders.Update(orderDb);
@@ -135,7 +136,7 @@ namespace Warehouse.Controllers
            
 
 
-            return View("ProductManager/Index");
+            return RedirectToAction("Index","ProductManager");
         }
         public IActionResult Continue(string id)
         {
@@ -144,7 +145,7 @@ namespace Warehouse.Controllers
             var baskets = new List<Basket>();
 
 
-            var productOrdersAndManager = _context.ProductOrders.GroupBy(p => p.ProductId).ToDictionary(key=>key.Key, value=>value.ToList());
+            var productOrdersAndManager = order.ProductOrders.GroupBy(p => p.ProductId).ToDictionary(key=>key.Key, value=>value.ToList());
             foreach(var key in productOrdersAndManager.Keys)
             {
                 baskets.Add(new Basket
@@ -160,7 +161,7 @@ namespace Warehouse.Controllers
             _context.Baskets.AddRange(baskets);
             _context.SaveChanges();
 
-            return View("ProductManager");
+            return RedirectToAction("Index", "ProductManager");
         }
         public IActionResult Delete(string id)
         {
