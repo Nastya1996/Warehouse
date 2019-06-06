@@ -111,7 +111,7 @@ namespace Warehouse.Controllers
         }
         
         
-
+        //Add to basket
         [Route("ProductManager/Add/{id}/{quantity}")]
         [HttpGet]
         public IActionResult Add(string id, string quantity)
@@ -143,15 +143,6 @@ namespace Warehouse.Controllers
 
             }
             return new JsonResult("");
-        }
-
-
-        [HttpPost]
-        [Route("Products/Get")]
-        //Get Products
-        public JsonResult GetProduct([FromBody]string selected)
-        {
-            return Json(_context.Products.Where(p => p.ProductTypeId == selected).ToList());
         }
         
     }
