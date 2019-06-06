@@ -10,17 +10,50 @@
         <th>Name</th>
         <th>Surname</th>
         <th>Phone</th>
-        <th>Disable</th>
+        <th>Disable \ Enable</th>
     </tr>
     @{
         foreach (var user in Model)
         {
             <tr>
+                <td hidden="hidden"><input type="hidden" value="@user.Id" /></td>
                 <td>@user.Name</td>
                 <td>@user.SurName</td>
                 <td>@user.PhoneNumber</td>
-                <td><a asp-action="" asp-route-id="@user.Id">Disable</a></td>
+                @if (user.LockoutEnd==null)
+                {
+                    <td><a href="#" class="Disable">Disable</a></td>
+                }
+                else
+                {
+                    <td><a href="#" class="Enable">Enable</a></td>
+                }
+
             </tr>
         }
     }
 </table>
+
+<!--Modal----user accaunt activation and deactivation-->
+<div class="modal" id="userModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h3 class="modal-title text-center ">Users</h3>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h3 class="text-center text-primary" id="userText"></h3>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="~/js/user.js"></script>
+}
