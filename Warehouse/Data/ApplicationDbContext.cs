@@ -20,6 +20,14 @@ namespace Warehouse.Data
         public DbSet<Product> Products { set; get; }
         public DbSet<Unit> Units { set; get; }
         public DbSet<Basket> Baskets { set; get; }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.Entity<ProductOrder>()
+                .HasOne(po => po.Order)
+                .WithMany(o => o.ProductOrders)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

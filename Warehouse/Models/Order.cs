@@ -10,7 +10,6 @@ namespace Warehouse.Models
     public class Order
     {
         public string Id { get; set; }
-    
         public decimal Price { get; set; }
         public decimal Sale { get; set; }
         public decimal FinallPrice { get; set; }
