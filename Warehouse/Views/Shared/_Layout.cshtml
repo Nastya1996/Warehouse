@@ -43,9 +43,17 @@
                         <li><a asp-controller="ProductManager" asp-action="Index">Product Manager</a></li>
                         <li><a asp-controller="Order" asp-action="Index">Order</a></li>
                         <li><a asp-controller="Customer" asp-action="Create">Customer Create</a></li>
-                        <li><a asp-controller="Basket" asp-action="Index"><img src="https://cdn4.iconfinder.com/data/icons/is_beta_accounting/png/400/basket.png" width="20px" alt="Alternate Text" /></a>
-                            <div class="basketModal"></div>
-                        </li>
+                        <li><a asp-controller="Basket" asp-action="Index"><img src="https://cdn4.iconfinder.com/data/icons/is_beta_accounting/png/400/basket.png" width="20px" alt="Alternate Text" /></a></li>
+                        <li data-toggle="modal" id="modalForBasket"><a href="#">asddad</a></li>
+                            <div class="modal" id="prodModal" tabindex="-1" role="dialog"></div>
+                            <script type="text/javascript">
+                                
+                                    //$('#modalForBasket').hover(function () {
+
+                                    //    $(".modal").modal('show');
+                                    //});
+                         
+                            </script>
                     }
                     else if (User.IsInRole("Storekeeper"))
                     {
