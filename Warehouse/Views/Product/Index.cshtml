@@ -20,34 +20,40 @@
             <th>Details</th>
             @if (User.IsInRole("Admin"))
             {
-                <td>Disable</td>
+                <td>Disable \ Enable</td>
             }
         </tr>
     </thead>
     <tbody>
-
-        @foreach (var pt in Model)
+        @if (Model.Count() == 0)
         {
-            <tr>
-                <td hidden="hidden"><input id="id" type="hidden" value="@pt.Id" /></td>
-                <td>@pt.Name</td>
-                <td>@pt.Barcode</td>
-                <td>@pt.ProductType?.Name</td>
-                <td>@pt.Unit?.Name</td>
-                <td><a asp-action="Edit" asp-route-id="@pt.Id">Edit</a></td>
-                <td><a asp-action="Details" asp-route-id="@pt.Id">Details</a></td>
-                @if (User.IsInRole("Admin"))
-                {
-                    @if (pt.IsActive == true)
+            <tr><td colspan="6" class="text-center">There are no products!</td></tr>
+        }
+        else
+        {
+            @foreach (var pt in Model)
+            {
+                <tr>
+                    <td hidden="hidden"><input id="id" type="hidden" value="@pt.Id" /></td>
+                    <td>@pt.Name</td>
+                    <td>@pt.Barcode</td>
+                    <td>@pt.ProductType?.Name</td>
+                    <td>@pt.Unit?.Name</td>
+                    <td><a asp-action="Edit" asp-route-id="@pt.Id">Edit</a></td>
+                    <td><a asp-action="Details" asp-route-id="@pt.Id">Details</a></td>
+                    @if (User.IsInRole("Admin"))
                     {
-                        <td><a href="#" class="Disable">Disable</a></td>
+                        @if (pt.IsActive == true)
+                        {
+                            <td><a href="#" class="Disable">Disable</a></td>
+                        }
+                        else
+                        {
+                            <td><a href="#" class="Enable">Enable</a></td>
+                        }
                     }
-                    else
-                    {
-                        <td><a href="#" class="Enable">Enable</a></td>
-                    }
-                }
-            </tr>
+                </tr>
+            }
         }
     </tbody>
 </table>
@@ -71,6 +77,8 @@
         </div>
     </div>
 </div>
+
+
 @section scripts{
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial.cshtml");}
     <script src="~/js/product.js"></script>

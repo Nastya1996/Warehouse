@@ -12,7 +12,7 @@ namespace Warehouse.Models
         
         public string Id { get; set; }
         [Required(ErrorMessage = "*The field is not filled")]
-        [RegularExpression("([1-9][0-9]{1,15})", ErrorMessage = "*Invalid value")]
+        [RegularExpression("([1-9][0-9]{0,15})", ErrorMessage = "*Invalid value")]
         public uint Count { get; set; }
         public uint CurrentCount { get; set; }
 
