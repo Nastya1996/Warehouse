@@ -18,8 +18,13 @@ namespace Warehouse.Controllers
         private readonly ApplicationDbContext _context;
         public ProductManagerController(ApplicationDbContext context) => _context = context;
 
-        public IActionResult Index()
+        public IActionResult Index(string type, string name)
         {
+            ViewBag.Max = _context.ProductManagers.Max(p => p.SalePrice);
+            type = type == null ? "" : type.Trim();
+            name = name == null ? "" : name.Trim();
+            ViewData["CurrentType"] = type;
+            ViewData["CurrentName"] = name;
             var user=_context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var productManagersByGroup = _context.ProductManagers
                 .Where(pm => pm.WareHouseId == user.WarehouseId && pm.Product.IsActive!=false)
@@ -27,6 +32,8 @@ namespace Warehouse.Controllers
                 .Include(p => p.Product.ProductType)
                 .Include(p=>p.Product.Unit)
                 .GroupBy(pm => pm.Product)
+                .Where(s => s.Key.ProductType.Name.Contains(type, StringComparison.InvariantCultureIgnoreCase) &&
+                s.Key.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase))
                 .Select(item => new
                 {
                     Product = item.Key,
@@ -35,6 +42,7 @@ namespace Warehouse.Controllers
 
                 })
                 .Select(c => c.ToExpando());
+
             return View(productManagersByGroup.ToList());
         }
         
