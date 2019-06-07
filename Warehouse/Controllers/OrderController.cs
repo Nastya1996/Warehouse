@@ -20,7 +20,8 @@ namespace Warehouse.Controllers
         }
         public IActionResult Index()
         {
-            return View(_context.Orders.Where(o=>!o.IsSelled));
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            return View(_context.Orders.Where(o=>!o.IsSelled && o.UserId == user.Id).ToList());
         }
         [HttpGet]
         public IActionResult Create()
@@ -34,7 +35,7 @@ namespace Warehouse.Controllers
             {
                 var count = item.Count;
 
-                var productManager = _context.ProductManagers.Where(p => p.WareHouseId == user.WarehouseId && p.ProductId == item.ProductId).OrderBy(pm => pm.AddDate).ToList();
+                var productManager = _context.ProductManagers.Where(p => p.WareHouseId == user.WarehouseId && p.ProductId == item.ProductId && p.CurrentCount!=0).OrderBy(pm => pm.AddDate).ToList();
                 if (productManager.Sum(p => p.CurrentCount) < count)
                 {
                     baskets.Add(item);
@@ -86,6 +87,9 @@ namespace Warehouse.Controllers
             _context.SaveChanges();
 
             ViewBag.Baskets = baskets;
+            
+            _context.Baskets.RemoveRange(basket);
+            _context.SaveChanges();
             return View(order);
 
         }
@@ -94,7 +98,7 @@ namespace Warehouse.Controllers
         public IActionResult Create(Order order)
         {
             var productManagers = new List<ProductManager>();
-            var orderDb = _context.Orders.FirstOrDefault(o => o.Id == order.Id && !o.IsSelled);
+            var orderDb = _context.Orders.Include(p=>p.ProductOrders).FirstOrDefault(o => o.Id == order.Id && !o.IsSelled);
             if (orderDb == null)
                 return NotFound();
             foreach (var item in orderDb.ProductOrders)
@@ -123,18 +127,47 @@ namespace Warehouse.Controllers
 
             orderDb.Price = order.ProductOrders.Sum(p => p.FinallyPrice);
             orderDb.FinallPrice = orderDb.Price * order.Sale;
+            orderDb.IsSelled = true;
 
             _context.ProductManagers.UpdateRange(productManagers);
             _context.Orders.Update(orderDb);
             _context.SaveChanges();
 
+           
+
+
+            return RedirectToAction("Index","ProductManager");
+        }
+        public IActionResult Continue(string id)
+        {
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var basket = _context.Baskets.Include(pb => pb.Product).FirstOrDefault(b => b.UserId == user.Id);
-            _context.Baskets.Remove(basket);
+            var order = _context.Orders.Include(p=>p.ProductOrders).FirstOrDefault(o => o.Id == id && o.UserId == user.Id );
+            var baskets = new List<Basket>();
+
+
+            var productOrdersAndManager = order.ProductOrders.GroupBy(p => p.ProductId).ToDictionary(key=>key.Key, value=>value.ToList());
+            foreach(var key in productOrdersAndManager.Keys)
+            {
+                baskets.Add(new Basket
+                {
+                    AddDate = DateTime.Now,
+                    Count = (uint)productOrdersAndManager[key].Sum(count=>count.Count),
+                    ProductId = key,
+                    UserId = order.UserId
+                });
+            }
+
+            _context.Orders.Remove(order);
+            _context.Baskets.AddRange(baskets);
             _context.SaveChanges();
 
-
-            return View("ProductManager/Index");
+            return RedirectToAction("Index", "ProductManager");
+        }
+        public IActionResult Delete(string id)
+        {
+            _context.Orders.Remove(_context.Orders.Find(id));
+            _context.SaveChanges();
+            return RedirectToAction("Index");
         }
     }
 }

@@ -29,7 +29,7 @@ namespace Warehouse.Controllers
             //todo
             var baskets = _context.Baskets.Include(p => p.Product).Where(p=>p.UserId == user.Id);
 
-            return View(baskets);
+            return View("_Index", baskets);
             //return View();
         }
         public IActionResult Delete(string id)

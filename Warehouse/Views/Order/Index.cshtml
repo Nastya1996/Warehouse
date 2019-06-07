@@ -1,0 +1,30 @@
+﻿@model IEnumerable<Warehouse.Models.Order>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>Price</th>
+        <th>Sale</th>
+        <th>Final Price</th>
+        <th>Date</th>
+        <th>Continue</th>
+        <th>Delete</th>
+    </tr>
+    @{
+        foreach (var o in Model)
+        {
+            <tr>
+                <td>@o.Price</td>
+                <td>@o.Sale</td>
+                <td>@o.FinallPrice</td>
+                <td>@o.Date</td>
+                <td><a asp-action="Continue" asp-route-id="@o.Id">Continue</a></td>
+                <td><a asp-action="Delete" asp-route-id="@o.Id">Delete</a></td>
+            </tr>
+        }
+    }
+</table>

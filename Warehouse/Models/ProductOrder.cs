@@ -7,6 +7,7 @@ namespace Warehouse.Models
 {
     public class ProductOrder
     {
+
         public string Id { get; set;}
         public uint Count { get; set; }
         public decimal Price { get; set; }
@@ -17,5 +18,8 @@ namespace Warehouse.Models
         public Product Product { get; set; }
 
         public string ProductManagerId { get; set; }
+
+        public string OrderId { get; set; }
+        public Order Order { get; set; }
     }
 }
