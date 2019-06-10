@@ -9,7 +9,7 @@ using Warehouse.Models;
 
 namespace Warehouse.Controllers
 {
-    [Authorize(Roles = "storekeeper")]
+    [Authorize(Roles = "Storekeeper")]
     public class UnitController : Controller
     {
         private readonly ApplicationDbContext _context;
