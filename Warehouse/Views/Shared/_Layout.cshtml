@@ -48,7 +48,7 @@
             $("#modalForBasket").mouseover(function () {
                 $.ajax({
                     url: "Basket/IndexForHover",
-                    
+                    beforeSend: function () { $(".modal-body").html("<p>Loading... </p>")},
                     success: function (response) {
                         $(".modal-body").html(response);
                     }
@@ -106,7 +106,7 @@
                         <li><a asp-controller="Product" asp-action="Create">Create Product</a></li>
                         <li><a asp-controller="ProductManager" asp-action="Index">Product Manager</a></li>
                         <li><a asp-controller="ProductManager" asp-action="Create">Create Product Manager</a></li>
-
+                        <li><a asp-controller="Unit" asp-action="Index">Unit</a></li>
                     }
                     else if (User.IsInRole("Report"))
                     {

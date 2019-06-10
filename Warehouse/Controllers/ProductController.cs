@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using Warehouse.Data;
 using Warehouse.Models;
 namespace Warehouse.Controllers
 {
+    [Authorize(Roles = "Storekeeper, Admin")]
     public class ProductController : Controller
     {
         private readonly ApplicationDbContext _context;
