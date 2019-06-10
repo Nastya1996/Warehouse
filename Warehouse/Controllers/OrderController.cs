@@ -114,6 +114,7 @@ namespace Warehouse.Controllers
                     }
                     else
                     {
+                        Con(order.Id);
                         return RedirectToAction("Create");
                     }
                 }
@@ -122,7 +123,7 @@ namespace Warehouse.Controllers
                     return NotFound();
                 }
                 var sale = order.ProductOrders.FirstOrDefault(p => p.Id == item.Id).Sale;
-                item.FinallyPrice = item.Price * sale;
+                item.FinallyPrice = item.Price * (100-sale)/100;
             }
 
             orderDb.Price = order.ProductOrders.Sum(p => p.FinallyPrice);
@@ -138,20 +139,20 @@ namespace Warehouse.Controllers
 
             return RedirectToAction("Index","ProductManager");
         }
-        public IActionResult Continue(string id)
+        public void Con(string id)
         {
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var order = _context.Orders.Include(p=>p.ProductOrders).FirstOrDefault(o => o.Id == id && o.UserId == user.Id );
+            var order = _context.Orders.Include(p => p.ProductOrders).FirstOrDefault(o => o.Id == id && o.UserId == user.Id);
             var baskets = new List<Basket>();
 
 
-            var productOrdersAndManager = order.ProductOrders.GroupBy(p => p.ProductId).ToDictionary(key=>key.Key, value=>value.ToList());
-            foreach(var key in productOrdersAndManager.Keys)
+            var productOrdersAndManager = order.ProductOrders.GroupBy(p => p.ProductId).ToDictionary(key => key.Key, value => value.ToList());
+            foreach (var key in productOrdersAndManager.Keys)
             {
                 baskets.Add(new Basket
                 {
                     AddDate = DateTime.Now,
-                    Count = (uint)productOrdersAndManager[key].Sum(count=>count.Count),
+                    Count = (uint)productOrdersAndManager[key].Sum(count => count.Count),
                     ProductId = key,
                     UserId = order.UserId
                 });
@@ -160,7 +161,10 @@ namespace Warehouse.Controllers
             _context.Orders.Remove(order);
             _context.Baskets.AddRange(baskets);
             _context.SaveChanges();
-
+        }
+        public IActionResult Continue(string id)
+        {
+            Con(id);
             return RedirectToAction("Index", "ProductManager");
         }
         public IActionResult Delete(string id)
