@@ -30,7 +30,14 @@ namespace Warehouse.Controllers
             var baskets = _context.Baskets.Include(p => p.Product).Where(p=>p.UserId == user.Id);
 
             return View("_Index", baskets);
-            //return View();
+        }
+        public IActionResult IndexForHover()
+        {
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            //todo
+            var baskets = _context.Baskets.Include(p => p.Product).Where(p => p.UserId == user.Id);
+
+            return View("IndexForHover", baskets);
         }
         public IActionResult Delete(string id)
         {
