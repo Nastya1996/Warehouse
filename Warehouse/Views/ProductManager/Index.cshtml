@@ -52,6 +52,9 @@
 
 
 @section Scripts{
+    <script src="https://kit.fontawesome.com/b7938c82ea.js"></script>
+    <link href="~/css/jquery-confirm.min.css" rel="stylesheet" />
+    <script src="~/js/jquery-confirm.min.js"></script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial.cshtml");}
     <script>
         $(() => {
@@ -63,16 +66,70 @@
                 let $currentCount = $(".select td.currentCount").html();
                 let $quantity = $inputQuantity.val();
                 $(this).parent().parent().removeClass();
-                if (parseInt($quantity) <= parseInt($currentCount)) {
+                if (parseInt($quantity) <= parseInt($currentCount) & parseInt($quantity)!==0) {
                     $.ajax({
                         type: 'GET',
                         url: '/ProductManager/Add/' + $id + '/' + $quantity,
-                        success: function () {
-                            $inputQuantity.val(0);
+                        success: function (data) {
+                            if (data) {
+                                $.confirm({
+                                    icon: 'fas fa-check-circle',
+                                    title: 'Warehouse!',
+                                    content: 'Product added to cart!',
+                                    type: 'blue',
+                                    typeAnimated: true,
+                                    animation: 'news',
+                                    closeAnimation: 'news',
+                                    buttons: {
+                                        close: {
+                                            btnClass: "btn-blue",
+                                            action: function () {
+                                            }
+                                        }
+                                    }
+                                });
+                                $inputQuantity.val(0);
+                            }
+                            else {
+                                $.confirm({
+                                    icon: 'fas fa-exclamation-triangle',
+                                    title: 'Warehouse!',
+                                    content: 'An error has occurred. Please, try again!',
+                                    type: 'red',
+                                    typeAnimated: true,
+                                    animation: 'news',
+                                    closeAnimation: 'news',
+                                    buttons: {
+                                        close: {
+                                            btnClass: "btn-red",
+                                            action: function () {
+                                            }
+                                        }
+                                    }
+                                });
+                            }
                         }
                     });
                 }
-                else $inputQuantity.css("border", "1px solid coral");
+                else {
+                    $.confirm({
+                        icon: 'fas fa-exclamation-triangle',
+                        title: 'Warehouse!',
+                        content: 'An error has occurred. Please, select fewer products!',
+                        type: 'red',
+                        typeAnimated: true,
+                        animation: 'news',
+                        closeAnimation: 'news',
+                        buttons: {
+                            close: {
+                                btnClass: "btn-red",
+                                action: function () {
+                                }
+                            }
+                        }
+                    });
+                    $inputQuantity.val(0);
+                }
             });
             $("input[name='quantity']").blur(function () {
                 $(this).css("border", "1px solid #92a8d1");

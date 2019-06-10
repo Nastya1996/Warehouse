@@ -141,16 +141,18 @@ namespace Warehouse.Controllers
                     };
                     _context.Baskets.Add(basket);
                     _context.SaveChanges();
+                    return Json(true);
                 }
                 else
                 {
                     basket.Count += count;
                     _context.Baskets.Update(basket);
                     _context.SaveChanges();
+                    return Json(true);
                 }
 
             }
-            return new JsonResult("");
+            return Json(false);
         }
         
     }
