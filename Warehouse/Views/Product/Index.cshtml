@@ -8,11 +8,9 @@
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
-            <th>Name</th>
-            <a asp-action="Index" asp-route-sortOrder="@ViewBag.ProductNameSort">
-                Name
-            </a>
-
+            <th>
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.ProductNameSort">Name</a>    
+            </th>
             <th>Bar Code</th>
             <th>Product Type</th>
             <th>Unit</th>
