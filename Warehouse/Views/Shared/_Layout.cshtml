@@ -46,6 +46,13 @@
 
         $(document).ready(function () {
             $("#modalForBasket").mouseover(function () {
+                $.ajax({
+                    url: "Basket/IndexForHover",
+                    
+                    success: function (response) {
+                        $(".modal-body").html(response);
+                    }
+                });
                 $('.modal-dialog').css({
                     "position": "absolute",
                     "top": ($("#modalForBasket").position().top + 20),
@@ -53,15 +60,12 @@
                 });
                 $("#myModal").modal();
             });
+            $("#close, #myModal").click(function () {
+                $(".modal-body").empty();
+            });
         });
 
-        $.ajax({
-            url: "Basket/IndexForHover",
-            success: function (response) {
-                $(".modal-body").html(response);
-            }
-        });
-
+        
     </script>
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
