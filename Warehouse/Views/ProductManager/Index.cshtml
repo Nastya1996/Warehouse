@@ -3,7 +3,6 @@
     ViewData["Title"] = "Index";
 }
 <br />
-
 <form method="get" asp-action="Index">
     <div class="form-inline form-group">
         <label class="control-label">Product Type: </label>
@@ -36,49 +35,48 @@
         }
         @foreach (dynamic productManager in Model)
         {
-        <tr>
-            <td hidden="hidden"><input id="id" type="hidden" value="@productManager.Product.Id" /></td>
-            <td>@productManager.Product.ProductType.Name</td>
-            <td>@productManager.Product.Name</td>
-            <td>@productManager.Count</td>
-            <td class="currentCount">@productManager.CurrentCount</td>
-            <td>@productManager.Product.Unit.Name</td>
-            <td><input type="number" min="0" style="width:50px" name="quantity" value="0" /></td>
-            <td><input type="button" value="Add" name="Add" /></td>
-            <td><a asp-action="Show" asp-route-id="@productManager.Product.Id">Show</a></td>
-        </tr>
+            <tr>
+                <td hidden="hidden"><input id="id" type="hidden" value="@productManager.Product.Id" /></td>
+                <td>@productManager.Product.ProductType.Name</td>
+                <td>@productManager.Product.Name</td>
+                <td>@productManager.Count</td>
+                <td class="currentCount">@productManager.CurrentCount</td>
+                <td>@productManager.Product.Unit.Name</td>
+                <td><input type="number" min="0" style="width:50px" name="quantity" value="0" /></td>
+                <td><input type="button" value="Add" name="Add" /></td>
+                <td><a asp-action="Show" asp-route-id="@productManager.Product.Id">Show</a></td>
+            </tr>
         }
     </tbody>
 </table>
 
 
-
 @section Scripts{
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-   <script>
-       $(() => {
-           //Before adding to the cart check the quantity of product
-           $("input[name='Add']").on("click", function () {
-               $(this).parent().parent().addClass("select");
-               let $inputQuantity = $(".select").children().find("input[name='quantity']");
-               let $id = $(".select").children().children().val();
-               let $currentCount = $(".select td.currentCount").html();
-               let $quantity = $inputQuantity.val();
-               $(this).parent().parent().removeClass();
-               if (parseInt($quantity) <= parseInt($currentCount)) {
-                   $.ajax({
-                       type: 'GET',
-                       url: '/ProductManager/Add/' + $id + '/' + $quantity,
-                       success: function () {
-                           $inputQuantity.val(0);
-                       }
-                   });
-               }
-               else $inputQuantity.css("border", "1px solid coral");
-           });
-           $("input[name='quantity']").blur(function () {
-               $(this).css("border", "1px solid #92a8d1");
-           });
-       });
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial.cshtml");}
+    <script>
+        $(() => {
+            //Before adding to the cart check the quantity of product
+            $("input[name='Add']").on("click", function () {
+                $(this).parent().parent().addClass("select");
+                let $inputQuantity = $(".select").children().find("input[name='quantity']");
+                let $id = $(".select").children().children().val();
+                let $currentCount = $(".select td.currentCount").html();
+                let $quantity = $inputQuantity.val();
+                $(this).parent().parent().removeClass();
+                if (parseInt($quantity) <= parseInt($currentCount)) {
+                    $.ajax({
+                        type: 'GET',
+                        url: '/ProductManager/Add/' + $id + '/' + $quantity,
+                        success: function () {
+                            $inputQuantity.val(0);
+                        }
+                    });
+                }
+                else $inputQuantity.css("border", "1px solid coral");
+            });
+            $("input[name='quantity']").blur(function () {
+                $(this).css("border", "1px solid #92a8d1");
+            });
+        });
     </script>
 }

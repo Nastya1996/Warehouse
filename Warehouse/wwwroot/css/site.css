@@ -88,3 +88,6 @@ input[type="checkbox"].input-validation-error {
     color:green;
 }
 
+.jconfirm .jconfirm-box.jconfirm-animation-news {
+    transform: rotate(400deg) scale(0);
+}
