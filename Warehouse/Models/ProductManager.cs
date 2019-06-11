@@ -17,11 +17,11 @@ namespace Warehouse.Models
         public uint CurrentCount { get; set; }
 
         [Required(ErrorMessage = "*The field is not filled")]
-        [RegularExpression("([1-9][0-9]{1,15})", ErrorMessage = "*Invalid value")]
+        [RegularExpression("([1-9][0-9]{0,15})", ErrorMessage = "*Invalid value")]
         public decimal ReceiptPrice { get; set; }
 
         [Required(ErrorMessage = "*The field is not filled")]
-        [RegularExpression("([1-9][0-9]{1,15})", ErrorMessage = "*Invalid value")]
+        [RegularExpression("([1-9][0-9]{0,15})", ErrorMessage = "*Invalid value")]
         public decimal SalePrice { get; set; }
         public DateTime ReceiptDate { get; set; }
         public DateTime AddDate { get; set; }

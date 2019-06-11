@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Warehouse.Models;
 using Warehouse.Data;
 using Microsoft.AspNetCore.Authorization;
-
+using PagedList.Core;
 namespace Warehouse.Controllers
 {
     [Authorize(Roles = "Storekeeper")]
@@ -18,9 +18,14 @@ namespace Warehouse.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string type, int page=1, int pageSize=10)
         {
-            return View(_context.Types.ToList());
+            type = type == null ? "" : type.Trim();
+            ViewData["CurrentSize"] = pageSize;
+            ViewData["CurrentType"] = type;
+            var types = _context.Types.Where(t => t.Name.Contains(type,StringComparison.InvariantCultureIgnoreCase)).AsQueryable();
+            PagedList<ProductType> model = new PagedList<ProductType>(types, page,pageSize);
+            return View(model);
         }
 
 
