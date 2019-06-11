@@ -46,6 +46,13 @@
 
         $(document).ready(function () {
             $("#modalForBasket").mouseover(function () {
+                $.ajax({
+                    url: "Basket/IndexForHover",
+                    beforeSend: function () { $(".modal-body").html("<p>Loading... </p>")},
+                    success: function (response) {
+                        $(".modal-body").html(response);
+                    }
+                });
                 $('.modal-dialog').css({
                     "position": "absolute",
                     "top": ($("#modalForBasket").position().top + 20),
@@ -53,15 +60,12 @@
                 });
                 $("#myModal").modal();
             });
+            $("#close, #myModal").click(function () {
+                $(".modal-body").empty();
+            });
         });
 
-        $.ajax({
-            url: "Basket/IndexForHover",
-            success: function (response) {
-                $(".modal-body").html(response);
-            }
-        });
-
+        
     </script>
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
@@ -102,7 +106,7 @@
                         <li><a asp-controller="Product" asp-action="Create">Create Product</a></li>
                         <li><a asp-controller="ProductManager" asp-action="Index">Product Manager</a></li>
                         <li><a asp-controller="ProductManager" asp-action="Create">Create Product Manager</a></li>
-
+                        <li><a asp-controller="Unit" asp-action="Index">Unit</a></li>
                     }
                     else if (User.IsInRole("Report"))
                     {

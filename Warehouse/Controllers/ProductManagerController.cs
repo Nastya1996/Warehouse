@@ -5,6 +5,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +15,7 @@ using Warehouse.Models;
 using PagedList.Core;
 namespace Warehouse.Controllers
 {
+    [Authorize(Roles = "Storekeeper, Worker")]
     public class ProductManagerController : Controller
     {
         private readonly ApplicationDbContext _context;

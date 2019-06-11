@@ -19,7 +19,7 @@
 
 <a asp-action="Create">Create new</a>
 <table id="pmTable" class="table table-hover table-bordered">
-    <thead class="bg-primary">
+    <thead>
         <tr>
             <th>Product type</th>
             <th>Product name</th>
@@ -28,7 +28,9 @@
             <th>Unit</th>
             <th>Select quantity</th>
             <th>Add to Basket</th>
-            <th></th>
+            <th>Show</th>
+            <th>Edit</th>
+            <th>Move</th>
         </tr>
     </thead>
     <tbody>
@@ -48,6 +50,8 @@
                 <td><input type="number" min="0" style="width:50px" name="quantity" value="0" /></td>
                 <td><input type="button" value="Add" name="Add" /></td>
                 <td><a asp-action="Show" asp-route-id="@productManager.Product.Id">Show</a></td>
+                <td></td>
+                <td></td>
             </tr>
         }
     </tbody>
@@ -80,12 +84,12 @@
                                     icon: 'fas fa-check-circle',
                                     title: 'Warehouse!',
                                     content: 'Product added to cart!',
-                                    type: 'blue',
+                                    type: 'dark',
                                     typeAnimated: true,
                                     closeAnimation: 'rotateXR',
                                     buttons: {
                                         close: {
-                                            btnClass: "btn-blue",
+                                            btnClass: "btn-dark",
                                             action: function () {
                                             }
                                         }

@@ -37,7 +37,7 @@ namespace Warehouse.Controllers
             //todo
             var baskets = _context.Baskets.Include(p => p.Product).Where(p => p.UserId == user.Id);
 
-            return View("IndexForHover", baskets);
+            return View("_IndexForHover", baskets);
         }
         public IActionResult Delete(string id)
         {

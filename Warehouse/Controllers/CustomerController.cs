@@ -2,14 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Warehouse.Data;
 using Warehouse.Models;
 
 namespace Warehouse.Controllers
 {
+    [Authorize(Roles = "Worker")]
     public class CustomerController : Controller
-
     {
         private readonly ApplicationDbContext _context;
         public CustomerController(ApplicationDbContext context)

@@ -10,9 +10,7 @@
     <thead class=" bg-primary">
         <tr>
             <th>Name</th>
-            <th></th>
-            <th></th>
-            <th></th>
+            <th>Edit</th>
         </tr>
     </thead>
     <tbody>
@@ -22,8 +20,6 @@
         <tr>
             <td>@pt.Name</td>
             <td><a asp-action="Edit" asp-route-id="@pt.Id">Edit</a></td>
-            <td><a asp-action="Delete" asp-route-id="@pt.Id">Delete</a></td>
-            <td><a asp-action="Details" asp-route-id="@pt.Id">Details</a></td>
         </tr>
         }
         </tbody>
