@@ -21,7 +21,7 @@ namespace Warehouse.Controllers
         private readonly ApplicationDbContext _context;
         public ProductManagerController(ApplicationDbContext context) => _context = context;
 
-        public IActionResult Index(string type, string name, int page=1, int pageSize=1)
+        public IActionResult Index(string type, string name, int page=1, int pageSize=10)
         {
             type = type == null ? "" : type.Trim();
             name = name == null ? "" : name.Trim();
