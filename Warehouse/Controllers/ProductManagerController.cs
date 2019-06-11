@@ -92,7 +92,9 @@ namespace Warehouse.Controllers
         //Show Product
         public IActionResult Show(string id)
         {
-            var products = _context.ProductManagers.Where(p => p.ProductId == id)
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var products = _context.ProductManagers
+                .Where(p => p.ProductId == id && p.WareHouseId==user.WarehouseId)
                 .Include(p=>p.Product).Include(u=>u.Product.Unit).ToList();
             return View(products);
         }

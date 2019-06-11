@@ -4,6 +4,7 @@
         $("#WareHouseId").chosen();
         $(() => {
             $("#type").on("change", function () {
+                alert("Yes");
                 TypeSpanDelete();
                 NameSpanDelete();
                 var selected = $(this).children("option:selected").val();
