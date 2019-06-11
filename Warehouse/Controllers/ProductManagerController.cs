@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Warehouse.Data;
 using Warehouse.HtmlHelper;
 using Warehouse.Models;
+using PagedList.Core;
 namespace Warehouse.Controllers
 {
     public class ProductManagerController : Controller
@@ -18,13 +19,13 @@ namespace Warehouse.Controllers
         private readonly ApplicationDbContext _context;
         public ProductManagerController(ApplicationDbContext context) => _context = context;
 
-        public IActionResult Index(string type, string name)
+        public IActionResult Index(string type, string name, int page=1, int pageSize=1)
         {
-            ViewBag.Max = _context.ProductManagers.Max(p => p.SalePrice);
             type = type == null ? "" : type.Trim();
             name = name == null ? "" : name.Trim();
             ViewData["CurrentType"] = type;
             ViewData["CurrentName"] = name;
+            ViewData["CurrentSize"] = pageSize;
             var user=_context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var productManagersByGroup = _context.ProductManagers
                 .Where(pm => pm.WareHouseId == user.WarehouseId && pm.Product.IsActive!=false)
@@ -42,8 +43,9 @@ namespace Warehouse.Controllers
 
                 })
                 .Select(c => c.ToExpando());
+            PagedList<ExpandoObject> model = new PagedList<ExpandoObject>(productManagersByGroup, page, pageSize);
 
-            return View(productManagersByGroup.ToList());
+            return View(model);
         }
         
         //Create

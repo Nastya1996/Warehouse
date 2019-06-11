@@ -1,4 +1,4 @@
-﻿@model IEnumerable<dynamic>
+﻿@model IPagedList<dynamic>
 @{
     ViewData["Title"] = "Index";
 }
@@ -10,6 +10,9 @@
 
         <label class="control-label">Product name: </label>
         <input type="text" name="name" value="@ViewData["CurrentName"]" />
+
+        <label class="control-label">Page size</label>
+        <input type="number" min="0" name="pageSize" value="@ViewData["CurrentSize"]" />
         <input type="submit" value="Filter" class="btn btn-default" />
     </div>
 </form>
@@ -49,6 +52,7 @@
         }
     </tbody>
 </table>
+<pager list="@Model" asp-route-pageSize="@ViewData["CurrentSize"]"  asp-route-type="@ViewData["CurrentType"]" asp-route-name="@ViewData["CurrentName"]" asp-controller="ProductManager" asp-action="Index"/>
 
 
 @section Scripts{
@@ -78,8 +82,7 @@
                                     content: 'Product added to cart!',
                                     type: 'blue',
                                     typeAnimated: true,
-                                    animation: 'news',
-                                    closeAnimation: 'news',
+                                    closeAnimation: 'rotateXR',
                                     buttons: {
                                         close: {
                                             btnClass: "btn-blue",
@@ -97,8 +100,7 @@
                                     content: 'An error has occurred. Please, try again!',
                                     type: 'red',
                                     typeAnimated: true,
-                                    animation: 'news',
-                                    closeAnimation: 'news',
+                                    closeAnimation: 'rotateXR',
                                     buttons: {
                                         close: {
                                             btnClass: "btn-red",
@@ -118,8 +120,7 @@
                         content: 'An error has occurred. Please, select fewer products!',
                         type: 'red',
                         typeAnimated: true,
-                        animation: 'news',
-                        closeAnimation: 'news',
+                        closeAnimation: 'rotateXR',
                         buttons: {
                             close: {
                                 btnClass: "btn-red",
