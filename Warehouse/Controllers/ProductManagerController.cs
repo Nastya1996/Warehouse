@@ -22,7 +22,7 @@ namespace Warehouse.Controllers
 
         public IActionResult Index(string type, string name)
         {
-            ViewBag.Max = _context.ProductManagers.Max(p => p.SalePrice);
+            //ViewBag.Max = _context.ProductManagers.Max(p => p.SalePrice);
             type = type == null ? "" : type.Trim();
             name = name == null ? "" : name.Trim();
             ViewData["CurrentType"] = type;
@@ -47,8 +47,9 @@ namespace Warehouse.Controllers
 
             return View(productManagersByGroup.ToList());
         }
-        
+
         //Create
+        [Authorize(Roles = "Storekeeper")]
         [HttpGet]
         public IActionResult Create()
         {
@@ -91,7 +92,8 @@ namespace Warehouse.Controllers
         public IActionResult Show(string id)
         {
             var products = _context.ProductManagers.Where(p => p.ProductId == id)
-                .Include(p=>p.Product).Include(u=>u.Product.Unit).ToList();
+                .Include(p => p.Product).Include(u => u.Product.Unit).Include(wh=>wh.WareHouse).ToList();
+            var w = _context.Warehouses.ToList();
             return View(products);
         }
 
@@ -156,6 +158,20 @@ namespace Warehouse.Controllers
             }
             return Json(false);
         }
-        
+        public IActionResult WHList(string testPMId)
+        {
+            ViewBag.PMId = testPMId;
+            return View("WHList",_context.Warehouses.ToList());
+        }
+        public IActionResult Move(string id, string IdOfPM)
+        {
+            var pm = _context.ProductManagers.FirstOrDefault(p => p.Id == IdOfPM);
+            var wh = _context.Warehouses.FirstOrDefault(w => w.Id == id);
+            pm.WareHouseId = wh.Id;
+            _context.ProductManagers.Update(pm);
+            _context.SaveChanges();
+            id = pm.ProductId;
+            return RedirectToAction("Show", "ProductManager", new { id });
+        }
     }
 }

@@ -3,6 +3,8 @@
     ViewData["Title"] = "Index";
 }
 <br />
+<br />
+<br />
 <form method="get" asp-action="Index">
     <div class="form-inline form-group">
         <label class="control-label">Product Type: </label>
@@ -14,7 +16,6 @@
     </div>
 </form>
 
-<a asp-action="Create">Create new</a>
 <table id="pmTable" class="table table-hover table-bordered">
     <thead>
         <tr>
@@ -23,11 +24,12 @@
             <th>Count</th>
             <th>Current count</th>
             <th>Unit</th>
-            <th>Select quantity</th>
-            <th>Add to Basket</th>
+            @if (User.IsInRole("Worker"))
+            {
+                <th>Select quantity</th>
+                <th>Add to Basket</th>
+            }
             <th>Show</th>
-            <th>Edit</th>
-            <th>Move</th>
         </tr>
     </thead>
     <tbody>
@@ -44,16 +46,16 @@
                 <td>@productManager.Count</td>
                 <td class="currentCount">@productManager.CurrentCount</td>
                 <td>@productManager.Product.Unit.Name</td>
-                <td><input type="number" min="0" style="width:50px" name="quantity" value="0" /></td>
-                <td><input type="button" value="Add" name="Add" /></td>
+                @if (User.IsInRole("Worker"))
+                {
+                    <td><input type="number" min="0" style="width:50px" name="quantity" value="0" /></td>
+                    <td><input type="button" value="Add" name="Add" /></td>
+                }
                 <td><a asp-action="Show" asp-route-id="@productManager.Product.Id">Show</a></td>
-                <td></td>
-                <td></td>
             </tr>
         }
     </tbody>
 </table>
-
 
 @section Scripts{
     <script src="https://kit.fontawesome.com/b7938c82ea.js"></script>

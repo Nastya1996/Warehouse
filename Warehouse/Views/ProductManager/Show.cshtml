@@ -2,7 +2,10 @@
 @{
     ViewData["Title"] = "Show";
 }
-@model  IEnumerable<ProductManager>
+@model IEnumerable<ProductManager>
+
+<br />
+<br />
 <table class="table table-bordered table-hover">
     <thead class="bg-primary">
         <tr>
@@ -14,24 +17,65 @@
             <th>Sale price</th>
             <th>Receipt date</th>
             <th>Added date</th>
-            <th></th>
+            <th>Warehouse</th>
+            <th>Move</th>
+            <th>Edit</th>
         </tr>
     </thead>
     <tbody>
-        @foreach(var product in Model)
+        @foreach (var product in Model)
         {
-        <tr>
-            <td>@product.Product.Name</td>
-            <td>@product.Count</td>
-            <td>@product.CurrentCount</td>
-            <td>@product.Product.Unit.Name</td>
-            <td>@product.ReceiptPrice</td>
-            <td>@product.SalePrice</td>
-            <td>@product.ReceiptDate.ToString("d")</td>
-            <td>@product.AddDate</td>
-            <td><a asp-action="Edit" asp-route-id="@(product.Id)">Edit</a></td>
-        </tr>
+            <tr>
+                <td>@product.Product.Name</td>
+                <td>@product.Count</td>
+                <td>@product.CurrentCount</td>
+                <td>@product.Product.Unit.Name</td>
+                <td>@product.ReceiptPrice</td>
+                <td>@product.SalePrice</td>
+                <td>@product.ReceiptDate.ToString("d")</td>
+                <td>@product.AddDate</td>
+                <td>@product.WareHouse.Number</td>
+                <td>
+                    <a class="moveProduct" id="@product.Id"  href="#">Move</a>
+                </td>
+                <td><a asp-action="Edit" asp-route-id="@(product.Id)">Edit</a></td>
+            </tr>
         }
     </tbody>
 </table>
+
+<div class="modal fade" id="modalMoveProduct" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Warehouses</h4>
+            </div>
+                <div class="modal-body">
+
+                </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $(".moveProduct").click(function () {
+            var id = $(this).attr('id');
+            $.ajax({
+                url: '@Url.Action("WHList", "ProductManager")',
+                data: { 'testPMId': id},
+                beforeSend: function () { $(".modal-body").html("<p>Loading... </p>") },
+                success: function (response) {
+                    $(".modal-body").html(response);
+                }
+            });
+            $("#modalMoveProduct").modal();
+        });
+    });
+</script>
 
