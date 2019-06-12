@@ -49,11 +49,12 @@
                 <td>@productManager.Count</td>
                 <td class="currentCount">@productManager.CurrentCount</td>
                 <td>@productManager.Product.Unit.Name</td>
-                <td><input type="number" min="0" style="width:50px" name="quantity" value="0" /></td>
-                <td><input type="button" value="Add" name="Add" /></td>
+                @if (User.IsInRole("Worker"))
+                {
+                    <td><input type="number" min="0" style="width:50px" name="quantity" value="0" /></td>
+                    <td><input type="button" value="Add" name="Add" /></td>
+                }
                 <td><a asp-action="Show" asp-route-id="@productManager.Product.Id">Show</a></td>
-                <td></td>
-                <td></td>
             </tr>
         }
     </tbody>

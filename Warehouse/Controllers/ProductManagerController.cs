@@ -107,7 +107,10 @@ namespace Warehouse.Controllers
             var products = _context.ProductManagers
                 .Where(p => p.ProductId == id && p.WareHouseId==user.WarehouseId &&
                  p.SalePrice>=from && p.SalePrice<=data)
-                .Include(p=>p.Product).Include(u=>u.Product.Unit).AsQueryable();
+                .Include(p=>p.Product)
+                .Include(u=>u.Product.Unit)
+                .Include(w=>w.WareHouse)
+                .AsQueryable();
             PagedList<ProductManager> model = new PagedList<ProductManager>(products, page, pageSize);
             return View(model);
         }
