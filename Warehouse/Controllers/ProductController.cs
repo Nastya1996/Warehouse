@@ -123,20 +123,6 @@ namespace Warehouse.Controllers
                 return Json("*The name of product is available in the database");
             return Json(true);
         }
-
-        //Get Products
-        [HttpPost]
-        [Route("Products/Get")]
-        public JsonResult GetProduct([FromBody]string selected)
-        {
-            return Json(_context.Products.Where(p => p.ProductTypeId == selected && p.IsActive != false).ToList());
-        }
         
-        [Route("Products/MaxPrice")]
-        public JsonResult GetMaxPrice()
-        {
-            decimal price = _context.ProductManagers.Max(p => p.SalePrice);
-            return  Json(price);
-        }
     }
 }
