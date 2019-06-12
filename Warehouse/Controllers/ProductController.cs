@@ -123,14 +123,6 @@ namespace Warehouse.Controllers
                 return Json("*The name of product is available in the database");
             return Json(true);
         }
-
-        //Get Products
-        [HttpPost]
-        [Route("Products/Get")]
-        public JsonResult GetProduct([FromBody]string selected)
-        {
-            return Json(_context.Products.Where(p => p.ProductTypeId == selected && p.IsActive != false).ToList());
-        }
-
+        
     }
 }

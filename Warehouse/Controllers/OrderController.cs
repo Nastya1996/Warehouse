@@ -23,7 +23,19 @@ namespace Warehouse.Controllers
         public IActionResult Index()
         {
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            return View(_context.Orders.Where(o=>!o.IsSelled && o.UserId == user.Id).ToList());
+            return View(_context.Orders.Where(o => o.UserId == user.Id).ToList());
+        }
+        [HttpGet]
+        public IActionResult Back(string id)
+        {
+            var productOrders = _context.ProductOrders
+                .Include(p=>p.Product)
+                .Include(pm=>pm.ProductManager)
+                .Include(pm=>pm.ProductManager.User)
+                .Include(pt=>pt.Product.ProductType)
+                .Include(u=>u.Product.Unit)
+                .Where(po=>po.OrderId == id);
+            return View("Show", productOrders);
         }
         [HttpGet]
         public IActionResult Create()
@@ -84,7 +96,8 @@ namespace Warehouse.Controllers
                 FinallPrice = productOrderList.Sum(p => p.FinallyPrice),
                 Price = productOrderList.Sum(p => p.FinallyPrice),
                 ProductOrders = productOrderList,
-                UserId = user.Id
+                UserId = user.Id,
+                OrderType=OrderType.InProgress
             };
             _context.Orders.Add(order);
             _context.SaveChanges();
@@ -101,7 +114,7 @@ namespace Warehouse.Controllers
         public IActionResult Create(Order order)
         {
             var productManagers = new List<ProductManager>();
-            var orderDb = _context.Orders.Include(p=>p.ProductOrders).FirstOrDefault(o => o.Id == order.Id && !o.IsSelled);
+            var orderDb = _context.Orders.Include(p=>p.ProductOrders).FirstOrDefault(o => o.Id == order.Id && o.OrderType==OrderType.InProgress);
             if (orderDb == null)
                 return NotFound();
             foreach (var item in orderDb.ProductOrders)
@@ -129,9 +142,9 @@ namespace Warehouse.Controllers
                 item.FinallyPrice = item.Price * (100-sale)/100;
             }
 
-            orderDb.Price = order.ProductOrders.Sum(p => p.FinallyPrice);
-            orderDb.FinallPrice = orderDb.Price * order.Sale;
-            orderDb.IsSelled = true;
+            orderDb.Price = orderDb.ProductOrders.Sum(p => p.FinallyPrice);
+            orderDb.FinallPrice = orderDb.Price * (100 - order.Sale)/100;
+            orderDb.OrderType = OrderType.Saled;
 
             _context.ProductManagers.UpdateRange(productManagers);
             _context.Orders.Update(orderDb);
@@ -140,7 +153,7 @@ namespace Warehouse.Controllers
 
             return RedirectToAction("Index","ProductManager");
         }
-        public void Con(string id)
+        private void Con(string id)
         {
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var order = _context.Orders.Include(p => p.ProductOrders).FirstOrDefault(o => o.Id == id && o.UserId == user.Id);

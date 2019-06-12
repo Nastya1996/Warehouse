@@ -13,6 +13,7 @@ using Warehouse.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Warehouse.Models;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Warehouse
 {
@@ -34,7 +35,7 @@ namespace Warehouse
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));

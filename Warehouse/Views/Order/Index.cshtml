@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Warehouse.Models.Order>
+﻿
+@model IEnumerable<Warehouse.Models.Order>
 @{
     ViewData["Title"] = "Index";
 }
@@ -11,8 +12,7 @@
         <th>Sale</th>
         <th>Final Price</th>
         <th>Date</th>
-        <th>Continue</th>
-        <th>Delete</th>
+        <th>Status</th>
     </tr>
     @{
         foreach (var o in Model)
@@ -22,8 +22,20 @@
                 <td>@o.Sale</td>
                 <td>@o.FinallPrice</td>
                 <td>@o.Date</td>
-                <td><a asp-action="Continue" asp-route-id="@o.Id">Continue</a></td>
-                <td><a asp-action="Delete" asp-route-id="@o.Id">Delete</a></td>
+                @{ 
+                    if (o.OrderType == OrderType.InProgress)
+                    {
+                        <td>
+                            <a asp-action="Continue" asp-route-id="@o.Id">Continue</a>
+                            /
+                            <a asp-action="Delete" asp-route-id="@o.Id">Delete</a>
+                        </td>
+                    }
+                    else if (o.OrderType == OrderType.Saled)
+                    {
+                        <td><a asp-action="Back" asp-route-id="@o.Id">Back</a></td>
+                    }
+                }
             </tr>
         }
     }

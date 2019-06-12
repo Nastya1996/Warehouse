@@ -19,6 +19,7 @@ namespace Warehouse.Models
         public string CustomerId { get; set; }
         public Customer Customer { get; set; }
         public IList<ProductOrder> ProductOrders { get; set; }
-        public bool IsSelled { get; set; }
+        public OrderType OrderType { get; set; }
+        //public bool IsSelled { get; set; }
     }
 }

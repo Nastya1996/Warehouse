@@ -1,30 +1,40 @@
-﻿
-@{
+﻿@model IPagedList<ProductManager>
+    @{
     ViewData["Title"] = "Show";
-}
-@model IEnumerable<ProductManager>
+    }
+    <br />
+    <form method="get" asp-action="Show">
+        <label class="control-label">Price:</label>
+        <input type="number" min="0" name="from" value="@ViewData[" CurrentFrom"]" placeholder="0" />
 
-<br />
-<br />
-<table class="table table-bordered table-hover">
-    <thead class="bg-primary">
-        <tr>
-            <th>Name</th>
-            <th>Count</th>
-            <th>Current count</th>
-            <th>Unit</th>
-            <th>Receipt price</th>
-            <th>Sale price</th>
-            <th>Receipt date</th>
-            <th>Added date</th>
-            <th>Warehouse</th>
-            <th>Move</th>
-            <th>Edit</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var product in Model)
-        {
+        <label class="control-label">From -</label>
+        <label class="control-label"> Before</label>
+        <input type="number" min="0" name="before" value="@ViewData[" CurrentBefore"]" placeholder="0" />
+
+        <label class="control-label">Page size</label>
+        <input type="number" name="pageSize" min="1" value="@ViewData[" CurrentSize"]" />
+        <input type="submit" id="send" value="Filter" class="btn btn-default" />
+    </form>
+    <table class="table table-bordered table-hover">
+        <thead class="bg-primary">
+            <tr>
+                <th>Name</th>
+                <th>Count</th>
+                <th>Current count</th>
+                <th>Unit</th>
+                <th>Receipt price</th>
+                <th>Sale price</th>
+                <th>Receipt date</th>
+                <th>Added date</th>
+                <th>Warehouse</th>
+                <th>Move</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var product in Model)
+            {
             <tr>
                 <td>@product.Product.Name</td>
                 <td>@product.Count</td>
@@ -36,34 +46,49 @@
                 <td>@product.AddDate</td>
                 <td>@product.WareHouse.Number</td>
                 <td>
-                    <a class="moveProduct" id="@product.Id"  href="#">Move</a>
+                    <a class="moveProduct" id="@product.Id" href="#">Move</a>
                 </td>
                 <td><a asp-action="Edit" asp-route-id="@(product.Id)">Edit</a></td>
             </tr>
-        }
-    </tbody>
-</table>
+            }
+        </tbody>
+    </table>
+    <div>
+        <pager list="@Model" asp-action="Show" asp-controller="ProductManager"
+               asp-route-from="@ViewData[" CurrentFrom"]" asp-route-before="@ViewData[" CurrentBefore"]"
+               asp-route-pageSize="@ViewData[" CurrentSize"]" />
+    </div>
+    <div class="modal fade" id="modalMoveProduct" role="dialog">
+        <div class="modal-dialog">
 
-<div class="modal fade" id="modalMoveProduct" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Warehouses</h4>
-            </div>
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Warehouses</h4>
+                </div>
                 <div class="modal-body">
 
                 </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
             </div>
-        </div>
 
+        </div>
     </div>
-</div>
-<script>
-    $(document).ready(function () {
+    @section scripts{
+    <script>
+        let a = $(":input[name='before']");
+        if (a.val() == "0") {
+            $.ajax({
+                url: "/Products/MaxPrice",
+                method: "Get",
+                success: function (data) {
+                    a.val(data);
+                }
+            });
+        }
+        $(document).ready(function () {
         $(".moveProduct").click(function () {
             var id = $(this).attr('id');
             $.ajax({
@@ -77,5 +102,5 @@
             $("#modalMoveProduct").modal();
         });
     });
-</script>
-
+    </script>
+    }
