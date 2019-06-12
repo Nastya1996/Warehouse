@@ -1,7 +1,6 @@
 ﻿$("#ProductId").prop("disabled", true);
         $("#type").chosen();
         $("#ProductId").chosen();
-        $("#WareHouseId").chosen();
         $(() => {
             $("#type").on("change", function () {
                 TypeSpanDelete();
@@ -28,12 +27,9 @@
             $("#ProductId").on("change", () => {
                 NameSpanDelete();
             })
-            $("#WareHouseId").on("change", () => {
-                HouseSpanDelete();
-            });
         });
         function Stop() {
-            if (NameNotValid() | TypeNotValid() | HouseNotValid()) {
+            if (NameNotValid() | TypeNotValid()) {
                 return false;
             }
         };
@@ -44,9 +40,6 @@
         }
         function NameSpanDelete() {
             $("#NameDiv span.SelectError").remove();
-        }
-        function HouseSpanDelete() {
-            $("#HouseDiv span.SelectError").remove();
         }
 
         //validation
@@ -64,15 +57,6 @@
             if (name.val() == "") {
                 NameSpanDelete();
                 $("#NameDiv").append("<span class='SelectError'>*Product name not selected</span>")
-                return true;
-            }
-            return false;
-        }
-        function HouseNotValid() {
-            let house = $("#WareHouseId").children("option:selected");
-            if (house.val() == "") {
-                HouseSpanDelete();
-                $("#HouseDiv").append("<span class='SelectError'>*WareHouse not selected</span>")
                 return true;
             }
             return false;
