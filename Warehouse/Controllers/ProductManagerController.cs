@@ -65,17 +65,15 @@ namespace Warehouse.Controllers
             {
                 ModelState.AddModelError("","The product type or product name not selected");
             }
-            if(string.IsNullOrEmpty(productManager.WareHouseId))
-            {
-                ModelState.AddModelError("", "WareHouse not selected");
-            }
             if (ModelState.IsValid)
             {
+                var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 var product = _context.Products.Include(u => u.Unit).FirstOrDefault(p => p.Id == productManager.ProductId);
                 productManager.AddDate = DateTime.Now;
-                productManager.UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+                productManager.UserId = user.Id;
                 productManager.CurrentCount = productManager.Count;
                 productManager.Product = product;
+                productManager.WareHouseId = user.WarehouseId;
                 _context.Add(productManager);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
@@ -94,7 +92,9 @@ namespace Warehouse.Controllers
         {
             decimal data;
             if (before == 0)
+            {
                 data = _context.ProductManagers.Max(p => p.SalePrice);
+            }
             else data = before;
             ViewData["CurrentId"] = id;
             ViewData["CurrentFrom"] = from;
