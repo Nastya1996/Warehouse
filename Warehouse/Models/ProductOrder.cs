@@ -18,6 +18,7 @@ namespace Warehouse.Models
         public Product Product { get; set; }
 
         public string ProductManagerId { get; set; }
+        public ProductManager ProductManager { get; set; }
 
         public string OrderId { get; set; }
         public Order Order { get; set; }
