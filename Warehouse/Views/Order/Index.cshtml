@@ -25,8 +25,11 @@
                 @{ 
                     if (o.OrderType == OrderType.InProgress)
                     {
-                        <td><a asp-action="Continue" asp-route-id="@o.Id">Continue</a></td>
-                        <td><a asp-action="Delete" asp-route-id="@o.Id">Delete</a></td>
+                        <td>
+                            <a asp-action="Continue" asp-route-id="@o.Id">Continue</a>
+                            /
+                            <a asp-action="Delete" asp-route-id="@o.Id">Delete</a>
+                        </td>
                     }
                     else if (o.OrderType == OrderType.Saled)
                     {

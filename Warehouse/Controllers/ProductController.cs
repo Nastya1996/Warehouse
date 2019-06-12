@@ -126,7 +126,7 @@ namespace Warehouse.Controllers
 
         //Get Products
         [HttpPost]
-        [Route("Products/Get")]
+        [Route("/Products/Get")]
         public JsonResult GetProduct([FromBody]string selected)
         {
             return Json(_context.Products.Where(p => p.ProductTypeId == selected && p.IsActive != false).ToList());

@@ -26,12 +26,16 @@ namespace Warehouse.Controllers
             return View(_context.Orders.Where(o => o.UserId == user.Id).ToList());
         }
         [HttpGet]
-        public IActionResult Back(Order order)
+        public IActionResult Back(string id)
         {
-           // var productOrders = new List<ProductOrder>();
-           // var orderId = _context.ProductOrders.Find(order.Id);
-            //var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            return View("Show");
+            var productOrders = _context.ProductOrders
+                .Include(p=>p.Product)
+                .Include(pm=>pm.ProductManager)
+                .Include(pm=>pm.ProductManager.User)
+                .Include(pt=>pt.Product.ProductType)
+                .Include(u=>u.Product.Unit)
+                .Where(po=>po.OrderId == id);
+            return View("Show", productOrders);
         }
         [HttpGet]
         public IActionResult Create()
@@ -137,8 +141,8 @@ namespace Warehouse.Controllers
                 item.FinallyPrice = item.Price * (100-sale)/100;
             }
 
-            orderDb.Price = order.ProductOrders.Sum(p => p.FinallyPrice);
-            orderDb.FinallPrice = orderDb.Price * order.Sale;
+            orderDb.Price = orderDb.ProductOrders.Sum(p => p.FinallyPrice);
+            orderDb.FinallPrice = orderDb.Price * (100 - order.Sale)/100;
             orderDb.OrderType = OrderType.Saled;
 
             _context.ProductManagers.UpdateRange(productManagers);
