@@ -90,13 +90,25 @@ namespace Warehouse.Controllers
         }
 
         //Show Product
-        public IActionResult Show(string id)
+        public IActionResult Show(string id, decimal from, decimal before, int page=1, int pageSize=1)
         {
+            decimal data;
+            if (before == 0)
+                data = _context.ProductManagers.Max(p => p.SalePrice);
+            else data = before;
+            ViewData["CurrentId"] = id;
+            ViewData["CurrentFrom"] = from;
+            ViewData["CurrentBefore"] = before;
+            ViewData["CurrentSize"] = pageSize;
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var maxPrice = _context.ProductManagers.Max(p => p.SalePrice);
+            var minPrice = _context.ProductManagers.Min(p => p.SalePrice);
             var products = _context.ProductManagers
-                .Where(p => p.ProductId == id && p.WareHouseId==user.WarehouseId)
-                .Include(p=>p.Product).Include(u=>u.Product.Unit).ToList();
-            return View(products);
+                .Where(p => p.ProductId == id && p.WareHouseId==user.WarehouseId &&
+                 p.SalePrice>=from && p.SalePrice<=data)
+                .Include(p=>p.Product).Include(u=>u.Product.Unit).AsQueryable();
+            PagedList<ProductManager> model = new PagedList<ProductManager>(products, page, pageSize);
+            return View(model);
         }
 
 
@@ -123,8 +135,7 @@ namespace Warehouse.Controllers
             _context.SaveChanges();
             return RedirectToAction("Show", new Dictionary<string, string> { { "id", prodManager.ProductId} });
         }
-        
-        
+
         //Add to basket
         [Route("ProductManager/Add/{id}/{quantity}")]
         [HttpGet]
@@ -160,6 +171,21 @@ namespace Warehouse.Controllers
             }
             return Json(false);
         }
-        
+
+
+        //Get Products
+        [HttpPost]
+        [Route("Products/Get")]
+        public JsonResult GetProduct([FromBody]string selected)
+        {
+            return Json(_context.Products.Where(p => p.ProductTypeId == selected && p.IsActive != false).ToList());
+        }
+
+        [Route("Products/MaxPrice")]
+        public JsonResult GetMaxPrice()
+        {
+            decimal price = _context.ProductManagers.Max(p => p.SalePrice);
+            return Json(price);
+        }
     }
 }

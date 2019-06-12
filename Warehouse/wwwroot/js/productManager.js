@@ -4,7 +4,6 @@
         $("#WareHouseId").chosen();
         $(() => {
             $("#type").on("change", function () {
-                alert("Hiiiii");
                 TypeSpanDelete();
                 NameSpanDelete();
                 var selected = $(this).children("option:selected").val();
@@ -16,7 +15,6 @@
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     success: function (data) {
-                        alert("Byy");
                         $("#ProductId").empty();
                         $("#ProductId").attr("disabled", false);
                         $("#ProductId").append("<option selected disabled value='0'>Select name...</select>");
