@@ -131,6 +131,12 @@ namespace Warehouse.Controllers
         {
             return Json(_context.Products.Where(p => p.ProductTypeId == selected && p.IsActive != false).ToList());
         }
-
+        
+        [Route("Products/MaxPrice")]
+        public JsonResult GetMaxPrice()
+        {
+            decimal price = _context.ProductManagers.Max(p => p.SalePrice);
+            return  Json(price);
+        }
     }
 }

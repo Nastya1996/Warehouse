@@ -12,7 +12,7 @@
         <input type="text" name="name" value="@ViewData["CurrentName"]" />
 
         <label class="control-label">Page size</label>
-        <input type="number" min="0" name="pageSize" value="@ViewData["CurrentSize"]" />
+        <input type="number" min="1" name="pageSize" value="@ViewData["CurrentSize"]" />
         <input type="submit" value="Filter" class="btn btn-default" />
     </div>
 </form>
@@ -49,7 +49,7 @@
                 <td>@productManager.Product.Unit.Name</td>
                 <td><input type="number" min="0" style="width:50px" name="quantity" value="0" /></td>
                 <td><input type="button" value="Add" name="Add" /></td>
-                <td><a asp-action="Show" asp-route-id="@productManager.Product.Id">Show</a></td>
+                <td><a asp-action="Show" asp-route-before="@productManager" asp-route-id="@productManager.Product.Id">Show</a></td>
                 <td></td>
                 <td></td>
             </tr>
