@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PagedList.Core;
 using Warehouse.Data;
 using Warehouse.Models;
 
@@ -17,10 +18,12 @@ namespace Warehouse.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+        public IActionResult Index(int page = 1, int pageSize = 10)
         {
-            var datas = _context.Customers.ToList();
-            return View(datas);
+            var customers = _context.Customers.AsQueryable();
+            ViewData["CurrentSize"] = pageSize;
+            PagedList<Customer> model = new PagedList<Customer>(customers, page, pageSize);
+            return View(model);
         }
         public IActionResult Create()
         {
