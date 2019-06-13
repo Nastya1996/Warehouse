@@ -3,9 +3,23 @@
     ViewData["Title"] = "Index";
 }
 
-@model IEnumerable<Product>
-<a asp-action="Create">Create New</a>
-<table class="table table-bordered table-hover">
+@model PagedList<Product>
+
+<br />
+<br />
+<br />
+<br />
+<form asp-action="Index" method="get">
+    <span>Name</span>
+    <input type="text" name="name" value="@ViewData["CurrentName"]" />
+    <span>Type</span>
+    <input type="text" name="type" value="@ViewData["CurrentType"]" />
+    <span>Page size</span>
+    <input type="number" min="1" name="pageSize" value="@ViewData["CurrentSize"]" />
+    <input type="submit" value="Filter" />
+</form>
+<pager list="@Model" asp-route-pageSize="@ViewData["CurrentSize"]" asp-route-name="@ViewData["CurrentName"]" asp-route-type="@ViewData["CurrentType"]" asp-controller="Product" asp-action="Index" />
+<table class="table table-striped">
     <thead>
         <tr>
             <th>

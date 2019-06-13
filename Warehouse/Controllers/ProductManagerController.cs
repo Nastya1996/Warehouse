@@ -49,8 +49,9 @@ namespace Warehouse.Controllers
 
             return View(model);
         }
-        
+
         //Create
+        [Authorize(Roles = "Storekeeper")]
         [HttpGet]
         public IActionResult Create()
         {
@@ -106,7 +107,10 @@ namespace Warehouse.Controllers
             var products = _context.ProductManagers
                 .Where(p => p.ProductId == id && p.WareHouseId==user.WarehouseId &&
                  p.SalePrice>=from && p.SalePrice<=data)
-                .Include(p=>p.Product).Include(u=>u.Product.Unit).AsQueryable();
+                .Include(p=>p.Product)
+                .Include(u=>u.Product.Unit)
+                .Include(w=>w.WareHouse)
+                .AsQueryable();
             PagedList<ProductManager> model = new PagedList<ProductManager>(products, page, pageSize);
             return View(model);
         }
@@ -186,6 +190,21 @@ namespace Warehouse.Controllers
         {
             decimal price = _context.ProductManagers.Max(p => p.SalePrice);
             return Json(price);
+        }
+        public IActionResult WHList(string testPMId)
+        {
+            ViewBag.PMId = testPMId;
+            return View("WHList",_context.Warehouses.ToList());
+        }
+        public IActionResult Move(string id, string IdOfPM)
+        {
+            var pm = _context.ProductManagers.FirstOrDefault(p => p.Id == IdOfPM);
+            var wh = _context.Warehouses.FirstOrDefault(w => w.Id == id);
+            pm.WareHouseId = wh.Id;
+            _context.ProductManagers.Update(pm);
+            _context.SaveChanges();
+            id = pm.ProductId;
+            return RedirectToAction("Show", "ProductManager", new { id });
         }
     }
 }

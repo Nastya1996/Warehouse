@@ -130,6 +130,7 @@ namespace Warehouse.Controllers
                             count -= productManager[i].CurrentCount;
                         }
                     }
+                    _context.Baskets.Remove(item);
                 }
             }
             var order = new Order()
@@ -147,7 +148,7 @@ namespace Warehouse.Controllers
 
             ViewBag.Baskets = baskets;
             
-            _context.Baskets.RemoveRange(basket);
+            //_context.Baskets.RemoveRange(basket);
             _context.SaveChanges();
             return View(order);
 
@@ -192,8 +193,6 @@ namespace Warehouse.Controllers
             _context.ProductManagers.UpdateRange(productManagers);
             _context.Orders.Update(orderDb);
             _context.SaveChanges();
-
-           
 
 
             return RedirectToAction("Index","ProductManager");

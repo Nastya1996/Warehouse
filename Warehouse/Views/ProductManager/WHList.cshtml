@@ -1,0 +1,15 @@
+﻿@model IEnumerable<Warehouse.Models.WareHouse>
+@{
+    ViewData["Title"] = "WHList";
+    Layout = null;
+}
+
+<form method="post" asp-controller="ProductManager" asp-action="Move" asp-route-IdOfPM="@ViewBag.PMId">
+    @foreach (var wh in Model){
+        <input type="radio" name="id" value="@wh.Id" />
+        <label>@wh.Number</label><br />
+    }
+
+    <input type="submit" />
+</form>
+

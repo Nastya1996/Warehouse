@@ -27,7 +27,7 @@ namespace Warehouse.Controllers
         {
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             //todo
-            var baskets = _context.Baskets.Include(p => p.Product).Where(p=>p.UserId == user.Id);
+            var baskets = _context.Baskets.Include(p => p.Product).Where(p=>p.UserId == user.Id).ToList();
 
             return View("_Index", baskets);
         }
