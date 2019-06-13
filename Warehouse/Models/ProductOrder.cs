@@ -10,6 +10,7 @@ namespace Warehouse.Models
 
         public string Id { get; set;}
         public uint Count { get; set; }
+        public uint ReturnedCount { get; set; }
         public decimal Price { get; set; }
         public decimal Sale { get; set; }
         public decimal FinallyPrice { get; set; }
