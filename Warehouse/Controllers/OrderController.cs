@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Warehouse.Data;
 using Warehouse.Models;
@@ -149,6 +150,7 @@ namespace Warehouse.Controllers
             _context.SaveChanges();
 
             ViewBag.Baskets = baskets;
+            ViewBag.Custemers = new SelectList(_context.Customers.ToList(), "Id", "Name");
             
             //_context.Baskets.RemoveRange(basket);
             _context.SaveChanges();
@@ -191,6 +193,7 @@ namespace Warehouse.Controllers
             orderDb.Price = orderDb.ProductOrders.Sum(p => p.FinallyPrice * p.Count);
             orderDb.FinallPrice = orderDb.Price * (100 - order.Sale)/100;
             orderDb.OrderType = OrderType.Saled;
+            orderDb.CustomerId = order.CustomerId;
             orderDb.Sale = order.Sale;
 
             _context.ProductManagers.UpdateRange(productManagers);

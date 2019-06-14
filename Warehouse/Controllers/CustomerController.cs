@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -71,6 +72,21 @@ namespace Warehouse.Controllers
         public IActionResult Details(string id) {
             var customer = _context.Customers.Find(id);
             return View(customer);
+        }
+
+        public JsonResult Register(Customer customer)
+        {
+            if (_context.Customers.FirstOrDefault(c => c.Phone == customer.Phone) != null)
+                return Json(false);
+            _context.Customers.Add(customer);
+            _context.SaveChanges();
+            return Json(true);
+        }
+
+        [HttpPost]
+        public JsonResult Get()
+        {
+            return Json(_context.Customers.AsQueryable());
         }
     }
 }
