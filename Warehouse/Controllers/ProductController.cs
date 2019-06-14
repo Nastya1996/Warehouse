@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using PagedList.Core;
 using Warehouse.Data;
 using Warehouse.Models;
 namespace Warehouse.Controllers
@@ -16,19 +17,26 @@ namespace Warehouse.Controllers
         
         private readonly ApplicationDbContext _context;
         public ProductController(ApplicationDbContext context) => _context = context;
-        public async Task<IActionResult> Index(SortState sortOrder = SortState.ProductNameAsc)
+        public IActionResult Index(string name, string type, SortState sortOrder = SortState.ProductNameAsc, int page = 1, int pageSize = 10)
         {
-            IQueryable<Product> products = _context.Products.Include(x => x.ProductType).Include(x => x.Unit);
+            name = name == null ? "" : name.Trim();
+            type = type == null ? "" : type.Trim();
 
+            IQueryable<Product> products = _context.Products.Where(p=>p.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase) && p.ProductType.Name.Contains(type, StringComparison.InvariantCultureIgnoreCase)).Include(x => x.ProductType).Include(x => x.Unit);
             ViewBag.ProductNameSort = sortOrder == SortState.ProductNameAsc ? SortState.ProductNameDesc : SortState.ProductNameAsc;
-
             switch (sortOrder)
             {
                 case SortState.ProductNameDesc:
                     products = products.OrderByDescending(s => s.Name);
                     break;
             }
-            return View(await products.AsNoTracking().ToListAsync());
+
+            ViewData["CurrentName"] = name;
+            ViewData["CurrentType"] = type;
+            ViewData["CurrentSize"] = pageSize;
+            PagedList<Product> model = new PagedList<Product>(products, page, pageSize);
+
+            return View(model);
         }
 
 
