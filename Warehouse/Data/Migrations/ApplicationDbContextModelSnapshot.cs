@@ -195,13 +195,19 @@ namespace Warehouse.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ProductManagerId");
+                    b.Property<DateTime>("AddDate");
+
+                    b.Property<long>("Count");
+
+                    b.Property<string>("ProductId");
 
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ProductManagerId");
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Baskets");
                 });
@@ -211,11 +217,17 @@ namespace Warehouse.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20);
 
-                    b.Property<string>("Phone");
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(20);
 
-                    b.Property<string>("Surname");
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasMaxLength(20);
 
                     b.HasKey("Id");
 
@@ -231,13 +243,23 @@ namespace Warehouse.Data.Migrations
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<decimal>("Sum");
+                    b.Property<decimal>("FinallPrice");
+
+                    b.Property<int>("OrderType");
+
+                    b.Property<decimal>("Price");
+
+                    b.Property<decimal>("Sale");
 
                     b.Property<string>("UserId");
+
+                    b.Property<string>("WareHouseId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Orders");
                 });
@@ -247,11 +269,18 @@ namespace Warehouse.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("Barcode");
+                    b.Property<string>("Barcode")
+                        .IsRequired()
+                        .HasMaxLength(13);
 
-                    b.Property<string>("Name");
+                    b.Property<bool>("IsActive");
 
-                    b.Property<string>("ProductTypeId");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20);
+
+                    b.Property<string>("ProductTypeId")
+                        .IsRequired();
 
                     b.Property<string>("UnitId");
 
@@ -287,11 +316,14 @@ namespace Warehouse.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("AddDate");
+
                     b.Property<long>("Count");
 
                     b.Property<long>("CurrentCount");
 
-                    b.Property<string>("ProductId");
+                    b.Property<string>("ProductId")
+                        .IsRequired();
 
                     b.Property<DateTime>("ReceiptDate");
 
@@ -307,6 +339,8 @@ namespace Warehouse.Data.Migrations
 
                     b.HasIndex("ProductId");
 
+                    b.HasIndex("UserId");
+
                     b.HasIndex("WareHouseId");
 
                     b.ToTable("ProductManagers");
@@ -317,7 +351,9 @@ namespace Warehouse.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("Count");
+                    b.Property<long>("Count");
+
+                    b.Property<decimal>("FinallyPrice");
 
                     b.Property<string>("OrderId");
 
@@ -325,13 +361,21 @@ namespace Warehouse.Data.Migrations
 
                     b.Property<string>("ProductId");
 
+                    b.Property<string>("ProductManagerId");
+
+                    b.Property<long>("ReturnedCount");
+
+                    b.Property<decimal>("Sale");
+
                     b.HasKey("Id");
 
                     b.HasIndex("OrderId");
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductOrder");
+                    b.HasIndex("ProductManagerId");
+
+                    b.ToTable("ProductOrders");
                 });
 
             modelBuilder.Entity("Warehouse.Models.ProductType", b =>
@@ -339,7 +383,9 @@ namespace Warehouse.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("Name");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(20);
 
                     b.HasKey("Id");
 
@@ -352,7 +398,8 @@ namespace Warehouse.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Name")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(10);
 
                     b.HasKey("Id");
 
@@ -365,9 +412,11 @@ namespace Warehouse.Data.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Address")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(20);
 
-                    b.Property<int>("Number");
+                    b.Property<string>("Number")
+                        .IsRequired();
 
                     b.HasKey("Id");
 
@@ -428,9 +477,13 @@ namespace Warehouse.Data.Migrations
 
             modelBuilder.Entity("Warehouse.Models.Basket", b =>
                 {
-                    b.HasOne("Warehouse.Models.ProductManager", "ProductManager")
+                    b.HasOne("Warehouse.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductManagerId");
+                        .HasForeignKey("ProductId");
+
+                    b.HasOne("Warehouse.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Warehouse.Models.Order", b =>
@@ -438,13 +491,18 @@ namespace Warehouse.Data.Migrations
                     b.HasOne("Warehouse.Models.Customer", "Customer")
                         .WithMany()
                         .HasForeignKey("CustomerId");
+
+                    b.HasOne("Warehouse.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Warehouse.Models.Product", b =>
                 {
                     b.HasOne("Warehouse.Models.ProductType", "ProductType")
                         .WithMany()
-                        .HasForeignKey("ProductTypeId");
+                        .HasForeignKey("ProductTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Warehouse.Models.Unit", "Unit")
                         .WithMany()
@@ -466,7 +524,12 @@ namespace Warehouse.Data.Migrations
                 {
                     b.HasOne("Warehouse.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Warehouse.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.HasOne("Warehouse.Models.WareHouse", "WareHouse")
                         .WithMany()
@@ -475,13 +538,18 @@ namespace Warehouse.Data.Migrations
 
             modelBuilder.Entity("Warehouse.Models.ProductOrder", b =>
                 {
-                    b.HasOne("Warehouse.Models.Order")
+                    b.HasOne("Warehouse.Models.Order", "Order")
                         .WithMany("ProductOrders")
-                        .HasForeignKey("OrderId");
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Warehouse.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId");
+
+                    b.HasOne("Warehouse.Models.ProductManager", "ProductManager")
+                        .WithMany()
+                        .HasForeignKey("ProductManagerId");
                 });
 #pragma warning restore 612, 618
         }

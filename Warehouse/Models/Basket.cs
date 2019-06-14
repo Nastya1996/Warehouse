@@ -8,9 +8,14 @@ namespace Warehouse.Models
 {
     public class Basket
     {
-        public string Id { set; get; }
-        public string ProductManagerId { set; get; }
+        public string Id { get; set; }
+        public uint Count { get; set; }
+        public DateTime AddDate { get; set; }
+
+        public string ProductId { get; set; }
+        public Product Product { get; set; }
+
         public string UserId { set; get; }
-        public ProductManager ProductManager { set; get; }
+        public AppUser User { get; set; }
     }
 }

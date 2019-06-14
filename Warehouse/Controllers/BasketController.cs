@@ -8,9 +8,11 @@ using Warehouse.Data;
 using Warehouse.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Warehouse.Controllers
 {
+    [Authorize(Roles = "Worker")]
     public class BasketController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -23,7 +25,19 @@ namespace Warehouse.Controllers
         }
         public IActionResult Index()
         {
-            return View(_context.Baskets.Include(x=>x.ProductManager.Product.Unit));
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            //todo
+            var baskets = _context.Baskets.Include(p => p.Product).Where(p=>p.UserId == user.Id).ToList();
+
+            return View("_Index", baskets);
+        }
+        public IActionResult IndexForHover()
+        {
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            //todo
+            var baskets = _context.Baskets.Include(p => p.Product).Where(p => p.UserId == user.Id);
+
+            return View("_IndexForHover", baskets);
         }
         public IActionResult Delete(string id)
         {
@@ -34,21 +48,6 @@ namespace Warehouse.Controllers
             _context.Baskets.Remove(_context.Baskets.Find(id));
             _context.SaveChanges();
             return RedirectToAction("Index");
-        }
-
-
-        //Add to Basket action
-        public IActionResult Create(string id)
-        {
-            if (_context.ProductManagers.Find(id) == null) return NotFound();
-            Basket basket = new Basket
-            {
-                ProductManagerId = id,
-                UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value,
-            };
-            _context.Add(basket);
-            _context.SaveChanges();
-            return RedirectToAction("Index","ProductManager");
         }
     }
 }

@@ -3,15 +3,35 @@
     ViewData["Title"] = "Edit";
 }
 @model Product
-<h2>Edit</h2>
-<form asp-action="Edit">
-    <label asp-for="Name">Name</label>
-    <input asp-for="Name" type="text" /><br />
-    <label asp-for="Barcode">Bar Code</label>
-    <input asp-for="Barcode" type="text" /><br />
-    <label asp-for="ProductTypeId">Product Type</label>
-    <select asp-for="ProductTypeId" asp-items="ViewBag.ProductTypes"></select><br />
-    <label asp-for="UnitId">Unit</label>
-    <select asp-for="UnitId" asp-items="ViewBag.Units"></select><br />
-    <input type="submit" value="Edit" />
+<h1>Edit Product</h1>
+
+<form asp-action="Edit" asp-antiforgery="true">
+    <div>
+        <div asp-validation-summary="ModelOnly"></div>
+        <div class="form-group">
+            <label asp-for="Name">Name</label>
+            <input asp-for="Name" type="text" class="form-control" />
+            <span asp-validation-for="Name"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Barcode">Bar Code</label>
+            <input asp-for="Barcode" type="text" class="form-control" />
+            <span asp-validation-for="Barcode"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ProductTypeId">Product Type</label>
+            <select asp-for="ProductTypeId" asp-items="ViewBag.ProductTypes" class="form-control"></select>
+            <span asp-validation-for="ProductTypeId"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="UnitId">Unit</label>
+            <select asp-for="UnitId" asp-items="ViewBag.Units" class="form-control"></select>
+            <span asp-validation-for="UnitId"></span>
+        </div>
+        <div><input type="submit" value="Edit" class="btn-primary" /></div>
+    </div>
 </form>
+
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

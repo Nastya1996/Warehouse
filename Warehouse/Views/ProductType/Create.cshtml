@@ -1,12 +1,21 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-@model ProductType
+﻿@model ProductType
+<br/>
+<br />
+<br />
+<form asp-action="Create">
+    <div>
+        <div asp-validation-summary="ModelOnly"></div>
+        <div class="form-group">
+            <label asp-for="Name"></label>
+            <input asp-for="Name" type="text" class="form-control" />
+            <span asp-validation-for="Name"></span>
+        </div>
+        <div>
+            <input type="submit" value="Create" class="btn-primary" />
+        </div>
+    </div>
+</form>
 
- <form asp-action="Create">
-       <label asp-for="Name"></label>
-       <input asp-for="Name" type="text"/>
-       <input type="submit" value="Create"/>
- </form>
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

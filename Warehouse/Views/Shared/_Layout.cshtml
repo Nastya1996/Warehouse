@@ -3,7 +3,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Warehouse</title>
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
@@ -16,6 +18,55 @@
     </environment>
 </head>
 <body>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Modal Header</h4>
+                </div>
+                <form asp-controller="Basket">
+                    <div class="modal-body">
+                        
+                    </div>
+                </form>
+                <div class="modal-footer modal-footer-basket">
+                    <div>
+                        <a asp-controller="Basket" asp-action="Index" class="btn btn-default">View All</a>
+                        <a asp-controller="Order" asp-action="Create" class="btn btn-default">Check out</a>
+                    </div>
+                    <button id="close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+
+        $(document).ready(function () {
+            $("#modalForBasket").mouseover(function () {
+                $.ajax({
+                    url: "Basket/IndexForHover",
+                    beforeSend: function () { $(".modal-body").html("<p>Loading... </p>")},
+                    success: function (response) {
+                        $(".modal-body").html(response);
+                    }
+                });
+                $('.modal-dialog').css({
+                    "position": "absolute",
+                    "top": ($("#modalForBasket").position().top + 20),
+                    "left": ($("#modalForBasket").position().left - 250)
+                });
+                $("#myModal").modal();
+            });
+            $("#close, #myModal").click(function () {
+                $(".modal-body").empty();
+            });
+        });
+
+        
+    </script>
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -34,20 +85,28 @@
                         <li>
                             <a asp-area="Identity" asp-page="/Account/Register">Create new account</a>
                         </li>
-                        <li><a asp-controller="Admin" asp-action="Index">Show Users</a></li>
+                        <li><a asp-controller="Admin" asp-action="ShowUsers">Show Users</a></li>
                         <li><a asp-controller="WareHouse" asp-action="Create">Create Warehouses</a></li>
                         <li><a asp-controller="WareHouse" asp-action="Index">Show Warehouses</a></li>
-                        <li><a asp-controller="ProductManager" asp-action="Index">Products</a></li>
+                        <li><a asp-controller="Product" asp-action="Index">Products</a></li>
                     }
                     else if (User.IsInRole("Worker"))
                     {
-                        <li><a asp-controller="ProductManager" asp-action="Index">Products</a></li>
-                        @*<li>Basket</li>*@
+                        <li><a asp-controller="ProductManager" asp-action="Index">Product Manager</a></li>
+                        <li><a asp-controller="Order" asp-action="Index">Order</a></li>
+                        <li><a asp-controller="Customer" asp-action="Create">Customer Create</a></li>
+                        <li data-toggle="modal" id="modalForBasket"><a asp-controller="Basket" asp-action="Index"><img src="https://cdn4.iconfinder.com/data/icons/is_beta_accounting/png/400/basket.png" width="20px" alt="Alternate Text" /></a></li>
+
                     }
                     else if (User.IsInRole("Storekeeper"))
                     {
-                        <li><a asp-controller="ProductManager" asp-action="Index">Products</a></li>
-
+                        <li><a asp-controller="ProductType" asp-action="Index">ProductType</a></li>
+                        <li><a asp-controller="ProductType" asp-action="Create">ProductType Create</a></li>
+                        <li><a asp-controller="Product" asp-action="Index">Products</a></li>
+                        <li><a asp-controller="Product" asp-action="Create">Create Product</a></li>
+                        <li><a asp-controller="ProductManager" asp-action="Index">Product Manager</a></li>
+                        <li><a asp-controller="ProductManager" asp-action="Create">Create Product Manager</a></li>
+                        <li><a asp-controller="Unit" asp-action="Index">Unit</a></li>
                     }
                     else if (User.IsInRole("Report"))
                     {
@@ -97,25 +156,28 @@
                 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
+
     </environment>
 
     @RenderSection("Scripts", required: false)
-    @section scripts{
 
-        <environment names="Development">
-            <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
-            <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
-        </environment>
-        <environment names="Staging,Production">
-            <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.min.js"
-                    asp-fallback-src="~/lib/jquery-validation/dist/jquery.validate.min.js"
-                    asp-fallback-test="window.jQuery && window.jQuery.validator">
-            </script>
-            <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"
-                    asp-fallback-src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"
-                    asp-fallback-test="window.jQuery && window.jQuery.validator && window.jQuery.validator.unobtrusive">
-            </script>
-        </environment>
-    }
+
+    @*@section scripts{
+
+            <environment names="Development">
+                <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+                <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+            </environment>
+            <environment names="Staging,Production">
+                <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.14.0/jquery.validate.min.js"
+                        asp-fallback-src="~/lib/jquery-validation/dist/jquery.validate.min.js"
+                        asp-fallback-test="window.jQuery && window.jQuery.validator">
+                </script>
+                <script src="https://ajax.aspnetcdn.com/ajax/jquery.validation.unobtrusive/3.2.6/jquery.validate.unobtrusive.min.js"
+                        asp-fallback-src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"
+                        asp-fallback-test="window.jQuery && window.jQuery.validator && window.jQuery.validator.unobtrusive">
+                </script>
+            </environment>
+        }*@
 </body>
 </html>

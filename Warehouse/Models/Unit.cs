@@ -9,8 +9,9 @@ namespace Warehouse.Models
     public class Unit
     {
         public string Id { set; get; }
-        [Required(ErrorMessage = "Не указано имя")]
-        [RegularExpression("[a-zA-Z]{1,}", ErrorMessage = "Only symbols")]
+
+        [Required(ErrorMessage = "*The field is not filled")]
+        [StringLength(10,ErrorMessage = "*The unit name must be up to 10 characters long")]
         public string Name { set; get; }
     }
 }

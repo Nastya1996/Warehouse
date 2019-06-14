@@ -6,9 +6,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\Migrations\20190526192720_no.cs" />
+    <Compile Remove="Data\Migrations\20190526192720_no.Designer.cs" />
+    <Compile Remove="Data\Migrations\20190528084611_addedDate.cs" />
+    <Compile Remove="Data\Migrations\20190528084611_addedDate.Designer.cs" />
+    <Compile Remove="Data\Migrations\20190528105742_bar.cs" />
+    <Compile Remove="Data\Migrations\20190528105742_bar.Designer.cs" />
+    <Compile Remove="Data\Migrations\20190528105907_bar.cs" />
+    <Compile Remove="Data\Migrations\20190528105907_bar.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" PrivateAssets="All" />
+    <PackageReference Include="PagedList.Core.Mvc" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Areas\Identity\Services\" />
+    <Folder Include="Views\ProductOrder\" />
   </ItemGroup>
 
 </Project>

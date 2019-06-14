@@ -1,0 +1,47 @@
+﻿@model IEnumerable<Warehouse.Models.AppUser>
+@{
+    ViewData["Title"] = "ShowUsers";
+}
+
+<h2>ShowUsers</h2>
+
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>Name</th>
+        <th>Surname</th>
+        <th>Phone</th>
+        <th>Disable \ Enable</th>
+    </tr>
+    @{
+        foreach (var user in Model)
+        {
+            <tr>
+                <td hidden="hidden"><input type="hidden" value="@user.Id" /></td>
+                <td>@user.Name</td>
+                <td>@user.SurName</td>
+                <td>@user.PhoneNumber</td>
+                @if (user.LockoutEnd == null)
+                {
+                    <td><a href="#" class="Disable">Disable</a></td>
+                }
+                else
+                {
+                    <td><a href="#" class="Enable">Enable</a></td>
+                }
+
+            </tr>
+        }
+    }
+</table>
+
+
+@section scripts{
+    <script src="https://kit.fontawesome.com/b7938c82ea.js"></script>
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <link href="~/css/jquery.contextMenu.css" rel="stylesheet" />
+    <script src="~/js/jquery.contextMenu.js"></script>
+    <script src="~/js/jquery.ui.position.js"></script>
+    <link href="~/css/jquery-confirm.min.css" rel="stylesheet" />
+    <script src="~/js/jquery-confirm.min.js"></script>
+    <script src="~/js/user.js"></script>
+}

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -70,7 +71,15 @@ namespace Warehouse.Areas.Identity.Pages.Account
 			[Display(Name ="Role")]
 			public string Role { get; set; }
 
-			[Required]
+            [Phone]
+            [Display(Name = "Phone")]
+            [DataType(DataType.PhoneNumber)]
+            [Required(ErrorMessage = "Phone Number Required!")]
+            [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{3})$",
+                   ErrorMessage = "Entered phone format is not valid.")]
+            public string PhoneNumber { get; set; }
+
+            [Required]
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
@@ -98,13 +107,13 @@ namespace Warehouse.Areas.Identity.Pages.Account
         {
             string role = null;
 
-			if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(User), "Admin"))
-			{
-				if (Input.Role == "Worker" || Input.Role == "Storekeeper" || Input.Role == "Report")
-					role = Input.Role;
-			}
+            if (await _userManager.IsInRoleAsync(await _userManager.GetUserAsync(User), "Admin"))
+            {
+                if (Input.Role == "Worker" || Input.Role == "Storekeeper" || Input.Role == "Report")
+                    role = Input.Role;
+            }
 
-			if (role == null)
+            if (role == null)
 				return Page();
 
 			returnUrl = returnUrl ?? Url.Content("~/");
@@ -116,7 +125,8 @@ namespace Warehouse.Areas.Identity.Pages.Account
                     BirthDate = Input.Birthdate,
                     WarehouseId = Input.WarehouseId,
                     UserName = Input.Email,
-                    Email = Input.Email
+                    Email = Input.Email,
+                    PhoneNumber = Input.PhoneNumber
                 };
                 
                 var result = await _userManager.CreateAsync(user, Input.Password);
@@ -133,21 +143,23 @@ namespace Warehouse.Areas.Identity.Pages.Account
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    await _userManager.AddToRoleAsync(user, role);
 
-                    await _signInManager.SignInAsync(user, isPersistent: false);
+                   // await _signInManager.SignInAsync(user, isPersistent: false);
                     return LocalRedirect(returnUrl);
                 }
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
-			
-
+		        
 			}
 
             ViewBag.Warehouse = new SelectList(_context.Warehouses, nameof(WareHouse.Id), nameof(WareHouse.Number));
             // If we got this far, something failed, redisplay form
             return Page();
+            
+           
         }
 
 		private DynamicViewData _viewBag;
@@ -163,5 +175,6 @@ namespace Warehouse.Areas.Identity.Pages.Account
 				return _viewBag;
 			}
 		}
+
 	}
 }

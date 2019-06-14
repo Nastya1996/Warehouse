@@ -5,8 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Warehouse.Models;
 using Warehouse.Data;
+using Microsoft.AspNetCore.Authorization;
+using PagedList.Core;
 namespace Warehouse.Controllers
 {
+    [Authorize(Roles = "Storekeeper")]
     public class ProductTypeController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -15,9 +18,14 @@ namespace Warehouse.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string type, int page=1, int pageSize=10)
         {
-            return View(_context.Types.ToList());
+            type = type == null ? "" : type.Trim();
+            ViewData["CurrentSize"] = pageSize;
+            ViewData["CurrentType"] = type;
+            var types = _context.Types.Where(t => t.Name.Contains(type,StringComparison.InvariantCultureIgnoreCase)).AsQueryable();
+            PagedList<ProductType> model = new PagedList<ProductType>(types, page,pageSize);
+            return View(model);
         }
 
 
@@ -30,9 +38,13 @@ namespace Warehouse.Controllers
         [HttpPost]
         public IActionResult Create(ProductType productType)
         {
-            _context.Types.Add(productType);
-            _context.SaveChanges();
-            return RedirectToAction("Index");
+            if (ModelState.IsValid)
+            {
+                _context.Types.Add(productType);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return Create();
         }
 
 
@@ -73,6 +85,14 @@ namespace Warehouse.Controllers
         public IActionResult Details(string id)
         {
             return View(_context.Types.FirstOrDefault(x=>x.Id==id));
+        }
+        //Type availability
+        public JsonResult TypeAvailability(string Name)
+        {
+            Name = Name.Trim();
+            if (_context.Types.FirstOrDefault(pt => pt.Name == Name)!=null)
+                return Json("*This type of product is available in the database");
+            return Json(true);
         }
     }
 }

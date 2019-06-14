@@ -7,10 +7,21 @@ namespace Warehouse.Models
 {
     public class ProductOrder
     {
+
         public string Id { get; set;}
-        public int Count { get; set; }
+        public uint Count { get; set; }
+        public uint ReturnedCount { get; set; }
         public decimal Price { get; set; }
+        public decimal Sale { get; set; }
+        public decimal FinallyPrice { get; set; }
+
         public string ProductId { get; set; }
         public Product Product { get; set; }
+
+        public string ProductManagerId { get; set; }
+        public ProductManager ProductManager { get; set; }
+
+        public string OrderId { get; set; }
+        public Order Order { get; set; }
     }
 }

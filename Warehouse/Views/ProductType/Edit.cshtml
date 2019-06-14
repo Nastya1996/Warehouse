@@ -3,10 +3,22 @@
     ViewData["Title"] = "Edit";
 }
 @model ProductType
-<form asp-action="Edit">
-    <label asp-for="Name" >Name</label>
-    <input type="text" asp-for="Name" />
-    <input type="hidden" asp-for="Id" />
-    <input type="submit" value="Edit"/>
+
+
+<form asp-action="Edit" asp-antiforgery="true">
+    <div>
+        <div asp-validation-summary="ModelOnly"></div>
+        <div>
+            <label asp-for="Name">Name</label><br />
+            <input type="text" asp-for="Name" />
+            <span asp-validation-for="Name"></span>
+        </div>
+    </div>
+    <div>
+        <input type="submit" value="Edit" />
+    </div>
 </form>
 
+@section scripts{
+    @Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
