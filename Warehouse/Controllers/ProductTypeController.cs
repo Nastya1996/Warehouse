@@ -38,13 +38,17 @@ namespace Warehouse.Controllers
         [HttpPost]
         public IActionResult Create(ProductType productType)
         {
+            if ((_context.Types.FirstOrDefault(pt => pt.Name == productType.Name)) != null)
+            {
+                ModelState.AddModelError("","This type of product is available in the database");
+            }
             if (ModelState.IsValid)
             {
                 _context.Types.Add(productType);
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
-            return Create();
+            return View(productType);
         }
 
 
@@ -57,9 +61,17 @@ namespace Warehouse.Controllers
         [HttpPost]
         public IActionResult Edit(ProductType productType)
         {
-            _context.Update(productType);
-            _context.SaveChanges();
-            return RedirectToAction("Index");
+            if ((_context.Types.FirstOrDefault(pt => pt.Name == productType.Name && pt.Id != productType.Id)) != null)
+            {
+                ModelState.AddModelError("", "This type of product is available in the database");
+            }
+            if (ModelState.IsValid)
+            {
+                _context.Update(productType);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(productType);
         }
 
 
@@ -69,6 +81,7 @@ namespace Warehouse.Controllers
         {
             return View(_context.Types.FirstOrDefault(x => x.Id == id));
         }
+
         [HttpGet]
         public IActionResult Deleted(string id)
         {
@@ -85,14 +98,6 @@ namespace Warehouse.Controllers
         public IActionResult Details(string id)
         {
             return View(_context.Types.FirstOrDefault(x=>x.Id==id));
-        }
-        //Type availability
-        public JsonResult TypeAvailability(string Name)
-        {
-            Name = Name.Trim();
-            if (_context.Types.FirstOrDefault(pt => pt.Name == Name)!=null)
-                return Json("*This type of product is available in the database");
-            return Json(true);
         }
     }
 }

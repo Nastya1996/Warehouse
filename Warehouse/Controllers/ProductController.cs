@@ -13,6 +13,7 @@ namespace Warehouse.Controllers
     [Authorize(Roles = "Storekeeper, Admin")]
     public class ProductController : Controller
     {
+        
         private readonly ApplicationDbContext _context;
         public ProductController(ApplicationDbContext context) => _context = context;
         public async Task<IActionResult> Index(SortState sortOrder = SortState.ProductNameAsc)
@@ -27,7 +28,6 @@ namespace Warehouse.Controllers
                     products = products.OrderByDescending(s => s.Name);
                     break;
             }
-
             return View(await products.AsNoTracking().ToListAsync());
         }
 
@@ -36,13 +36,21 @@ namespace Warehouse.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            ViewBag.ProductTypes = new SelectList(_context.Types,"Id", "Name");
-            ViewBag.Units = new SelectList(_context.Units, "Id", "Name");
+            SelectInitial();
             return View();
         }
+
+
         [HttpPost]
         public IActionResult Create(Product product)
         {
+            SelectInitial();
+            if (string.IsNullOrEmpty(product.ProductTypeId))
+                ModelState.AddModelError("","The product type not selected");
+            if (string.IsNullOrEmpty(product.UnitId))
+                ModelState.AddModelError("", "The unit not selected");
+            if (_context.Products.FirstOrDefault(p => p.Name == product.Name) != null)
+                ModelState.AddModelError("", "This name of product is available in the database");
             if (ModelState.IsValid)
             {
                 product.IsActive = true;
@@ -53,6 +61,13 @@ namespace Warehouse.Controllers
             return View(product);
         }
 
+
+        //Initial Select tags
+        void SelectInitial()
+        {
+            ViewBag.ProductTypes = new SelectList(_context.Types, "Id", "Name");
+            ViewBag.Units = new SelectList(_context.Units, "Id", "Name");
+        }
         
 
         //Edit
@@ -67,9 +82,16 @@ namespace Warehouse.Controllers
         [HttpPost]
         public IActionResult Edit(Product product)
         {
-            _context.Update(product);
-            _context.SaveChanges();
-            return RedirectToAction("Index");
+            SelectInitial();
+            if((_context.Products.FirstOrDefault(p=>p.Name==product.Name && p.Id != product.Id))!=null)
+                ModelState.AddModelError("", "This name of product is available in the database");
+            if (ModelState.IsValid)
+            {
+                _context.Update(product);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(product);
         }
 
 
@@ -79,6 +101,8 @@ namespace Warehouse.Controllers
         {
             return View(_context.Products.Include(x=>x.ProductType).Include(x=>x.Unit).FirstOrDefault(x => x.Id == id));
         }
+
+
 
         //Disable product
         [HttpPost]
@@ -97,6 +121,8 @@ namespace Warehouse.Controllers
             }
             return Json(false);
         }
+
+
         //Enable product
         [HttpPost]
         [Route("Products/Enable/")]
@@ -113,15 +139,6 @@ namespace Warehouse.Controllers
                 return Json(true);
             }
             return Json(false);
-        }
-        
-        //Product Availability
-        public JsonResult ProductAvailability(string Name)
-        {
-            Name = Name.Trim();
-            if (_context.Products.FirstOrDefault(p => p.Name == Name) != null)
-                return Json("*The name of product is available in the database");
-            return Json(true);
         }
         
     }

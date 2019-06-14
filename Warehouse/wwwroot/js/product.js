@@ -1,4 +1,10 @@
-﻿$(() => {
+﻿$("#ProductTypeId").chosen({
+    search_contains: true
+});
+$("#UnitId").chosen({
+    search_contains:true
+});
+$(() => {
     //Disable and Enable product
     $("[href='#']").on("click", function () {
         let $link = $(this);
@@ -126,3 +132,45 @@
         
     });
 });
+
+//Product Create selets tags validation
+function PrCreateStop() {
+    if (TypeNotValid() | UnitNotValid()) {
+        return false;
+    }
+}
+
+//validation functions
+function TypeNotValid() {
+    let type = $("#ProductTypeId").children("option:selected");
+    if (type.val() == "") {
+        TypeSpanDelete();
+        $("#PrMngTypeDiv").append("<span class='SelectError'>*Product type not selected</span>");
+        return true;
+    }
+    return false;
+}
+$("#ProductTypeId").on("change", () => {
+    TypeSpanDelete();
+});
+
+function UnitNotValid() {
+    let unit = $("#UnitId").children("option:selected");
+    if (unit.val() == "") {
+        UnitSpanDelete();
+        $("#PrMngUnitDiv").append("<span class='SelectError'>*Unit not selected</span>");
+        return true;
+    }
+    return false;
+}
+$("#UnitId").on("change", () => {
+    UnitSpanDelete();
+});
+
+//delete span tag
+function TypeSpanDelete() {
+    $("#PrMngTypeDiv span.SelectError").remove();
+}
+function UnitSpanDelete() {
+    $("#PrMngUnitDiv span.SelectError").remove();
+}
