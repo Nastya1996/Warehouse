@@ -34,6 +34,8 @@
         <td>@p.Product.Unit.Name</td>
         <td>@p.Price</td>
         <td>@p.FinallyPrice</td>
+        @*<td>@(p.Price * p.Count)</td>
+        <td>@(p.FinallyPrice * p.Count)</td>*@
         <td>@p.ProductManager.User.Name</td>
         <td><a name="back">Back</a></td>
     </tr>

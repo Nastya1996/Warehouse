@@ -76,6 +76,8 @@ namespace Warehouse.Controllers
 
             }
             //todo:: change orders data
+            po.Order.Price -= countCast * po.FinallyPrice;
+            po.Order.FinallPrice-= countCast * po.FinallyPrice * (100 - po.Sale)/100;
             po.ReturnedCount += countCast;
             _context.ProductOrders.Update(po);
             _context.SaveChanges();
@@ -188,10 +190,11 @@ namespace Warehouse.Controllers
                 item.FinallyPrice = item.Price * (100-sale)/100;
             }
 
-            orderDb.Price = orderDb.ProductOrders.Sum(p => p.FinallyPrice);
+            orderDb.Price = orderDb.ProductOrders.Sum(p => p.FinallyPrice * p.Count);
             orderDb.FinallPrice = orderDb.Price * (100 - order.Sale)/100;
             orderDb.OrderType = OrderType.Saled;
             orderDb.CustomerId = order.CustomerId;
+            orderDb.Sale = order.Sale;
 
             _context.ProductManagers.UpdateRange(productManagers);
             _context.Orders.Update(orderDb);
