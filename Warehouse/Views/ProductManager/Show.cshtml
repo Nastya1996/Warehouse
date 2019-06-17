@@ -89,18 +89,18 @@
             });
         }
         $(document).ready(function () {
-        $(".moveProduct").click(function () {
-            var id = $(this).attr('id');
-            $.ajax({
-                url: '@Url.Action("WHList", "ProductManager")',
-                data: { 'testPMId': id},
-                beforeSend: function () { $(".modal-body").html("<p>Loading... </p>") },
-                success: function (response) {
-                    $(".modal-body").html(response);
-                }
+            $(".moveProduct").click(function () {
+                var id = $(this).attr('id');
+                $.ajax({
+                    url: '@Url.Action("WHList", "ProductManager")',
+                    data: { 'testPMId': id},
+                    beforeSend: function () { $(".modal-body").html("<p>Loading... </p>") },
+                    success: function (response) {
+                        $(".modal-body").html(response);
+                    }
+                });
+                $("#modalMoveProduct").modal();
             });
-            $("#modalMoveProduct").modal();
         });
-    });
     </script>
     }
