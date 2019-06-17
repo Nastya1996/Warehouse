@@ -29,13 +29,11 @@
         <td>@p.Product.Name</td>
         <td>@p.Product.Barcode</td>
         <td>@p.Product.ProductType.Name</td>
-        <td>@count</td>
-        <td><input type="number" name="count" /></td>
+        <td class="maxCount">@count</td>
+        <td><input type="number" name="count" id="count" min="0" /></td>
         <td>@p.Product.Unit.Name</td>
         <td>@p.Price</td>
         <td>@p.FinallyPrice</td>
-        @*<td>@(p.Price * p.Count)</td>
-        <td>@(p.FinallyPrice * p.Count)</td>*@
         <td>@p.ProductManager.User.Name</td>
         <td><a name="back">Back</a></td>
     </tr>
@@ -51,22 +49,79 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial.cshtml");}
     <script>
         $(() => {
-            //Before adding to the cart check the quantity of product
+
             $("a[name='back']").on("click", function () {
                 $(this).parent().parent().addClass("select");
                 let $inputCount = $(".select").children().find("input[name='count']");
                 let $id = $(".select").children().children().val();
-                $(this).parent().parent().removeClass();
+                let $maxCount = $(".select td.maxCount").html();
+                let $quantity = $inputCount.val();
+                if (parseInt($quantity) <= parseInt($maxCount) && parseInt($quantity)!==0) {
+                    $(this).parent().parent().removeClass();
                     $.ajax({
                         type: 'POST',
                         url: '/Order/FinallyBack/',
                         data: { 'id': $id, 'count': $inputCount.val() },
                         success: function (data) {
                             if (data) {
+                                $.confirm({
+                                    icon: 'fas fa-check-circle',
+                                    title: 'Warehouse!',
+                                    content: 'Product returned!',
+                                    type: 'dark',
+                                    typeAnimated: true,
+                                    closeAnimation: 'rotateXR',
+                                    buttons: {
+                                        close: {
+                                            btnClass: "btn-dark",
+                                            action: function () {
+                                            }
+                                        }
+                                    }
+                                });
                                 $inputCount.val(0);
+                            }
+                            else {
+                                $.confirm({
+                                    icon: 'fas fa-exclamation-triangle',
+                                    title: 'Warehouse!',
+                                    content: 'An error has occurred. Please, try again!',
+                                    type: 'red',
+                                    typeAnimated: true,
+                                    closeAnimation: 'rotateXR',
+                                    buttons: {
+                                        close: {
+                                            btnClass: "btn-red",
+                                            action: function () {
+                                            }
+                                        }
+                                    }
+                                });
                             }
                         }
                     });
+                }else {
+                    $.confirm({
+                        icon: 'fas fa-exclamation-triangle',
+                        title: 'Warehouse!',
+                        content: 'An error has occurred. Please, select fewer products!',
+                        type: 'red',
+                        typeAnimated: true,
+                        closeAnimation: 'rotateXR',
+                        buttons: {
+                            close: {
+                                btnClass: "btn-red",
+                                action: function () {
+                                }
+                            }
+                        }
+                    });
+                    $inputCount.val(0);
+                }
+                $("input[name='count']").blur(function () {
+                    $(this).css("border", "1px solid #92a8d1");
+                });
+                $(this).parent().parent().removeClass();
             });
         });
     </script>
