@@ -7,9 +7,13 @@
     ViewData["Title"] = "Create";
 }
 
-<h2>Index</h2>
+<h2>Create</h2>
 
 <form asp-action="Create" method="post" asp-controller="Order">
+    <select id="SelectCustomer" asp-items="@ViewBag.Custemers" asp-for="@Model.CustomerId">
+        <option disabled selected>Select customer...</option>
+    </select>
+    <a href="#" id="registerCustomer" class="text-info" > Registration customer</a> 
     <input hidden="hidden" asp-for="@Model.Id" />
     <table class="table table-striped">
         <thead>
@@ -25,6 +29,8 @@
             @for (int i = 0; i < Model.ProductOrders.Count; ++i)
             {
                 <tr>
+
+                    <input hidden="hidden" asp-for="@Model.ProductOrders[i].Id" />
                     
                     <td><input hidden="hidden" asp-for="@Model.ProductOrders[i].Id" /></td>
                     <td>@Model.ProductOrders[i].Product.Name</td>
@@ -54,4 +60,145 @@
 {
     <h2>Aydqan apranq chunenq</h2>
     <partial name="../Basket/_Index" model="@ViewBag.Baskets"/>
+}
+
+
+<div class="modal fade" id="ShowModalCustomer">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4>Customer registration</h4>
+            </div>
+            <div class="modal-body">
+                <form  id="Registration">
+                    <div id="message0">
+                        <div class="alert alert-danger">
+                            <span class="glyphicon glyphicon-remove"></span><strong>ErrorMessage! Such A Buyer Has Already Been Registered</strong>
+                        </div>
+                    </div>
+                    <div id="message1">
+                        <div class="alert alert-success">
+                            <span class="glyphicon glyphicon-ok"></span><strong>Success Message! Your Registration Is Complete</strong>
+                        </div>
+                    </div>
+                    <div id="message2">
+                        <div class="alert alert-danger">
+                            <span class="glyphicon glyphicon-remove"></span><strong>Error Message! Your Registration Is Not Complete</strong>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input class="form-control" type="text" name="Name" id="Name" placeholder="Name" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-cloud"></i></span>
+                            <input class="form-control" type="text" name="SurName" id="SurName" placeholder="SurName" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
+                            <input class="form-control" type="text" name="Phone" id="Phone" placeholder="Phone" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button id="register" type="submit" class="btn btn-info form-control"><i class="glyphicon glyphicon-registration-mark"></i>Registration</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <link href="~/css/chosen.min.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/chosen.jquery.min.js"></script>
+    <script>
+        $(() => {
+            var phone;
+            $("#SelectCustomer").chosen({
+                search_contains: true
+            });
+
+            $("#registerCustomer").on("click", () => {
+                $("#ShowModalCustomer").modal();
+                $("#message0").hide();
+                $("#message1").hide();
+                $("#message2").hide();
+            });
+
+            $("#register").on("click", function (e) {
+                e.preventDefault();
+                var name = $("#Name").val();
+                var surName = $("#SurName").val();
+                phone = $("#Phone").val();
+                phone = PhoneValidator(phone);
+                
+                
+                if (name.length < 3 || surName.length < 3 || phone === false) {
+                    if (name.length < 3) {
+                        $("#Name").css("background", "#F2DEDE");
+                    }
+                    else $("#Name").css("background", "#FFFFFF");
+                    if (surName.length < 3) {
+                        $("#SurName").css("background", "#F2DEDE");
+                    }
+                    else $("#SurName").css("background", "#FFFFFF");
+                    if (phone === false) {
+                        $("#Phone").css("background", "#F2DEDE");
+                    }
+                    else $("#Phone").css("background", "#FFFFFF");
+                    $("#message1").hide();
+                    $("#message2").show();
+                    return false;
+                }
+                else {
+                    $("#Name").css("background", "#FFFFFF");
+                    $("#SurName").css("background", "#FFFFFF");
+                    $("#Phone").css("background", "#FFFFFF");
+                }
+                var data = $("#Registration").serialize();    
+                $.ajax({
+                    type: "Post",
+                    data: data,
+                    url: "/Customer/Register",
+                    success: function (result) {
+                        if (result) {
+                            $("#message0").hide();
+                            $("#message1").show();
+                            $("#message2").hide();
+                            $("#Registration")[0].reset();
+                            $.ajax({
+                                url: '/Customer/Get',
+                                type: "POST",
+                                success: function (data) {
+                                    $("#SelectCustomer").empty();
+                                    $("#SelectCustomer").append("<option selected disabled value=''>Select Customer...</select>");
+                                    data.forEach(function (element) {
+                                        $("#SelectCustomer").append("<option value=" + element.id + ">" + element.name + "</option>");
+                                    });
+                                    $("#SelectCustomer").trigger("chosen:updated");
+                                }
+                            })
+                        }
+                        else {
+                            $("#message0").val("ErrorMessage! Such A Buyer Has Already Been Registered");
+                            $("#Phone").css("background", "#F2DEDE");
+                            $("#message0").show();
+                            $("#message1").hide();
+                            $("#message2").hide();
+                        }
+                    }
+                });
+            });
+            PhoneValidator = (phone) => {
+                var exp = /^([0]{1}[\d]{2}[-]{1}[\d]{2}[-]{1}[\d]{2}[-]{1}[\d]{2}|[0]{1}[\d]{2}[ ]{1}[\d]{2}[ ]{1}[\d]{2}[ ]{1}[\d]{2}|[0]{1}[\d]{2}[\d]{2}[\d]{2}[\d]{2})$/;
+                result = exp.test(phone);
+                return result;
+            };
+        });
+    </script>
 }

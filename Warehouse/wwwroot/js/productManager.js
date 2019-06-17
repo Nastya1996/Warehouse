@@ -1,6 +1,10 @@
 ﻿$("#ProductId").prop("disabled", true);
-        $("#type").chosen();
-        $("#ProductId").chosen();
+$("#type").chosen({
+    search_contains: true
+});
+$("#ProductId").chosen({
+    search_contains: true
+});
         $(() => {
             $("#type").on("change", function () {
                 TypeSpanDelete();
