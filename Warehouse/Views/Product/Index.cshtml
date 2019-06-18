@@ -68,6 +68,7 @@
                 {
                     <td><a asp-action="Edit" asp-route-id="@pt.Id">Edit</a></td>
                 }
+                <td><img src="@Url.Content(pt.FileModelImg?.Path)"></td>
             </tr>
             }
         }

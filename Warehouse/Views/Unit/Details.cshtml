@@ -1,9 +1,15 @@
-﻿@model Warehouse.Models.Unit
+﻿@*@model IEnumerable<Warehouse.Models.FileModelImg>*@
 @{
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
+@*<h2>Details</h2>
 
-<p>@Model.Id</p>
-<p>@Model.Name</p>
+    <p>@Model.Id</p>
+    <p>@Model.Name</p>*@
+@{
+    @foreach (var f in Model)
+    {
+        <p><img src="@Url.Content(f.Path)"></p>
+    }
+}

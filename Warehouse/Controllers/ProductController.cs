@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -16,13 +19,18 @@ namespace Warehouse.Controllers
     {
         
         private readonly ApplicationDbContext _context;
-        public ProductController(ApplicationDbContext context) => _context = context;
+        private IHostingEnvironment _appEnvironment;
+
+        public ProductController(ApplicationDbContext context, IHostingEnvironment appEnvironment)
+        {
+            _context = context;
+            _appEnvironment = appEnvironment;
+        }
         public IActionResult Index(string name, string type, SortState sortOrder = SortState.ProductNameAsc, int page = 1, int pageSize = 10)
         {
             name = name == null ? "" : name.Trim();
             type = type == null ? "" : type.Trim();
-
-            IQueryable<Product> products = _context.Products.Where(p=>p.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase) && p.ProductType.Name.Contains(type, StringComparison.InvariantCultureIgnoreCase)).Include(x => x.ProductType).Include(x => x.Unit);
+            IQueryable<Product> products = _context.Products.Where(p=>p.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase) && p.ProductType.Name.Contains(type, StringComparison.InvariantCultureIgnoreCase)).Include(x => x.ProductType).Include(x => x.Unit).Include(f => f.FileModelImg);
             ViewBag.ProductNameSort = sortOrder == SortState.ProductNameAsc ? SortState.ProductNameDesc : SortState.ProductNameAsc;
             switch (sortOrder)
             {
@@ -50,7 +58,7 @@ namespace Warehouse.Controllers
 
 
         [HttpPost]
-        public IActionResult Create(Product product)
+        public async Task<IActionResult> Create(Product product, IFormFile uploadedFile)
         {
             SelectInitial();
             if (string.IsNullOrEmpty(product.ProductTypeId))
@@ -61,6 +69,23 @@ namespace Warehouse.Controllers
                 ModelState.AddModelError("", "This name of product is available in the database");
             if (ModelState.IsValid)
             {
+                var imgID = "";
+                if (uploadedFile != null)
+                {
+                    // путь к папке Files
+                    string path = "/Files/" + uploadedFile.FileName;
+                    // сохраняем файл в папку Files в каталоге wwwroot
+                    using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                    {
+                        await uploadedFile.CopyToAsync(fileStream);
+                    }
+                    FileModelImg file = new FileModelImg { Name = uploadedFile.FileName, Path = path };
+                    _context.Files.Add(file);
+                    _context.SaveChanges();
+                    //imgID = _context.Files.Find(file).Id;
+                    product.FileModelImg = file;
+                }
+                
                 product.IsActive = true;
                 _context.Add(product);
                 _context.SaveChanges();

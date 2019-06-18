@@ -13,13 +13,21 @@ using Warehouse.Data;
 using Warehouse.HtmlHelper;
 using Warehouse.Models;
 using PagedList.Core;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+
 namespace Warehouse.Controllers
 {
     [Authorize(Roles = "Storekeeper, Worker")]
     public class ProductManagerController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public ProductManagerController(ApplicationDbContext context) => _context = context;
+        
+        public ProductManagerController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
 
         public IActionResult Index(string type, string name, int page=1, int pageSize=10)
         {
@@ -49,7 +57,26 @@ namespace Warehouse.Controllers
 
             return View(model);
         }
+        //nkar kam file avelacnel
+        [HttpPost]
+        public async Task<IActionResult> AddFile(IFormFile uploadedFile)
+        {
+            //if (uploadedFile != null)
+            //{
+            //    // путь к папке Files
+            //    string path = "/Files/" + uploadedFile.FileName;
+            //    // сохраняем файл в папку Files в каталоге wwwroot
+            //    using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+            //    {
+            //        await uploadedFile.CopyToAsync(fileStream);
+            //    }
+            //    FileModelImg file = new FileModelImg { Name = uploadedFile.FileName, Path = path };
+            //    _context.Files.Add(file);
+            //    _context.SaveChanges();
+            //}
 
+            return RedirectToAction("Index");
+        }
         //Create
         [Authorize(Roles = "Storekeeper")]
         [HttpGet]
