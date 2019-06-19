@@ -20,6 +20,7 @@ namespace Warehouse.Models
         public Customer Customer { get; set; }
         public IList<ProductOrder> ProductOrders { get; set; }
         public OrderType OrderType { get; set; }
+        public string WareHouseId { get; set; }
         //public bool IsSelled { get; set; }
     }
 }

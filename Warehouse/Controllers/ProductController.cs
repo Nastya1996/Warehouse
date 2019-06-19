@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using PagedList.Core;
 using Warehouse.Data;
 using Warehouse.Models;
 namespace Warehouse.Controllers
@@ -13,14 +17,21 @@ namespace Warehouse.Controllers
     [Authorize(Roles = "Storekeeper, Admin")]
     public class ProductController : Controller
     {
+        
         private readonly ApplicationDbContext _context;
-        public ProductController(ApplicationDbContext context) => _context = context;
-        public async Task<IActionResult> Index(SortState sortOrder = SortState.ProductNameAsc)
+        private IHostingEnvironment _appEnvironment;
+
+        public ProductController(ApplicationDbContext context, IHostingEnvironment appEnvironment)
         {
-            IQueryable<Product> products = _context.Products.Include(x => x.ProductType).Include(x => x.Unit);
-
+            _context = context;
+            _appEnvironment = appEnvironment;
+        }
+        public IActionResult Index(string name, string type, SortState sortOrder = SortState.ProductNameAsc, int page = 1, int pageSize = 10)
+        {
+            name = name == null ? "" : name.Trim();
+            type = type == null ? "" : type.Trim();
+            IQueryable<Product> products = _context.Products.Where(p=>p.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase) && p.ProductType.Name.Contains(type, StringComparison.InvariantCultureIgnoreCase)).Include(x => x.ProductType).Include(x => x.Unit).Include(f => f.FileModelImg);
             ViewBag.ProductNameSort = sortOrder == SortState.ProductNameAsc ? SortState.ProductNameDesc : SortState.ProductNameAsc;
-
             switch (sortOrder)
             {
                 case SortState.ProductNameDesc:
@@ -28,7 +39,12 @@ namespace Warehouse.Controllers
                     break;
             }
 
-            return View(await products.AsNoTracking().ToListAsync());
+            ViewData["CurrentName"] = name;
+            ViewData["CurrentType"] = type;
+            ViewData["CurrentSize"] = pageSize;
+            PagedList<Product> model = new PagedList<Product>(products, page, pageSize);
+
+            return View(model);
         }
 
 
@@ -36,15 +52,40 @@ namespace Warehouse.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            ViewBag.ProductTypes = new SelectList(_context.Types,"Id", "Name");
-            ViewBag.Units = new SelectList(_context.Units, "Id", "Name");
+            SelectInitial();
             return View();
         }
+
+
         [HttpPost]
-        public IActionResult Create(Product product)
+        public async Task<IActionResult> Create(Product product, IFormFile uploadedFile)
         {
+            SelectInitial();
+            if (string.IsNullOrEmpty(product.ProductTypeId))
+                ModelState.AddModelError("","The product type not selected");
+            if (string.IsNullOrEmpty(product.UnitId))
+                ModelState.AddModelError("", "The unit not selected");
+            if (_context.Products.FirstOrDefault(p => p.Name == product.Name) != null)
+                ModelState.AddModelError("", "This name of product is available in the database");
             if (ModelState.IsValid)
             {
+                var imgID = "";
+                if (uploadedFile != null)
+                {
+                    // путь к папке Files
+                    string path = "/Files/" + uploadedFile.FileName;
+                    // сохраняем файл в папку Files в каталоге wwwroot
+                    using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                    {
+                        await uploadedFile.CopyToAsync(fileStream);
+                    }
+                    FileModelImg file = new FileModelImg { Name = uploadedFile.FileName, Path = path };
+                    _context.Files.Add(file);
+                    _context.SaveChanges();
+                    //imgID = _context.Files.Find(file).Id;
+                    product.FileModelImg = file;
+                }
+                
                 product.IsActive = true;
                 _context.Add(product);
                 _context.SaveChanges();
@@ -53,6 +94,13 @@ namespace Warehouse.Controllers
             return View(product);
         }
 
+
+        //Initial Select tags
+        void SelectInitial()
+        {
+            ViewBag.ProductTypes = new SelectList(_context.Types, "Id", "Name");
+            ViewBag.Units = new SelectList(_context.Units, "Id", "Name");
+        }
         
 
         //Edit
@@ -67,9 +115,16 @@ namespace Warehouse.Controllers
         [HttpPost]
         public IActionResult Edit(Product product)
         {
-            _context.Update(product);
-            _context.SaveChanges();
-            return RedirectToAction("Index");
+            SelectInitial();
+            if((_context.Products.FirstOrDefault(p=>p.Name==product.Name && p.Id != product.Id))!=null)
+                ModelState.AddModelError("", "This name of product is available in the database");
+            if (ModelState.IsValid)
+            {
+                _context.Update(product);
+                _context.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(product);
         }
 
 
@@ -79,6 +134,8 @@ namespace Warehouse.Controllers
         {
             return View(_context.Products.Include(x=>x.ProductType).Include(x=>x.Unit).FirstOrDefault(x => x.Id == id));
         }
+
+
 
         //Disable product
         [HttpPost]
@@ -97,6 +154,8 @@ namespace Warehouse.Controllers
             }
             return Json(false);
         }
+
+
         //Enable product
         [HttpPost]
         [Route("Products/Enable/")]
@@ -113,15 +172,6 @@ namespace Warehouse.Controllers
                 return Json(true);
             }
             return Json(false);
-        }
-        
-        //Product Availability
-        public JsonResult ProductAvailability(string Name)
-        {
-            Name = Name.Trim();
-            if (_context.Products.FirstOrDefault(p => p.Name == Name) != null)
-                return Json("*The name of product is available in the database");
-            return Json(true);
         }
         
     }

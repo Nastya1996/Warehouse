@@ -1,20 +1,26 @@
-﻿@model IEnumerable<Warehouse.Models.Customer>
+﻿@model PagedList<Customer>
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Customer</h1>
-<a asp-action="Create" asp-controller="Customer">Create new</a>
 
+<br />
+<br />
+<br />
+<br />
+<form asp-action="Index" method="get">
+    <span>Page size</span>
+    <input type="number" min="1" name="pageSize" value="@ViewData["CurrentSize"]" />
+    <input type="submit" value="Filter" />
+</form>
 <table class="table table-bordered table-hover">
-    <thead class="bg-primary">
+    <thead>
         <tr>
-            <th @Html.DisplayNameFor(Customer => Customer.Name)>Name</th>
-            <th @Html.DisplayNameFor(Customer => Customer.Surname)>Surname</th>
-            <th @Html.DisplayNameFor(Customer => Customer.Phone)>Phone</th>
-            <th></th>
-            <th></th>
-            <th></th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Phone</th>
+            <th>Edit</th>
+            <th>Delete</th>
         </tr>
     </thead>
     <tbody>
@@ -26,8 +32,8 @@
                 <td>@Html.DisplayFor(x => i.Phone)</td>
                 <td><a asp-action="Edit" asp-route-id="@i.Id">Edit</a></td>
                 <td><a asp-action="Delete" asp-route-id="@i.Id">Delete</a></td>
-                <td><a asp-action="Details" asp-route-id="@i.Id">Detalls</a></td>
             </tr>
         }
     </tbody>
 </table>
+<pager list="@Model" asp-route-pageSize="@ViewData["CurrentSize"]" asp-controller="Customer" asp-action="Index" />

@@ -1,34 +1,128 @@
 ﻿@model IEnumerable<Warehouse.Models.ProductOrder>
+@{
+    ViewData["Title"] = "Show";
+}
+
+<h2>Show</h2>
+
+<table class="table table-striped">
+    <tr>
+        <th>Product</th>
+        <th>Barcode</th>
+        <th>ProductType</th>
+        <th>Count</th>
+        <th>ChangeCount</th>
+        <th>Unit</th>
+        <th>Price</th>
+        <th>FinallyPrice</th>
+        <th>User</th>
+        <th>Back</th>
+    </tr>
     @{
-ViewData["Title"] = "Show";
-    }
-
-    <h2>Show</h2>
-
-    <table class="table table-striped">
-        <tr>
-            <th>Product</th>
-            <th>Barcode</th>
-            <th>ProductType</th>
-            <th>Count</th>
-            <th>Unit</th>
-            <th>Price</th>
-            <th>FinallyPrice</th>
-            <th>User</th>
-        </tr>
+        foreach (var p in Model)
+        {
+    <tr>
         @{
-            foreach(var p in Model)
-            {
-            <tr>
-                <td>@p.Product.Name</td>
-                <td>@p.Product.Barcode</td>
-                <td>@p.Product.ProductType.Name</td>
-                <td>@p.Count</td>
-                <td>@p.Product.Unit.Name</td>
-                <td>@p.Price</td>
-                <td>@p.FinallyPrice</td>
-                <td>@p.ProductManager.User.Name</td>
-            </tr>
-            }
+            var count = p.Count - p.ReturnedCount;
         }
-    </table>
+        <td hidden="hidden"><input id="id" type="hidden" value="@p.Id" /></td>
+        <td>@p.Product.Name</td>
+        <td>@p.Product.Barcode</td>
+        <td>@p.Product.ProductType.Name</td>
+        <td class="maxCount">@count</td>
+        <td><input type="number" name="count" id="count" min="0" /></td>
+        <td>@p.Product.Unit.Name</td>
+        <td>@p.Price</td>
+        <td>@p.FinallyPrice</td>
+        <td>@p.ProductManager.User.Name</td>
+        <td><a name="back">Back</a></td>
+    </tr>
+        }
+    }
+</table>
+
+@section Scripts{
+    <script src="https://kit.fontawesome.com/b7938c82ea.js"></script>
+    <link href="~/css/jquery-confirm.min.css" rel="stylesheet" />
+    <script src="~/js/jquery-confirm.min.js"></script>
+
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial.cshtml");}
+    <script>
+        $(() => {
+
+            $("a[name='back']").on("click", function () {
+                $(this).parent().parent().addClass("select");
+                let $inputCount = $(".select").children().find("input[name='count']");
+                let $id = $(".select").children().children().val();
+                let $maxCount = $(".select td.maxCount").html();
+                let $quantity = $inputCount.val();
+                if (parseInt($quantity) <= parseInt($maxCount) && parseInt($quantity)!==0) {
+                    $(this).parent().parent().removeClass();
+                    $.ajax({
+                        type: 'POST',
+                        url: '/Order/FinallyBack/',
+                        data: { 'id': $id, 'count': $inputCount.val() },
+                        success: function (data) {
+                            if (data) {
+                                $.confirm({
+                                    icon: 'fas fa-check-circle',
+                                    title: 'Warehouse!',
+                                    content: 'Product returned!',
+                                    type: 'dark',
+                                    typeAnimated: true,
+                                    closeAnimation: 'rotateXR',
+                                    buttons: {
+                                        close: {
+                                            btnClass: "btn-dark",
+                                            action: function () {
+                                            }
+                                        }
+                                    }
+                                });
+                                $inputCount.val(0);
+                            }
+                            else {
+                                $.confirm({
+                                    icon: 'fas fa-exclamation-triangle',
+                                    title: 'Warehouse!',
+                                    content: 'An error has occurred. Please, try again!',
+                                    type: 'red',
+                                    typeAnimated: true,
+                                    closeAnimation: 'rotateXR',
+                                    buttons: {
+                                        close: {
+                                            btnClass: "btn-red",
+                                            action: function () {
+                                            }
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }else {
+                    $.confirm({
+                        icon: 'fas fa-exclamation-triangle',
+                        title: 'Warehouse!',
+                        content: 'An error has occurred. Please, select fewer products!',
+                        type: 'red',
+                        typeAnimated: true,
+                        closeAnimation: 'rotateXR',
+                        buttons: {
+                            close: {
+                                btnClass: "btn-red",
+                                action: function () {
+                                }
+                            }
+                        }
+                    });
+                    $inputCount.val(0);
+                }
+                $("input[name='count']").blur(function () {
+                    $(this).css("border", "1px solid #92a8d1");
+                });
+                $(this).parent().parent().removeClass();
+            });
+        });
+    </script>
+}

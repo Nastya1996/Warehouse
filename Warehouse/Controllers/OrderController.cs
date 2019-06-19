@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Warehouse.Data;
 using Warehouse.Models;
@@ -36,6 +37,51 @@ namespace Warehouse.Controllers
                 .Include(u=>u.Product.Unit)
                 .Where(po=>po.OrderId == id);
             return View("Show", productOrders);
+        }
+        [HttpPost]
+        public JsonResult FinallyBack(string id, string count)
+        {
+            UInt32 countCast;
+            if (!UInt32.TryParse(count, out countCast))
+                return new JsonResult(false);
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var po = _context.ProductOrders
+                .Include(o => o.Order)
+                .FirstOrDefault(p => p.Id == id);
+            if (po == null)
+                return new JsonResult(false);
+            var pm = _context.ProductManagers.FirstOrDefault(p => p.Id == po.ProductManagerId);
+            if (po.Count - po.ReturnedCount < countCast)
+                return new JsonResult(false);
+            if (pm.WareHouseId == po.Order.WareHouseId)
+            {
+                pm.CurrentCount += countCast;
+                _context.ProductManagers.Update(pm);
+            }
+            else
+            {
+                var newPM = new ProductManager
+                {
+                    AddDate = pm.AddDate,
+                    Count = countCast,
+                    CurrentCount = countCast,
+                    ProductId = pm.ProductId,
+                    ReceiptDate = pm.ReceiptDate,
+                    ReceiptPrice = pm.ReceiptPrice,
+                    SalePrice = pm.SalePrice,
+                    UserId = pm.UserId,
+                     WareHouseId = po.Order.WareHouseId
+                };
+                _context.ProductManagers.Add(newPM);
+
+            }
+            //todo:: change orders data
+            po.Order.Price -= countCast * po.FinallyPrice;
+            po.Order.FinallPrice-= countCast * po.FinallyPrice * (100 - po.Sale)/100;
+            po.ReturnedCount += countCast;
+            _context.ProductOrders.Update(po);
+            _context.SaveChanges();
+            return new JsonResult(true);
         }
         [HttpGet]
         public IActionResult Create()
@@ -97,12 +143,14 @@ namespace Warehouse.Controllers
                 Price = productOrderList.Sum(p => p.FinallyPrice),
                 ProductOrders = productOrderList,
                 UserId = user.Id,
-                OrderType=OrderType.InProgress
+                OrderType=OrderType.InProgress,
+                WareHouseId=user.WarehouseId
             };
             _context.Orders.Add(order);
             _context.SaveChanges();
 
             ViewBag.Baskets = baskets;
+            ViewBag.Custemers = new SelectList(_context.Customers.ToList(), "Id", "Name");
             
             //_context.Baskets.RemoveRange(basket);
             _context.SaveChanges();
@@ -142,9 +190,11 @@ namespace Warehouse.Controllers
                 item.FinallyPrice = item.Price * (100-sale)/100;
             }
 
-            orderDb.Price = orderDb.ProductOrders.Sum(p => p.FinallyPrice);
+            orderDb.Price = orderDb.ProductOrders.Sum(p => p.FinallyPrice * p.Count);
             orderDb.FinallPrice = orderDb.Price * (100 - order.Sale)/100;
             orderDb.OrderType = OrderType.Saled;
+            orderDb.CustomerId = order.CustomerId;
+            orderDb.Sale = order.Sale;
 
             _context.ProductManagers.UpdateRange(productManagers);
             _context.Orders.Update(orderDb);

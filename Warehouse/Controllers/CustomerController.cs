@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PagedList.Core;
 using Warehouse.Data;
 using Warehouse.Models;
 
@@ -17,10 +19,12 @@ namespace Warehouse.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+        public IActionResult Index(int page = 1, int pageSize = 10)
         {
-            var datas = _context.Customers.ToList();
-            return View(datas);
+            var customers = _context.Customers.AsQueryable();
+            ViewData["CurrentSize"] = pageSize;
+            PagedList<Customer> model = new PagedList<Customer>(customers, page, pageSize);
+            return View(model);
         }
         public IActionResult Create()
         {
@@ -68,6 +72,21 @@ namespace Warehouse.Controllers
         public IActionResult Details(string id) {
             var customer = _context.Customers.Find(id);
             return View(customer);
+        }
+
+        public JsonResult Register(Customer customer)
+        {
+            if (_context.Customers.FirstOrDefault(c => c.Phone == customer.Phone) != null)
+                return Json(false);
+            _context.Customers.Add(customer);
+            _context.SaveChanges();
+            return Json(true);
+        }
+
+        [HttpPost]
+        public JsonResult Get()
+        {
+            return Json(_context.Customers.AsQueryable());
         }
     }
 }

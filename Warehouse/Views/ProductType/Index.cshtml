@@ -7,13 +7,12 @@
 <br />
 <br />
 <br />
-<a asp-action="Create">Create New</a>
 <form method="get" asp-action="Index">
     <div class="form-inline form-group">
         <label class="control-label">Product Type: </label>
         <input type="text" name="type" value="@ViewData["CurrentType"]" />
 
-        <label class="control-label">Page size</label>
+        <label class="control-label">Page size:</label>
         <input type="number" min="0" name="pageSize" value="@ViewData["CurrentSize"]" />
 
         <input type="submit" value="Filter" class="btn btn-default" />

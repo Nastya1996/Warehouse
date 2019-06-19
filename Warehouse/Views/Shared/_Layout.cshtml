@@ -34,7 +34,7 @@
                 <div class="modal-footer modal-footer-basket">
                     <div>
                         <a asp-controller="Basket" asp-action="Index" class="btn btn-default">View All</a>
-                        <a asp-controller="Order" asp-action="Create" class="btn btn-default">Check out</a>
+                        <a asp-controller="Order" asp-action="Create" class="btn btn-default" id="chekOutBtn">Check out</a>
                     </div>
                     <button id="close" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
@@ -47,7 +47,7 @@
         $(document).ready(function () {
             $("#modalForBasket").mouseover(function () {
                 $.ajax({
-                    url: "Basket/IndexForHover",
+                    url: '@Url.Action("IndexForHover", "Basket")',
                     beforeSend: function () { $(".modal-body").html("<p>Loading... </p>")},
                     success: function (response) {
                         $(".modal-body").html(response);
@@ -60,9 +60,8 @@
                 });
                 $("#myModal").modal();
             });
-            $("#close, #myModal").click(function () {
+            if ($("#myModal").css('display') == 'none')
                 $(".modal-body").empty();
-            });
         });
 
         

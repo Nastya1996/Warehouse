@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Warehouse.Models.ProductManager>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+<br />
+<br />
+<br />
+<form method="post" asp-action="Index" asp-controller="Report">
+    <label for="dateFrom">From</label>
+    <input type="date" name="dateFrom" value="" />
+    <label for="dateTo">To</label>
+    <input type="date" name="dateTo" value="" />
+    @Html.DropDownList("pType", ViewBag.prodType as SelectList, "Type")
+    @Html.DropDownList("productName", ViewBag.prodName as SelectList, "Product")
+    @Html.DropDownList("worker", ViewBag.workers as SelectList, "Worker")
+    <br /><input type="radio" name="gorcarq" value="elq" />
+    <label>Elq</label><br />
+    <input type="radio" name="gorcarq" value="mutq" />
+    <label>Mutq</label><br />
+    <input type="radio" name="gorcarq" value="dursGrac" />
+    <label>Durs Grac</label><br />
+    <input type="submit" value="Search" />
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Count</th>
+            <th>ReceiptPrice</th>
+            <th>SalePrice</th>
+        </tr>
+    </thead>
+    <tbody>
+        @{ 
+            @foreach (var pm in Model)
+            {
+                <tr>
+                    <td>@pm.Product.Name</td>
+                    <td>@pm.Product.ProductType.Name</td>
+                    <td>@pm.Count</td>
+                    <td>@pm.ReceiptPrice</td>
+                    <td>@pm.SalePrice</td>
+                </tr>
+            }
+         }
+    </tbody>
+</table>
