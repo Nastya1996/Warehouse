@@ -34,5 +34,6 @@ namespace Warehouse.Models
         [Required]
         public string ProductId { get; set; }
         public Product Product { get; set; }
+
     }
 }

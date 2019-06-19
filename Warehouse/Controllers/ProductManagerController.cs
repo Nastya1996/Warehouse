@@ -13,13 +13,24 @@ using Warehouse.Data;
 using Warehouse.HtmlHelper;
 using Warehouse.Models;
 using PagedList.Core;
+using Microsoft.AspNetCore.Http;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
+
 namespace Warehouse.Controllers
 {
     [Authorize(Roles = "Storekeeper, Worker")]
     public class ProductManagerController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public ProductManagerController(ApplicationDbContext context) => _context = context;
+        readonly ILogger<ProductManagerController> _log;
+
+        public ProductManagerController(ApplicationDbContext context, ILogger<ProductManagerController> log)
+        {
+            _log = log;
+            _context = context;
+        }
 
         public IActionResult Index(string type, string name, int page=1, int pageSize=10)
         {
@@ -46,10 +57,9 @@ namespace Warehouse.Controllers
                 })
                 .Select(c => c.ToExpando());
             PagedList<ExpandoObject> model = new PagedList<ExpandoObject>(productManagersByGroup, page, pageSize);
-
+            _log.LogInformation("Product manager index.User: "+user);
             return View(model);
         }
-
         //Create
         [Authorize(Roles = "Storekeeper")]
         [HttpGet]
@@ -77,6 +87,7 @@ namespace Warehouse.Controllers
                 productManager.WareHouseId = user.WarehouseId;
                 _context.Add(productManager);
                 _context.SaveChanges();
+                _log.LogInformation("Product manager created.User: " + user);
                 return RedirectToAction("Index");
             }
             return View(productManager);
@@ -112,6 +123,7 @@ namespace Warehouse.Controllers
                 .Include(w=>w.WareHouse)
                 .AsQueryable();
             PagedList<ProductManager> model = new PagedList<ProductManager>(products, page, pageSize);
+            _log.LogInformation("Product manager show.User "+user);
             return View(model);
         }
 
@@ -137,6 +149,8 @@ namespace Warehouse.Controllers
             prodManager.SalePrice = productManager.SalePrice;
             _context.Update(prodManager);
             _context.SaveChanges();
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Product manager edited.User: "+user);
             return RedirectToAction("Show", new Dictionary<string, string> { { "id", prodManager.ProductId} });
         }
 
@@ -146,6 +160,7 @@ namespace Warehouse.Controllers
         public IActionResult Add(string id, string quantity)
         {
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Product manager add.User: "+user);
             uint count = Convert.ToUInt32(quantity);
             var product = _context.ProductManagers.FirstOrDefault(pm => pm.ProductId == id);
             if (product != null)
@@ -191,12 +206,14 @@ namespace Warehouse.Controllers
         }
         public IActionResult Move(string id, string IdOfPM)
         {
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var pm = _context.ProductManagers.FirstOrDefault(p => p.Id == IdOfPM);
             var wh = _context.Warehouses.FirstOrDefault(w => w.Id == id);
             pm.WareHouseId = wh.Id;
             _context.ProductManagers.Update(pm);
             _context.SaveChanges();
             id = pm.ProductId;
+            _log.LogInformation("Product manager move to another warehouse.User: "+user);
             return RedirectToAction("Show", "ProductManager", new { id });
         }
     }

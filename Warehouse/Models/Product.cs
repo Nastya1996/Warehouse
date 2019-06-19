@@ -27,5 +27,7 @@ namespace Warehouse.Models
         public Unit Unit { set; get; }
 
         public bool IsActive { set; get; }
+        public string FileModelImgId { get; set; }
+        public FileModelImg FileModelImg { get; set; }
     }
 }

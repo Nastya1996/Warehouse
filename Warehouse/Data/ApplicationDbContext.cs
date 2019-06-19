@@ -20,6 +20,7 @@ namespace Warehouse.Data
         public DbSet<Product> Products { set; get; }
         public DbSet<Unit> Units { set; get; }
         public DbSet<Basket> Baskets { set; get; }
+        public DbSet<FileModelImg> Files { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

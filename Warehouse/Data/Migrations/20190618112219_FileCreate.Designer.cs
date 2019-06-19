@@ -3,19 +3,21 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Warehouse.Data;
 
 namespace Warehouse.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190618112219_FileCreate")]
+    partial class FileCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
+                .HasAnnotation("ProductVersion", "2.1.8-servicing-32085")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -287,8 +289,6 @@ namespace Warehouse.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(13);
 
-                    b.Property<string>("FileModelImgId");
-
                     b.Property<bool>("IsActive");
 
                     b.Property<string>("Name")
@@ -301,8 +301,6 @@ namespace Warehouse.Data.Migrations
                     b.Property<string>("UnitId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FileModelImgId");
 
                     b.HasIndex("ProductTypeId");
 
@@ -334,11 +332,13 @@ namespace Warehouse.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<DateTime>("AddDate");
+
                     b.Property<long>("Count");
 
                     b.Property<long>("CurrentCount");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<string>("FileModelImgId");
 
                     b.Property<string>("ProductId")
                         .IsRequired();
@@ -354,6 +354,8 @@ namespace Warehouse.Data.Migrations
                     b.Property<string>("WareHouseId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FileModelImgId");
 
                     b.HasIndex("ProductId");
 
@@ -517,10 +519,6 @@ namespace Warehouse.Data.Migrations
 
             modelBuilder.Entity("Warehouse.Models.Product", b =>
                 {
-                    b.HasOne("Warehouse.Models.FileModelImg", "FileModelImg")
-                        .WithMany()
-                        .HasForeignKey("FileModelImgId");
-
                     b.HasOne("Warehouse.Models.ProductType", "ProductType")
                         .WithMany()
                         .HasForeignKey("ProductTypeId")
@@ -544,6 +542,10 @@ namespace Warehouse.Data.Migrations
 
             modelBuilder.Entity("Warehouse.Models.ProductManager", b =>
                 {
+                    b.HasOne("Warehouse.Models.FileModelImg", "FileModelImg")
+                        .WithMany()
+                        .HasForeignKey("FileModelImgId");
+
                     b.HasOne("Warehouse.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")

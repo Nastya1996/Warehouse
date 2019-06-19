@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using PagedList.Core;
 using Warehouse.Data;
 using Warehouse.Models;
 
@@ -17,16 +19,64 @@ namespace Warehouse.Controllers
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
-        
-        public AdminController(ApplicationDbContext context)
+        private readonly UserManager<AppUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ILogger<AdminController> _log;
+        public AdminController(ApplicationDbContext context, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, ILogger<AdminController> log)
         {
+            _log = log;
             _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
-        public IActionResult ShowUsers()
+        public IActionResult ShowUsers(string name = "", string role = null, string number = "", int page = 1, int pageSize = 10)
         {
-            var c = _context.AppUsers.Include(user => user.Warehouse).ToList();
-            return View(c);
+
+            name = name == null ? "" : name.Trim();
+            //role = role == null ? "" : role.Trim();
+            number = number == null ? "" : number.Trim();
+
+            // var users = //_context.AppUsers
+            //                            .Include(w => w.Warehouse)
+            //                            .Where(us => us.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase)
+            //                                && us.Warehouse != null && us.Warehouse.Number.Contains(number, StringComparison.InvariantCultureIgnoreCase)).ToList();
+            IEnumerable<string> userIds = null;
+
+            if (role != null)
+            {
+                var roleDb = _roleManager.Roles.FirstOrDefault(rl => rl.Name.Contains(role, StringComparison.InvariantCultureIgnoreCase));
+                if (roleDb != null)
+                    userIds = _context.UserRoles.Where(r => r.RoleId == roleDb.Id)
+                        .Select(i => i.UserId)
+                        .ToList();
+            }
+
+            IEnumerable<AppUser> users;
+
+            if (userIds != null)
+            {
+                users = _context.AppUsers
+                .Include(w => w.Warehouse)
+                .Where(u => u.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase) && userIds.Contains(u.Id) && u.Warehouse.Number.Contains(number, StringComparison.InvariantCultureIgnoreCase));
+            }
+            else { 
+                users = _context.AppUsers
+                .Include(w => w.Warehouse)
+                .Where(u => u.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase) && u.Warehouse.Number.Contains(number, StringComparison.InvariantCultureIgnoreCase));
+            }
+
+
+            ViewData["CurrentName"] = name;
+            ViewData["CurrentRole"] = role;
+            ViewData["CurrentNumber"] = number;
+            ViewData["CurrentSize"] = pageSize;
+
+           // var users = _context.AppUsers.Include(user => user.Warehouse).ToList();
+            PagedList<AppUser> model = new PagedList<AppUser>(users, page, pageSize);
+            var userSignIn = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Show users.User: "+ userSignIn);
+            return View(model);
         }
         public IActionResult CreateAdmin()
         {
@@ -47,6 +97,8 @@ namespace Warehouse.Controllers
                 user.LockoutEnd = DateTime.MaxValue;
                 _context.Update(user);
                 _context.SaveChanges();
+                var userSignIn = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                _log.LogInformation("Disabled user.User: "+ userSignIn);
                 return Json(true);
             }
         }
@@ -63,6 +115,8 @@ namespace Warehouse.Controllers
             user.LockoutEnd = null;
             _context.Update(user);
             _context.SaveChanges();
+            var userSignIn = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Enabled user.User: "+ userSignIn);
             return Json(true);
         }
         public IActionResult WHListForAdmin(string userId)
@@ -77,6 +131,8 @@ namespace Warehouse.Controllers
             users.WarehouseId = wh.Id;
             _context.AppUsers.Update(users);
             _context.SaveChanges();
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Changed user's warehouse.User: "+user);
             return RedirectToAction("ShowUsers", "Admin");
         }
     }

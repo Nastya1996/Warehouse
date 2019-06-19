@@ -1,11 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using PagedList.Core;
 using Warehouse.Data;
 using Warehouse.Models;
@@ -16,13 +21,20 @@ namespace Warehouse.Controllers
     {
         
         private readonly ApplicationDbContext _context;
-        public ProductController(ApplicationDbContext context) => _context = context;
+        private IHostingEnvironment _appEnvironment;
+        readonly ILogger<ProductController> _log;
+
+        public ProductController(ApplicationDbContext context, IHostingEnvironment appEnvironment, ILogger<ProductController> log)
+        {
+            _log = log;
+            _context = context;
+            _appEnvironment = appEnvironment;
+        }
         public IActionResult Index(string name, string type, SortState sortOrder = SortState.ProductNameAsc, int page = 1, int pageSize = 10)
         {
             name = name == null ? "" : name.Trim();
             type = type == null ? "" : type.Trim();
-
-            IQueryable<Product> products = _context.Products.Where(p=>p.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase) && p.ProductType.Name.Contains(type, StringComparison.InvariantCultureIgnoreCase)).Include(x => x.ProductType).Include(x => x.Unit);
+            IQueryable<Product> products = _context.Products.Where(p=>p.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase) && p.ProductType.Name.Contains(type, StringComparison.InvariantCultureIgnoreCase)).Include(x => x.ProductType).Include(x => x.Unit).Include(f => f.FileModelImg);
             ViewBag.ProductNameSort = sortOrder == SortState.ProductNameAsc ? SortState.ProductNameDesc : SortState.ProductNameAsc;
             switch (sortOrder)
             {
@@ -35,7 +47,8 @@ namespace Warehouse.Controllers
             ViewData["CurrentType"] = type;
             ViewData["CurrentSize"] = pageSize;
             PagedList<Product> model = new PagedList<Product>(products, page, pageSize);
-
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Product index.User: "+user);
             return View(model);
         }
 
@@ -50,7 +63,7 @@ namespace Warehouse.Controllers
 
 
         [HttpPost]
-        public IActionResult Create(Product product)
+        public async Task<IActionResult> Create(Product product, IFormFile uploadedFile)
         {
             SelectInitial();
             if (string.IsNullOrEmpty(product.ProductTypeId))
@@ -61,9 +74,27 @@ namespace Warehouse.Controllers
                 ModelState.AddModelError("", "This name of product is available in the database");
             if (ModelState.IsValid)
             {
+                if (uploadedFile != null)
+                {
+                    // путь к папке Files
+                    string path = "/Files/" + uploadedFile.FileName;
+                    // сохраняем файл в папку Files в каталоге wwwroot
+                    using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                    {
+                        await uploadedFile.CopyToAsync(fileStream);
+                    }
+                    FileModelImg file = new FileModelImg { Name = uploadedFile.FileName, Path = path };
+                    _context.Files.Add(file);
+                    _context.SaveChanges();
+                    //imgID = _context.Files.Find(file).Id;
+                    product.FileModelImg = file;
+                }
+                
                 product.IsActive = true;
                 _context.Add(product);
                 _context.SaveChanges();
+                var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                _log.LogInformation("Product created.User: "+user);
                 return RedirectToAction("Index");
             }
             return View(product);
@@ -97,20 +128,21 @@ namespace Warehouse.Controllers
             {
                 _context.Update(product);
                 _context.SaveChanges();
+                var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                _log.LogInformation("Product edited.User: "+user);
                 return RedirectToAction("Index");
             }
             return View(product);
         }
 
-
         //Details
         [HttpGet]
         public IActionResult Details(string id)
         {
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Product details."+user);
             return View(_context.Products.Include(x=>x.ProductType).Include(x=>x.Unit).FirstOrDefault(x => x.Id == id));
         }
-
-
 
         //Disable product
         [HttpPost]
@@ -125,11 +157,12 @@ namespace Warehouse.Controllers
                 product.IsActive = false;
                 _context.Update(product);
                 _context.SaveChanges();
+                var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                _log.LogInformation("Product disabled."+user);
                 return Json(true);
             }
             return Json(false);
         }
-
 
         //Enable product
         [HttpPost]
@@ -144,6 +177,8 @@ namespace Warehouse.Controllers
                 product.IsActive = true;
                 _context.Update(product);
                 _context.SaveChanges();
+                var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                _log.LogInformation("Product enabled."+user);
                 return Json(true);
             }
             return Json(false);
