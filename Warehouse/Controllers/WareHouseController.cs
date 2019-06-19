@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using PagedList.Core;
 using Warehouse.Data;
 using Warehouse.Models;
@@ -14,9 +15,11 @@ namespace Warehouse.Controllers
     [Authorize(Roles = "Admin")]
     public class WareHouseController : Controller
     {
+        readonly ILogger<WareHouseController> _log;
         private readonly ApplicationDbContext _context;
-        public WareHouseController(ApplicationDbContext context)
+        public WareHouseController(ApplicationDbContext context, ILogger<WareHouseController> log)
         {
+            _log = log;
             _context = context;
         }
         public IActionResult Index(string number, string address, int page = 1, int pageSize = 10)
@@ -31,6 +34,7 @@ namespace Warehouse.Controllers
             ViewData["CurrentSize"] = pageSize;
 
             PagedList<WareHouse> model = new PagedList<WareHouse>(wareHouses, page, pageSize);
+            _log.LogInformation("Warehouse index.");
             return View(model);
         }
 
@@ -47,6 +51,7 @@ namespace Warehouse.Controllers
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
+            _log.LogInformation("Create warehouse.");
             return View();
         }
         public IActionResult Edit(string id)
@@ -63,6 +68,7 @@ namespace Warehouse.Controllers
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
+            _log.LogInformation("Edit warehouse.");
             return View();
         }
         public IActionResult Delete(string id)
@@ -73,12 +79,14 @@ namespace Warehouse.Controllers
         {
             _context.Warehouses.Remove(_context.Warehouses.Find(id));
             _context.SaveChanges();
+            _log.LogInformation("Delete warehouse.");
             return RedirectToAction("Index");
         }
         
         public IActionResult Details(string id)
         {
             var obj = _context.Warehouses.Find(id);
+            _log.LogInformation("Details of warehouse.");
             return View(obj);
         }
     }

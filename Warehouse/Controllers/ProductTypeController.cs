@@ -7,14 +7,18 @@ using Warehouse.Models;
 using Warehouse.Data;
 using Microsoft.AspNetCore.Authorization;
 using PagedList.Core;
+using Microsoft.Extensions.Logging;
+
 namespace Warehouse.Controllers
 {
     [Authorize(Roles = "Storekeeper")]
     public class ProductTypeController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public ProductTypeController(ApplicationDbContext context)
+        readonly ILogger<ProductTypeController> _log;
+        public ProductTypeController(ApplicationDbContext context, ILogger<ProductTypeController> log)
         {
+            _log = log;
             _context = context;
         }
 
@@ -25,6 +29,7 @@ namespace Warehouse.Controllers
             ViewData["CurrentType"] = type;
             var types = _context.Types.Where(t => t.Name.Contains(type,StringComparison.InvariantCultureIgnoreCase)).AsQueryable();
             PagedList<ProductType> model = new PagedList<ProductType>(types, page,pageSize);
+            _log.LogInformation("Product type index.");
             return View(model);
         }
 
@@ -46,6 +51,7 @@ namespace Warehouse.Controllers
             {
                 _context.Types.Add(productType);
                 _context.SaveChanges();
+                _log.LogInformation("Product type create.");
                 return RedirectToAction("Index");
             }
             return View(productType);
@@ -71,6 +77,7 @@ namespace Warehouse.Controllers
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
+            _log.LogInformation("Product type edit.");
             return View(productType);
         }
 
@@ -89,6 +96,7 @@ namespace Warehouse.Controllers
             if (obj == null) return NotFound();
             _context.Remove(_context.Types.Find(id));
             _context.SaveChanges();
+            _log.LogInformation("Product type delete.");
             return RedirectToAction("Index");
         }
 
@@ -97,6 +105,7 @@ namespace Warehouse.Controllers
         [HttpGet]
         public IActionResult Details(string id)
         {
+            _log.LogInformation("Product type details.");
             return View(_context.Types.FirstOrDefault(x=>x.Id==id));
         }
     }

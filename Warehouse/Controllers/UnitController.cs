@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Warehouse.Data;
 using Warehouse.Models;
 
@@ -15,10 +16,12 @@ namespace Warehouse.Controllers
     [Authorize(Roles = "Storekeeper")]
     public class UnitController : Controller
     {
+        readonly ILogger<UnitController> _log;
         private readonly ApplicationDbContext _context;
         
-        public UnitController(ApplicationDbContext context)
+        public UnitController(ApplicationDbContext context, ILogger<UnitController> log)
         {
+            _log = log;
             _context = context;
         }
 
@@ -26,6 +29,7 @@ namespace Warehouse.Controllers
         public IActionResult Index()
         {
             var unitDatas = _context.Units;
+            _log.LogInformation("Unit index.");
             return View(unitDatas.ToList());
         }
         public IActionResult Create()
@@ -41,6 +45,7 @@ namespace Warehouse.Controllers
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
+            _log.LogInformation("Unit create.");
             return View();
         }
         public IActionResult Edit(string id)
@@ -57,6 +62,7 @@ namespace Warehouse.Controllers
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
+            _log.LogInformation("Edit index.");
             return View();
         }
         public IActionResult Delete(string id)
@@ -67,11 +73,13 @@ namespace Warehouse.Controllers
         {
             _context.Units.Remove(_context.Units.Find(id));
             _context.SaveChanges();
+            _log.LogInformation("Unit delete.");
             return RedirectToAction("Index");
         }
         public IActionResult Details(string id)
         {
             var obj = _context.Units.Find(id);
+            _log.LogInformation("Unit details.");
             return View(obj);
             //return View(_context.Files.ToList());
         }

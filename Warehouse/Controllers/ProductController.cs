@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using PagedList.Core;
 using Warehouse.Data;
 using Warehouse.Models;
@@ -20,9 +21,11 @@ namespace Warehouse.Controllers
         
         private readonly ApplicationDbContext _context;
         private IHostingEnvironment _appEnvironment;
+        readonly ILogger<ProductController> _log;
 
-        public ProductController(ApplicationDbContext context, IHostingEnvironment appEnvironment)
+        public ProductController(ApplicationDbContext context, IHostingEnvironment appEnvironment, ILogger<ProductController> log)
         {
+            _log = log;
             _context = context;
             _appEnvironment = appEnvironment;
         }
@@ -43,7 +46,7 @@ namespace Warehouse.Controllers
             ViewData["CurrentType"] = type;
             ViewData["CurrentSize"] = pageSize;
             PagedList<Product> model = new PagedList<Product>(products, page, pageSize);
-
+            _log.LogInformation("Product index.");
             return View(model);
         }
 
@@ -91,6 +94,7 @@ namespace Warehouse.Controllers
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
+            _log.LogInformation("Product create.");
             return View(product);
         }
 
@@ -124,6 +128,7 @@ namespace Warehouse.Controllers
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
+            _log.LogInformation("Product edit.");
             return View(product);
         }
 
@@ -131,6 +136,7 @@ namespace Warehouse.Controllers
         [HttpGet]
         public IActionResult Details(string id)
         {
+            _log.LogInformation("Product details.");
             return View(_context.Products.Include(x=>x.ProductType).Include(x=>x.Unit).FirstOrDefault(x => x.Id == id));
         }
 
@@ -147,6 +153,7 @@ namespace Warehouse.Controllers
                 product.IsActive = false;
                 _context.Update(product);
                 _context.SaveChanges();
+                _log.LogInformation("Product disable.");
                 return Json(true);
             }
             return Json(false);
@@ -165,6 +172,7 @@ namespace Warehouse.Controllers
                 product.IsActive = true;
                 _context.Update(product);
                 _context.SaveChanges();
+                _log.LogInformation("Product enable.");
                 return Json(true);
             }
             return Json(false);

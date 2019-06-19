@@ -16,6 +16,7 @@ using PagedList.Core;
 using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace Warehouse.Controllers
 {
@@ -23,9 +24,11 @@ namespace Warehouse.Controllers
     public class ProductManagerController : Controller
     {
         private readonly ApplicationDbContext _context;
-        
-        public ProductManagerController(ApplicationDbContext context)
+        readonly ILogger<ProductManagerController> _log;
+
+        public ProductManagerController(ApplicationDbContext context, ILogger<ProductManagerController> log)
         {
+            _log = log;
             _context = context;
         }
 
@@ -54,28 +57,8 @@ namespace Warehouse.Controllers
                 })
                 .Select(c => c.ToExpando());
             PagedList<ExpandoObject> model = new PagedList<ExpandoObject>(productManagersByGroup, page, pageSize);
-
+            _log.LogInformation("Product manager index.");
             return View(model);
-        }
-        //nkar kam file avelacnel
-        [HttpPost]
-        public async Task<IActionResult> AddFile(IFormFile uploadedFile)
-        {
-            //if (uploadedFile != null)
-            //{
-            //    // путь к папке Files
-            //    string path = "/Files/" + uploadedFile.FileName;
-            //    // сохраняем файл в папку Files в каталоге wwwroot
-            //    using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
-            //    {
-            //        await uploadedFile.CopyToAsync(fileStream);
-            //    }
-            //    FileModelImg file = new FileModelImg { Name = uploadedFile.FileName, Path = path };
-            //    _context.Files.Add(file);
-            //    _context.SaveChanges();
-            //}
-
-            return RedirectToAction("Index");
         }
         //Create
         [Authorize(Roles = "Storekeeper")]
@@ -106,6 +89,7 @@ namespace Warehouse.Controllers
                 _context.SaveChanges();
                 return RedirectToAction("Index");
             }
+            _log.LogInformation("Product manager create.");
             return View(productManager);
         }
         void SelectInitial()
@@ -139,6 +123,7 @@ namespace Warehouse.Controllers
                 .Include(w=>w.WareHouse)
                 .AsQueryable();
             PagedList<ProductManager> model = new PagedList<ProductManager>(products, page, pageSize);
+            _log.LogInformation("Product manager show.");
             return View(model);
         }
 
@@ -164,6 +149,7 @@ namespace Warehouse.Controllers
             prodManager.SalePrice = productManager.SalePrice;
             _context.Update(prodManager);
             _context.SaveChanges();
+            _log.LogInformation("Product manager edit.");
             return RedirectToAction("Show", new Dictionary<string, string> { { "id", prodManager.ProductId} });
         }
 
@@ -172,6 +158,7 @@ namespace Warehouse.Controllers
         [HttpGet]
         public IActionResult Add(string id, string quantity)
         {
+            _log.LogInformation("Product manager add.");
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             uint count = Convert.ToUInt32(quantity);
             var product = _context.ProductManagers.FirstOrDefault(pm => pm.ProductId == id);
@@ -231,6 +218,7 @@ namespace Warehouse.Controllers
             _context.ProductManagers.Update(pm);
             _context.SaveChanges();
             id = pm.ProductId;
+            _log.LogInformation("Product manager move to another warehouse.");
             return RedirectToAction("Show", "ProductManager", new { id });
         }
     }

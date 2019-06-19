@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Warehouse.Data;
 using Warehouse.Models;
 using Warehouse.ViewModels;
@@ -16,14 +17,17 @@ namespace Warehouse.Controllers
     [Authorize(Roles = "Worker")]
     public class OrderController : Controller
     {
+        readonly ILogger<OrderController> _log;
         private readonly ApplicationDbContext _context;
-        public OrderController(ApplicationDbContext context)
+        public OrderController(ApplicationDbContext context, ILogger<OrderController> log)
         {
+            _log = log;
             _context = context;
         }
         public IActionResult Index()
         {
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Order index.");
             return View(_context.Orders.Where(o => o.UserId == user.Id).ToList());
         }
         [HttpGet]
@@ -36,6 +40,7 @@ namespace Warehouse.Controllers
                 .Include(pt=>pt.Product.ProductType)
                 .Include(u=>u.Product.Unit)
                 .Where(po=>po.OrderId == id);
+            _log.LogInformation("Back product.");
             return View("Show", productOrders);
         }
         [HttpPost]
@@ -81,6 +86,7 @@ namespace Warehouse.Controllers
             po.ReturnedCount += countCast;
             _context.ProductOrders.Update(po);
             _context.SaveChanges();
+            _log.LogInformation("Back product.");
             return new JsonResult(true);
         }
         [HttpGet]
@@ -154,6 +160,7 @@ namespace Warehouse.Controllers
             
             //_context.Baskets.RemoveRange(basket);
             _context.SaveChanges();
+            _log.LogInformation("Create order.");
             return View(order);
 
         }
@@ -200,7 +207,7 @@ namespace Warehouse.Controllers
             _context.Orders.Update(orderDb);
             _context.SaveChanges();
 
-
+            _log.LogInformation("Check out.");
             return RedirectToAction("Index","ProductManager");
         }
         private void Con(string id)
@@ -229,12 +236,14 @@ namespace Warehouse.Controllers
         public IActionResult Continue(string id)
         {
             Con(id);
+            _log.LogInformation("Continue order.");
             return RedirectToAction("Index", "ProductManager");
         }
         public IActionResult Delete(string id)
         {
             _context.Orders.Remove(_context.Orders.Find(id));
             _context.SaveChanges();
+            _log.LogInformation("Delete order.");
             return RedirectToAction("Index");
         }
     }
