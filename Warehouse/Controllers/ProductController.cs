@@ -102,15 +102,12 @@ namespace Warehouse.Controllers
             return View(product);
         }
 
-
         //Details
         [HttpGet]
         public IActionResult Details(string id)
         {
             return View(_context.Products.Include(x=>x.ProductType).Include(x=>x.Unit).FirstOrDefault(x => x.Id == id));
         }
-
-
 
         //Disable product
         [HttpPost]
@@ -129,7 +126,6 @@ namespace Warehouse.Controllers
             }
             return Json(false);
         }
-
 
         //Enable product
         [HttpPost]

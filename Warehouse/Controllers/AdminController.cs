@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PagedList.Core;
 using Warehouse.Data;
 using Warehouse.Models;
 
@@ -17,16 +18,61 @@ namespace Warehouse.Controllers
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
-        
-        public AdminController(ApplicationDbContext context)
+        private readonly UserManager<AppUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        public AdminController(ApplicationDbContext context, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
-        public IActionResult ShowUsers()
+        public IActionResult ShowUsers(string name="", string role = "", string number= "", int page = 1, int pageSize = 10)
         {
-            var c = _context.AppUsers.Include(user => user.Warehouse).ToList();
-            return View(c);
+
+            name = name == null ? "" : name.Trim();
+            //role = role == null ? "" : role.Trim();
+            number = number == null ? "" : number.Trim();
+
+            // var users = //_context.AppUsers
+            //                            .Include(w => w.Warehouse)
+            //                            .Where(us => us.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase)
+            //                                && us.Warehouse != null && us.Warehouse.Number.Contains(number, StringComparison.InvariantCultureIgnoreCase)).ToList();
+            IEnumerable<string> userIds = null;
+
+            if (role != null)
+            {
+                var roleDb = _roleManager.Roles.FirstOrDefault(rl => rl.Name.Contains(role, StringComparison.InvariantCultureIgnoreCase));
+                if (roleDb != null)
+                    userIds = _context.UserRoles.Where(r => r.RoleId == roleDb.Id)
+                        .Select(i => i.UserId)
+                        .ToList();
+            }
+
+            IEnumerable<AppUser> users;
+
+            if(userIds!=null)
+            {
+                users = _context.AppUsers
+                .Include(w => w.Warehouse)
+                .Where(u => u.UserName.Contains(name) && userIds.Contains(u.Id) && u.Warehouse.Number.Contains(number));
+            }
+            else
+                users =_context.AppUsers
+                .Include(w => w.Warehouse)
+                .Where(u => u.UserName.Contains(name));
+
+
+
+            ViewData["CurrentName"] = name;
+            ViewData["CurrentRole"] = role;
+            ViewData["CurrentNumber"] = number;
+            ViewData["CurrentSize"] = pageSize;
+
+           // var users = _context.AppUsers.Include(user => user.Warehouse).ToList();
+            PagedList<AppUser> model = new PagedList<AppUser>(users, page, pageSize);
+
+            return View(model);
         }
         public IActionResult CreateAdmin()
         {

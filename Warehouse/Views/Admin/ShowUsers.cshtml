@@ -1,10 +1,30 @@
-﻿@model IEnumerable<Warehouse.Models.AppUser>
+﻿@using Warehouse.Models
+
 @{
     ViewData["Title"] = "ShowUsers";
 }
-
+@model IPagedList<AppUser>
 <h2>ShowUsers</h2>
+<form method="get" asp-action="ShowUsers">
+    <div class="form-inline form-group">
+        <label class="control-label">Name: </label>
+        <input type="text" name="name" value="@ViewData["CurrentName"]" />
 
+        <label class="control-label">Role: </label>
+        <select name="role" class="form-control">
+            <option value="Worker">Worker</option>
+            <option value="Storekeeper">Storekeeper</option>
+            <option value="Report">Report</option>
+        </select>
+        <label class="control-label">Warehouse Number: </label>
+        <input type="text" name="whNumber" value="@ViewData["CurrentNumber"]" />
+
+        <label class="control-label">Page size</label>
+        <input type="number" min="1" name="pageSize" value="@ViewData["CurrentSize"]" />
+        <input type="submit" value="Filter" class="btn btn-default" />
+    </div>
+</form>
+<pager list="@Model" asp-route-pageSize="@ViewData["CurrentSize"]" asp-route-whNumber="@ViewData["CurrentNumber"]" asp-route-role="@ViewData["CurrentRole"]" asp-route-name="@ViewData["CurrentName"]" asp-controller="Admin" asp-action="ShowUsers" />
 <table class="table">
     <tr>
         <th>Name</th>
@@ -34,8 +54,8 @@
                     {
                         <td><a href="#" class="Enable">Enable</a></td>
                     }
-                 </tr>
-             }
+                </tr>
+            }
         }
     }
 </table>

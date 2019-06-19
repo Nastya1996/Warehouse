@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using PagedList.Core;
 using Warehouse.Data;
 using Warehouse.Models;
 
@@ -17,11 +19,21 @@ namespace Warehouse.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+        public IActionResult Index(string number, string address, int page = 1, int pageSize = 10)
         {
-            var whDatas = _context.Warehouses;
-            return View(whDatas.ToList());
+            number = number == null ? "" : number.Trim();
+            address = address == null ? "" : address.Trim();
+
+            IQueryable<WareHouse> wareHouses = _context.Warehouses.Where(w => w.Number.Contains(number, StringComparison.InvariantCultureIgnoreCase) && w.Address.Contains(address, StringComparison.InvariantCultureIgnoreCase));
+
+            ViewData["CurrentNumber"] = number;
+            ViewData["CurrentAddress"] = address;
+            ViewData["CurrentSize"] = pageSize;
+
+            PagedList<WareHouse> model = new PagedList<WareHouse>(wareHouses, page, pageSize);
+            return View(model);
         }
+
         public IActionResult Create()
         {
             return View();
