@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -29,7 +30,8 @@ namespace Warehouse.Controllers
         public IActionResult Index()
         {
             var unitDatas = _context.Units;
-            _log.LogInformation("Unit index.");
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Unit index."+user);
             return View(unitDatas.ToList());
         }
         public IActionResult Create()
@@ -43,9 +45,10 @@ namespace Warehouse.Controllers
             if (ModelState.IsValid) {
                 _context.Add(unit);
                 _context.SaveChanges();
+                var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                _log.LogInformation("Unit createed."+user);
                 return RedirectToAction("Index");
             }
-            _log.LogInformation("Unit create.");
             return View();
         }
         public IActionResult Edit(string id)
@@ -60,9 +63,10 @@ namespace Warehouse.Controllers
             {
                 _context.Units.Update(unit);
                 _context.SaveChanges();
+                var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                _log.LogInformation("Edited index."+user);
                 return RedirectToAction("Index");
             }
-            _log.LogInformation("Edit index.");
             return View();
         }
         public IActionResult Delete(string id)
@@ -73,13 +77,15 @@ namespace Warehouse.Controllers
         {
             _context.Units.Remove(_context.Units.Find(id));
             _context.SaveChanges();
-            _log.LogInformation("Unit delete.");
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Unit delete."+user);
             return RedirectToAction("Index");
         }
         public IActionResult Details(string id)
         {
             var obj = _context.Units.Find(id);
-            _log.LogInformation("Unit details.");
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Unit details."+user);
             return View(obj);
             //return View(_context.Files.ToList());
         }

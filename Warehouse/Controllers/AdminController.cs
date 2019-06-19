@@ -74,7 +74,8 @@ namespace Warehouse.Controllers
 
            // var users = _context.AppUsers.Include(user => user.Warehouse).ToList();
             PagedList<AppUser> model = new PagedList<AppUser>(users, page, pageSize);
-            _log.LogInformation("Show users.");
+            var userSignIn = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Show users.User: "+ userSignIn);
             return View(model);
         }
         public IActionResult CreateAdmin()
@@ -96,7 +97,8 @@ namespace Warehouse.Controllers
                 user.LockoutEnd = DateTime.MaxValue;
                 _context.Update(user);
                 _context.SaveChanges();
-                _log.LogInformation("Disable user.");
+                var userSignIn = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                _log.LogInformation("Disabled user.User: "+ userSignIn);
                 return Json(true);
             }
         }
@@ -113,7 +115,8 @@ namespace Warehouse.Controllers
             user.LockoutEnd = null;
             _context.Update(user);
             _context.SaveChanges();
-            _log.LogInformation("Enable user.");
+            var userSignIn = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Enabled user.User: "+ userSignIn);
             return Json(true);
         }
         public IActionResult WHListForAdmin(string userId)
@@ -128,7 +131,8 @@ namespace Warehouse.Controllers
             users.WarehouseId = wh.Id;
             _context.AppUsers.Update(users);
             _context.SaveChanges();
-            _log.LogInformation("Change user's warehouse.");
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Changed user's warehouse.User: "+user);
             return RedirectToAction("ShowUsers", "Admin");
         }
     }

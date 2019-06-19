@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -46,7 +47,8 @@ namespace Warehouse.Controllers
             ViewData["CurrentType"] = type;
             ViewData["CurrentSize"] = pageSize;
             PagedList<Product> model = new PagedList<Product>(products, page, pageSize);
-            _log.LogInformation("Product index.");
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Product index.User: "+user);
             return View(model);
         }
 
@@ -72,7 +74,6 @@ namespace Warehouse.Controllers
                 ModelState.AddModelError("", "This name of product is available in the database");
             if (ModelState.IsValid)
             {
-                var imgID = "";
                 if (uploadedFile != null)
                 {
                     // путь к папке Files
@@ -92,9 +93,10 @@ namespace Warehouse.Controllers
                 product.IsActive = true;
                 _context.Add(product);
                 _context.SaveChanges();
+                var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                _log.LogInformation("Product created.User: "+user);
                 return RedirectToAction("Index");
             }
-            _log.LogInformation("Product create.");
             return View(product);
         }
 
@@ -126,9 +128,10 @@ namespace Warehouse.Controllers
             {
                 _context.Update(product);
                 _context.SaveChanges();
+                var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                _log.LogInformation("Product edited.User: "+user);
                 return RedirectToAction("Index");
             }
-            _log.LogInformation("Product edit.");
             return View(product);
         }
 
@@ -136,7 +139,8 @@ namespace Warehouse.Controllers
         [HttpGet]
         public IActionResult Details(string id)
         {
-            _log.LogInformation("Product details.");
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Product details."+user);
             return View(_context.Products.Include(x=>x.ProductType).Include(x=>x.Unit).FirstOrDefault(x => x.Id == id));
         }
 
@@ -153,7 +157,8 @@ namespace Warehouse.Controllers
                 product.IsActive = false;
                 _context.Update(product);
                 _context.SaveChanges();
-                _log.LogInformation("Product disable.");
+                var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                _log.LogInformation("Product disabled."+user);
                 return Json(true);
             }
             return Json(false);
@@ -172,7 +177,8 @@ namespace Warehouse.Controllers
                 product.IsActive = true;
                 _context.Update(product);
                 _context.SaveChanges();
-                _log.LogInformation("Product enable.");
+                var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                _log.LogInformation("Product enabled."+user);
                 return Json(true);
             }
             return Json(false);

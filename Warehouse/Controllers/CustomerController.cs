@@ -27,7 +27,8 @@ namespace Warehouse.Controllers
             var customers = _context.Customers.AsQueryable();
             ViewData["CurrentSize"] = pageSize;
             PagedList<Customer> model = new PagedList<Customer>(customers, page, pageSize);
-            _log.LogInformation("Customer index.");
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Customer index."+user);
             return View(model);
         }
         public IActionResult Create()
@@ -39,7 +40,8 @@ namespace Warehouse.Controllers
         {
             _context.Add(customer);
             _context.SaveChanges();
-            _log.LogInformation("Create new customer.");
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Created new customer."+user);
             return RedirectToAction("Index");
         }
         public IActionResult Edit(string id)
@@ -52,7 +54,8 @@ namespace Warehouse.Controllers
         {
             _context.Update(customer);
             _context.SaveChanges();
-            _log.LogInformation("Edit customer.");
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Edited customer."+user);
             return RedirectToAction("Index");
         }
         public IActionResult Delete(string id)
@@ -69,7 +72,8 @@ namespace Warehouse.Controllers
                 _context.Customers.Remove(obj);
                 _context.SaveChanges();
             }
-            _log.LogInformation("Delete customer.");
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Deleted customer."+user);
             return RedirectToAction("Index");
         }
         public IActionResult Back()
