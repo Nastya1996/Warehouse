@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Warehouse.Data;
 using Warehouse.Models;
 
@@ -15,10 +17,12 @@ namespace Warehouse.Controllers
     [Authorize(Roles = "Storekeeper")]
     public class UnitController : Controller
     {
+        readonly ILogger<UnitController> _log;
         private readonly ApplicationDbContext _context;
         
-        public UnitController(ApplicationDbContext context)
+        public UnitController(ApplicationDbContext context, ILogger<UnitController> log)
         {
+            _log = log;
             _context = context;
         }
 
@@ -26,6 +30,8 @@ namespace Warehouse.Controllers
         public IActionResult Index()
         {
             var unitDatas = _context.Units;
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Unit index."+user);
             return View(unitDatas.ToList());
         }
         public IActionResult Create()
@@ -39,6 +45,8 @@ namespace Warehouse.Controllers
             if (ModelState.IsValid) {
                 _context.Add(unit);
                 _context.SaveChanges();
+                var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                _log.LogInformation("Unit createed."+user);
                 return RedirectToAction("Index");
             }
             return View();
@@ -55,6 +63,8 @@ namespace Warehouse.Controllers
             {
                 _context.Units.Update(unit);
                 _context.SaveChanges();
+                var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                _log.LogInformation("Edited index."+user);
                 return RedirectToAction("Index");
             }
             return View();
@@ -67,11 +77,15 @@ namespace Warehouse.Controllers
         {
             _context.Units.Remove(_context.Units.Find(id));
             _context.SaveChanges();
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Unit delete."+user);
             return RedirectToAction("Index");
         }
         public IActionResult Details(string id)
         {
             var obj = _context.Units.Find(id);
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Unit details."+user);
             return View(obj);
             //return View(_context.Files.ToList());
         }

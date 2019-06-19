@@ -7,17 +7,22 @@ using Warehouse.Models;
 using Warehouse.Data;
 using Microsoft.AspNetCore.Authorization;
 using PagedList.Core;
+using Microsoft.Extensions.Logging;
+using System.Security.Claims;
+
 namespace Warehouse.Controllers
 {
     [Authorize(Roles = "Storekeeper")]
     public class ProductTypeController : Controller
     {
+        
         private readonly ApplicationDbContext _context;
-        public ProductTypeController(ApplicationDbContext context)
+        readonly ILogger<ProductTypeController> _log;
+        public ProductTypeController(ApplicationDbContext context, ILogger<ProductTypeController> log)
         {
+            _log = log;
             _context = context;
         }
-
         public IActionResult Index(string type, int page=1, int pageSize=10)
         {
             type = type == null ? "" : type.Trim();
@@ -25,6 +30,8 @@ namespace Warehouse.Controllers
             ViewData["CurrentType"] = type;
             var types = _context.Types.Where(t => t.Name.Contains(type,StringComparison.InvariantCultureIgnoreCase)).AsQueryable();
             PagedList<ProductType> model = new PagedList<ProductType>(types, page,pageSize);
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Product type index.User: "+user);
             return View(model);
         }
 
@@ -46,6 +53,8 @@ namespace Warehouse.Controllers
             {
                 _context.Types.Add(productType);
                 _context.SaveChanges();
+                var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                _log.LogInformation("Product type created.User: "+user);
                 return RedirectToAction("Index");
             }
             return View(productType);
@@ -61,6 +70,7 @@ namespace Warehouse.Controllers
         [HttpPost]
         public IActionResult Edit(ProductType productType)
         {
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             if ((_context.Types.FirstOrDefault(pt => pt.Name == productType.Name && pt.Id != productType.Id)) != null)
             {
                 ModelState.AddModelError("", "This type of product is available in the database");
@@ -69,6 +79,7 @@ namespace Warehouse.Controllers
             {
                 _context.Update(productType);
                 _context.SaveChanges();
+                _log.LogInformation("Product type edited.User: "+user);
                 return RedirectToAction("Index");
             }
             return View(productType);
@@ -85,10 +96,12 @@ namespace Warehouse.Controllers
         [HttpGet]
         public IActionResult Deleted(string id)
         {
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var obj = _context.Types.Find(id);
             if (obj == null) return NotFound();
             _context.Remove(_context.Types.Find(id));
             _context.SaveChanges();
+            _log.LogInformation("Product type deleted.User: "+user);
             return RedirectToAction("Index");
         }
 
@@ -97,6 +110,8 @@ namespace Warehouse.Controllers
         [HttpGet]
         public IActionResult Details(string id)
         {
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Product type details.User: "+user);
             return View(_context.Types.FirstOrDefault(x=>x.Id==id));
         }
     }

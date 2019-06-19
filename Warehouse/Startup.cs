@@ -16,6 +16,7 @@ using Warehouse.Models;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System.Globalization;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Logging;
 
 namespace Warehouse
 {
@@ -53,8 +54,19 @@ namespace Warehouse
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            loggerFactory.AddFile(
+                pathFormat: "Logs/dsl-{Date}.txt",
+                levelOverrides: new Dictionary<string, LogLevel>
+                {
+                    { "Warehouse",LogLevel.Information },
+                    { "Default",LogLevel.Warning },
+                    { "System", LogLevel.Warning},
+                    { "Microsoft", LogLevel.Warning}
+                });
+
+            
             app.UseStaticFiles();
             IList<CultureInfo> supportedCultures = new List<CultureInfo>()
             {

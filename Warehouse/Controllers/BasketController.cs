@@ -9,6 +9,7 @@ using Warehouse.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
 
 namespace Warehouse.Controllers
 {
@@ -16,11 +17,13 @@ namespace Warehouse.Controllers
     public class BasketController : Controller
     {
         private readonly ApplicationDbContext _context;
+        readonly ILogger<BasketController> _log;
 
         public string MemberShip { get; private set; }
 
-        public BasketController(ApplicationDbContext context)
+        public BasketController(ApplicationDbContext context, ILogger<BasketController> log)
         {
+            _log = log;
             _context = context;
         }
         public IActionResult Index()
@@ -28,7 +31,7 @@ namespace Warehouse.Controllers
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             //todo
             var baskets = _context.Baskets.Include(p => p.Product).Where(p=>p.UserId == user.Id).ToList();
-
+            _log.LogInformation("Basket index. User: "+user);
             return View("_Index", baskets);
         }
         public IActionResult IndexForHover()
@@ -36,7 +39,7 @@ namespace Warehouse.Controllers
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             //todo
             var baskets = _context.Baskets.Include(p => p.Product).Where(p => p.UserId == user.Id);
-
+            _log.LogInformation("Basket index.User: "+user);
             return View("_IndexForHover", baskets);
         }
         public IActionResult Delete(string id)
@@ -47,6 +50,8 @@ namespace Warehouse.Controllers
         {
             _context.Baskets.Remove(_context.Baskets.Find(id));
             _context.SaveChanges();
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Deleted basket item."+user);
             return RedirectToAction("Index");
         }
     }

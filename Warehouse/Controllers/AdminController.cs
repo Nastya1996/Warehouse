@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using PagedList.Core;
 using Warehouse.Data;
 using Warehouse.Models;
@@ -20,8 +21,10 @@ namespace Warehouse.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<AppUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        public AdminController(ApplicationDbContext context, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager)
+        private readonly ILogger<AdminController> _log;
+        public AdminController(ApplicationDbContext context, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, ILogger<AdminController> log)
         {
+            _log = log;
             _context = context;
             _userManager = userManager;
             _roleManager = roleManager;
@@ -71,7 +74,8 @@ namespace Warehouse.Controllers
 
            // var users = _context.AppUsers.Include(user => user.Warehouse).ToList();
             PagedList<AppUser> model = new PagedList<AppUser>(users, page, pageSize);
-
+            var userSignIn = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Show users.User: "+ userSignIn);
             return View(model);
         }
         public IActionResult CreateAdmin()
@@ -93,6 +97,8 @@ namespace Warehouse.Controllers
                 user.LockoutEnd = DateTime.MaxValue;
                 _context.Update(user);
                 _context.SaveChanges();
+                var userSignIn = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                _log.LogInformation("Disabled user.User: "+ userSignIn);
                 return Json(true);
             }
         }
@@ -109,6 +115,8 @@ namespace Warehouse.Controllers
             user.LockoutEnd = null;
             _context.Update(user);
             _context.SaveChanges();
+            var userSignIn = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Enabled user.User: "+ userSignIn);
             return Json(true);
         }
         public IActionResult WHListForAdmin(string userId)
@@ -123,6 +131,8 @@ namespace Warehouse.Controllers
             users.WarehouseId = wh.Id;
             _context.AppUsers.Update(users);
             _context.SaveChanges();
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Changed user's warehouse.User: "+user);
             return RedirectToAction("ShowUsers", "Admin");
         }
     }

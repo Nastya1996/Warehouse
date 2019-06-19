@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using PagedList.Core;
 using Warehouse.Data;
 using Warehouse.Models;
@@ -15,8 +16,10 @@ namespace Warehouse.Controllers
     public class CustomerController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public CustomerController(ApplicationDbContext context)
+        readonly ILogger<CustomerController> _log;
+        public CustomerController(ApplicationDbContext context, ILogger<CustomerController> log)
         {
+            _log = log;
             _context = context;
         }
         public IActionResult Index(int page = 1, int pageSize = 10)
@@ -24,6 +27,8 @@ namespace Warehouse.Controllers
             var customers = _context.Customers.AsQueryable();
             ViewData["CurrentSize"] = pageSize;
             PagedList<Customer> model = new PagedList<Customer>(customers, page, pageSize);
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Customer index."+user);
             return View(model);
         }
         public IActionResult Create()
@@ -35,6 +40,8 @@ namespace Warehouse.Controllers
         {
             _context.Add(customer);
             _context.SaveChanges();
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Created new customer."+user);
             return RedirectToAction("Index");
         }
         public IActionResult Edit(string id)
@@ -47,6 +54,8 @@ namespace Warehouse.Controllers
         {
             _context.Update(customer);
             _context.SaveChanges();
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Edited customer."+user);
             return RedirectToAction("Index");
         }
         public IActionResult Delete(string id)
@@ -63,6 +72,8 @@ namespace Warehouse.Controllers
                 _context.Customers.Remove(obj);
                 _context.SaveChanges();
             }
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            _log.LogInformation("Deleted customer."+user);
             return RedirectToAction("Index");
         }
         public IActionResult Back()
