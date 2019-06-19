@@ -24,7 +24,7 @@ namespace Warehouse.Models
         [RegularExpression("([1-9][0-9]{0,15})", ErrorMessage = "*Invalid value")]
         public decimal SalePrice { get; set; }
         public DateTime ReceiptDate { get; set; }
-        public DateTime AddDate { get; set; }
+        public DateTime Date { get; set; }
 
 
         public string UserId { get; set; }

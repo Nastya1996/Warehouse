@@ -70,7 +70,7 @@ namespace Warehouse.Controllers
             {
                 var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 var product = _context.Products.Include(u => u.Unit).FirstOrDefault(p => p.Id == productManager.ProductId);
-                productManager.AddDate = DateTime.Now;
+                productManager.Date = DateTime.Now;
                 productManager.UserId = user.Id;
                 productManager.CurrentCount = productManager.Count;
                 productManager.Product = product;
@@ -171,19 +171,12 @@ namespace Warehouse.Controllers
                     _context.SaveChanges();
                     return Json(true);
                 }
-
             }
             return Json(false);
         }
 
 
-        //Get Products
-        [HttpPost]
-        [Route("Products/Get")]
-        public JsonResult GetProduct([FromBody]string selected)
-        {
-            return Json(_context.Products.Where(p => p.ProductTypeId == selected && p.IsActive != false).ToList());
-        }
+        
 
         [Route("Products/MaxPrice")]
         public JsonResult GetMaxPrice()

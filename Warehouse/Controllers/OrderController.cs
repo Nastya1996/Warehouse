@@ -62,7 +62,7 @@ namespace Warehouse.Controllers
             {
                 var newPM = new ProductManager
                 {
-                    AddDate = pm.AddDate,
+                    Date = pm.Date,
                     Count = countCast,
                     CurrentCount = countCast,
                     ProductId = pm.ProductId,
@@ -95,7 +95,7 @@ namespace Warehouse.Controllers
             {
                 var count = item.Count;
 
-                var productManager = _context.ProductManagers.Where(p => p.WareHouseId == user.WarehouseId && p.ProductId == item.ProductId && p.CurrentCount!=0).OrderBy(pm => pm.AddDate).ToList();
+                var productManager = _context.ProductManagers.Where(p => p.WareHouseId == user.WarehouseId && p.ProductId == item.ProductId && p.CurrentCount!=0).OrderBy(pm => pm.Date).ToList();
                 if (productManager.Sum(p => p.CurrentCount) < count)
                 {
                     baskets.Add(item);
