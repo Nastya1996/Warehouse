@@ -5,6 +5,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging;
 using PagedList.Core;
 using Warehouse.Data;
 using Warehouse.Models;
@@ -14,13 +16,21 @@ namespace Warehouse.Controllers
     [Authorize(Roles = "Admin")]
     public class WareHouseController : Controller
     {
+        private readonly IStringLocalizer<WareHouseController> _localizer;
+        private readonly ILogger<WareHouseController> _logger;
+
         private readonly ApplicationDbContext _context;
-        public WareHouseController(ApplicationDbContext context)
+        public WareHouseController(ApplicationDbContext context, IStringLocalizer<WareHouseController> localizer,
+    ILogger<WareHouseController> logger)
         {
             _context = context;
+            _localizer = localizer;
+            _logger = logger;
         }
+
         public IActionResult Index(string number, string address, int page = 1, int pageSize = 10)
         {
+            _logger.LogInformation(_localizer["Product"]);
             number = number == null ? "" : number.Trim();
             address = address == null ? "" : address.Trim();
 

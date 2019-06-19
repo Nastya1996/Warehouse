@@ -14,6 +14,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Warehouse.Models;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace Warehouse
 {
@@ -29,6 +31,10 @@ namespace Warehouse
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddLocalization(o =>
+            {
+                o.ResourcesPath = "Resources";
+            });
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -49,6 +55,20 @@ namespace Warehouse
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseStaticFiles();
+            IList<CultureInfo> supportedCultures = new List<CultureInfo>()
+            {
+                new CultureInfo("en-US"),
+                new CultureInfo("ru"),
+            };
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("en-US"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
+
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
