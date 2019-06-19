@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Warehouse.Data;
 using Warehouse.Models;
@@ -13,10 +16,13 @@ namespace Warehouse.Controllers
     public class UnitController : Controller
     {
         private readonly ApplicationDbContext _context;
+        
         public UnitController(ApplicationDbContext context)
         {
             _context = context;
         }
+
+
         public IActionResult Index()
         {
             var unitDatas = _context.Units;
@@ -67,6 +73,7 @@ namespace Warehouse.Controllers
         {
             var obj = _context.Units.Find(id);
             return View(obj);
+            //return View(_context.Files.ToList());
         }
     }
 }
