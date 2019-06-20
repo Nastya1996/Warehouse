@@ -1,0 +1,7 @@
+2019-06-20T12:51:44.2885461+04:00 0HLNLBF9BQS57:00000003 [WRN] Invalid password for user "7dd6a9f5-fda7-47fa-b000-7f1123690045". (c2dce6c7)
+2019-06-20T12:51:44.2992220+04:00 0HLNLBF9BQS57:00000003 [WRN] User "7dd6a9f5-fda7-47fa-b000-7f1123690045" failed to provide the correct password. (ec8d2479)
+2019-06-20T12:51:50.6280538+04:00 0HLNLBF9BQS57:00000004 [INF] User logged in. (fdce0db4)
+2019-06-20T12:52:45.1227709+04:00 0HLNLBF9BQS57:00000007 [WRN] The LINQ expression '"where [rl].Name.Contains(__role_0, InvariantCultureIgnoreCase)"' could not be translated and will be evaluated locally. (011792c6)
+2019-06-20T12:52:45.1238522+04:00 0HLNLBF9BQS57:00000007 [WRN] The LINQ expression '"FirstOrDefault()"' could not be translated and will be evaluated locally. (011792c6)
+2019-06-20T12:52:45.2107246+04:00 0HLNLBF9BQS57:00000007 [INF] Show users.User: warehouseadmin@gmail.com (83472e5c)
+2019-06-20T12:55:18.8792708+04:00 0HLNLBF9BQS5F:00000001 [INF] Show users.User: warehouseadmin@gmail.com (83472e5c)
