@@ -1,82 +1,88 @@
 ﻿@model IPagedList<ProductManager>
-    @{
+@{
     ViewData["Title"] = "Show";
-    }
-    <br />
-    <form method="get" asp-action="Show">
-        <label class="control-label">Price:</label>
-        <input type="number" min="0" name="from" value="@ViewData[" CurrentFrom"]" placeholder="0" />
+}
+<br />
+<form method="get" asp-action="Show">
+    <label class="control-label">Price:</label>
+    <input type="number" min="0" name="from" value="@ViewData["CurrentFrom"]" placeholder="0" />
 
-        <label class="control-label">From -</label>
-        <label class="control-label"> Before</label>
-        <input type="number" min="0" name="before" value="@ViewData[" CurrentBefore"]" placeholder="0" />
+    <label class="control-label">From -</label>
+    <label class="control-label"> Before</label>
+    <input type="number" min="0" name="before" value="@ViewData["CurrentBefore"]" placeholder="0" />
 
-        <label class="control-label">Page size</label>
-        <input type="number" name="pageSize" min="1" value="@ViewData[" CurrentSize"]" />
-        <input type="submit" id="send" value="Filter" class="btn btn-default" />
-    </form>
-    <table class="table table-bordered table-hover">
-        <thead class="bg-primary">
+    <label class="control-label">Page size</label>
+    <input type="number" name="pageSize" min="1" value="@ViewData["CurrentSize"]" />
+    <input type="submit" id="send" value="Filter" class="btn btn-default" />
+</form>
+<table class="table table-bordered table-hover">
+    <thead class="bg-primary">
+        <tr>
+            <th>Name</th>
+            <th>Count</th>
+            <th>Current count</th>
+            <th>Unit</th>
+            <th>Receipt price</th>
+            <th>Sale price</th>
+            <th>Receipt date</th>
+            <th>Added date</th>
+            <th>Warehouse</th>
+            <th>Move</th>
+            <th>Edit</th>
+            <td>Write out</td>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var product in Model)
+        {
             <tr>
-                <th>Name</th>
-                <th>Count</th>
-                <th>Current count</th>
-                <th>Unit</th>
-                <th>Receipt price</th>
-                <th>Sale price</th>
-                <th>Receipt date</th>
-                <th>Added date</th>
-                <th>Warehouse</th>
-                <th>Move</th>
-                <th>Edit</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @foreach (var product in Model)
-            {
-            <tr>
+                <td hidden="hidden"><input type="hidden" value="@product.Id" /></td>
                 <td>@product.Product.Name</td>
                 <td>@product.Count</td>
-                <td>@product.CurrentCount</td>
+                <td class="currentCount">@product.CurrentCount</td>
                 <td>@product.Product.Unit.Name</td>
                 <td>@product.ReceiptPrice</td>
                 <td>@product.SalePrice</td>
                 <td>@product.ReceiptDate.ToString("d")</td>
-                <td>@product.AddDate</td>
+                <td>@product.Date</td>
                 <td>@product.WareHouse.Number</td>
                 <td>
                     <a class="moveProduct" id="@product.Id" href="#">Move</a>
                 </td>
                 <td><a asp-action="Edit" asp-route-id="@(product.Id)">Edit</a></td>
+                <td><a>Write out</a></td>
             </tr>
-            }
-        </tbody>
-    </table>
-    <div>
-        <pager list="@Model" asp-action="Show" asp-controller="ProductManager"
-               asp-route-from="@ViewData[" CurrentFrom"]" asp-route-before="@ViewData[" CurrentBefore"]"
-               asp-route-pageSize="@ViewData[" CurrentSize"]" />
-    </div>
-    <div class="modal fade" id="modalMoveProduct" role="dialog">
-        <div class="modal-dialog">
+        }
+    </tbody>
+</table>
+<div>
+    <pager list="@Model" asp-action="Show" asp-controller="ProductManager"
+           asp-route-from="@ViewData["CurrentFrom"]" asp-route-before="@ViewData["CurrentBefore"]"
+           asp-route-pageSize="@ViewData["CurrentSize"]" />
+</div>
+<div class="modal fade" id="modalMoveProduct" role="dialog">
+    <div class="modal-dialog">
 
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Warehouses</h4>
-                </div>
-                <div class="modal-body">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Warehouses</h4>
             </div>
+            <div class="modal-body">
 
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
         </div>
+
     </div>
-    @section scripts{
+</div>
+@section scripts{
+    <script src="https://kit.fontawesome.com/b7938c82ea.js"></script>
+    <script src="~/js/jquery-confirm.min.js"></script>
+    <link href="~/css/jquery-confirm.min.css" rel="stylesheet" />
     <script>
         let a = $(":input[name='before']");
         if (a.val() == "0") {
@@ -102,5 +108,105 @@
                 $("#modalMoveProduct").modal();
             });
         });
+
+
+        $(() => {
+            $("a:contains('Write out')").on("click", function () {
+                var $productManagerId = $(this).parents("tr").children("td:first").children(":input").val();
+                var thisTag = $(this).parents("tr").children("td.currentCount")
+                var $count = thisTag.html();
+                var error = false;
+                //confirm
+                $.confirm({
+                    title: 'Write out!',
+                    content: '' +
+                        '<div class="form-group">' +
+                        '<label>Select quantity of products for write out!</label>' +
+                        '<input type="number" placeholder="0" min="0"  class="quantity form-control" required />' +
+                        '<label>Select price!</label>' +
+                        '<input type="number" placeholder="0" min="0"  class="price form-control" required />' +
+                        '</div>',
+                    buttons: {
+                        formSubmit: {
+                            text: 'Remove',
+                            btnClass: 'btn-blue',
+                            action: function () {
+                                var $currentCount = parseInt(this.$content.find('.quantity').val());
+                                var $price = parseInt(this.$content.find(".price").val());
+                                if ($price < 0 || $price>9000000000 || $count < $currentCount || $currentCount == 0) {
+                                $.confirm({
+                                        icon: 'fas fa-exclamation-triangle',
+                                        title: 'Warehouse!',
+                                        content: 'An error has occurred. Write the actual amount!',
+                                        type: 'red',
+                                        typeAnimated: true,
+                                        buttons: {
+                                            close: {
+                                                btnClass: "btn-red",
+                                                action: function () {
+                                                }
+                                            }
+                                        }
+                                    });
+                                    return false;
+                                }
+                                $.ajax({
+                                    type: "POST",
+                                    data: {
+                                        id: $productManagerId,
+                                        quantity: $currentCount,
+                                        price : $price
+                                    },
+                                    async: false,
+                                    url: "../../ProductManager/WriteOut",
+                                    success: function (result) {
+                                        if (result) {
+                                            error = false;
+                                            let $count = thisTag.html();
+                                            thisTag.html($count - $currentCount);
+                                            $.confirm({
+                                                icon: 'fas fa-check-circle',
+                                                title: 'Warehouse!',
+                                                content: 'Product removal successful!',
+                                                type: 'blue',
+                                                typeAnimated: true,
+                                                buttons: {
+                                                    close: {
+                                                        btnClass: "btn-blue",
+                                                        action: function () {
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                        else {
+                                            error = true;
+                                            $.confirm({
+                                                icon: 'fas fa-exclamation-triangle',
+                                                title: 'Warehouse!',
+                                                content: 'An error has occurred. Please, try again!',
+                                                type: 'red',
+                                                typeAnimated: true,
+                                                buttons: {
+                                                    close: {
+                                                        btnClass: "btn-red",
+                                                        action: function () {
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                                if (error) return false;
+                            }
+                        },
+                        cancel: function () {
+                            //close
+                        },
+                    },
+                });
+            });
+        });
     </script>
-    }
+}

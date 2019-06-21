@@ -23,7 +23,7 @@ namespace Warehouse.Controllers
         public WareHouseController(ApplicationDbContext context, ILogger<WareHouseController> log,
     ILogger<WareHouseController> logger)
         {
-            _log = log;
+            _log = logger;
             _context = context;
         }
 

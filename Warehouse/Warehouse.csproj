@@ -14,9 +14,16 @@
     <Compile Remove="Data\Migrations\20190528105742_bar.Designer.cs" />
     <Compile Remove="Data\Migrations\20190528105907_bar.cs" />
     <Compile Remove="Data\Migrations\20190528105907_bar.Designer.cs" />
+    <Compile Remove="Data\Migrations\20190621072606_writeOutChanges.cs" />
+    <Compile Remove="Data\Migrations\20190621072606_writeOutChanges.Designer.cs" />
+    <Compile Remove="Data\Migrations\20190621073401_writeOut.cs" />
+    <Compile Remove="Data\Migrations\20190621073401_writeOut.Designer.cs" />
+    <Compile Remove="Data\Migrations\20190621073646_fix.cs" />
+    <Compile Remove="Data\Migrations\20190621073646_fix.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="EPPlus" Version="4.5.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Language" Version="2.1.2" />

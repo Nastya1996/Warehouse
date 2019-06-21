@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Warehouse.Models.ProductManager>
+﻿@*@model IEnumerable<Warehouse.Models.ProductManager>*@
+@model ReportViewModel
 @{
     ViewData["Title"] = "Index";
 }
@@ -7,45 +8,173 @@
 <br />
 <br />
 <br />
-<form method="post" asp-action="Index" asp-controller="Report">
-    <label for="dateFrom">From</label>
-    <input type="date" name="dateFrom" value="" />
-    <label for="dateTo">To</label>
-    <input type="date" name="dateTo" value="" />
-    @Html.DropDownList("pType", ViewBag.prodType as SelectList, "Type")
-    @Html.DropDownList("productName", ViewBag.prodName as SelectList, "Product")
-    @Html.DropDownList("worker", ViewBag.workers as SelectList, "Worker")
-    <br /><input type="radio" name="gorcarq" value="elq" />
-    <label>Elq</label><br />
-    <input type="radio" name="gorcarq" value="mutq" />
-    <label>Mutq</label><br />
-    <input type="radio" name="gorcarq" value="dursGrac" />
-    <label>Durs Grac</label><br />
-    <input type="submit" value="Search" />
+@{
+    var date = DateTime.Now.ToString("yyyy-MM-dd");
+}
+<form method="get" asp-action="Index" asp-controller="Report">
+    <div class="form-inline form-group">
+        <label class="control-label">Deal:</label>
+        <select asp-for="Deal">
+            <option selected disabled value="">Select the deal...</option>
+            <option>Import</option>
+            <option>Saled</option>
+            <option>Export</option>
+        </select>
+
+        <label class="control-label">Type:</label>
+        <select asp-for="TypeId" asp-items="ViewBag.Types">
+            <option selected value="">All</option>
+        </select>
+        <label class="control-label">Name:</label>
+        <select asp-for="ProductId" asp-items="ViewBag.Names">
+            <option selected value="">All</option>
+        </select>
+
+        <label class="control-label">User:</label>
+        <select asp-for="UserId" asp-items="ViewBag.Users">
+            <option selected value="">All</option>
+        </select>
+
+        <label class="control-label">From:</label>
+        <input class="form-control" asp-for="DateFrom" min="01.01.2000" max="@date" type="date" />
+
+        <label class="control-label">To:</label>
+        <input class="form-control" asp-for="DateTo" type="date" min="01.01.2000" max="@date" />
+
+        <label class="control-label">Page size:</label>
+        <input class="form-control form-inline" asp-for="PageSize" type="number" min="0" />
+        <input type="submit" value="Filter" class="btn btn-default" />
+    </div>
 </form>
 
-<table class="table table-striped">
+<table class="table table-bordered table-hover">
     <thead>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Count</th>
-            <th>ReceiptPrice</th>
-            <th>SalePrice</th>
-        </tr>
+        @{
+            if (ViewBag.paged == null || ViewBag.paged.Count == 0)
+            {
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Count</th>
+                    <th>Price</th>
+                    <th>Date</th>
+                    <th>User</th>
+                </tr>
+            }
+            else if (ViewBag.paged[0] is ProductManager)
+            {
+                <tr>
+                    <th>Product name</th>
+                    <th>Product type</th>
+                    <th>Import count</th>
+                    <th>Receipt price</th>
+                    <th>Added date</th>
+                    <th>User</th>
+                </tr>
+            }
+            else if (ViewBag.paged[0] is ProductOrder)
+            {
+                <tr>
+                    <th>Product name</th>
+                    <th>Product type</th>
+                    <th>Count of saled</th>
+                    <th>Receipt price</th>
+                    <th>Date of saled</th>
+                    <th>User</th>
+                </tr>
+            }
+            else if (ViewBag.paged[0] is WriteOut)
+            {
+                <tr>
+                    <th>Product name</th>
+                    <th>Product type</th>
+                    <th>Count of out</th>
+                    <th>Price of out</th>
+                    <th>Date of write out</th>
+                    <th>User</th>
+                </tr>
+            }
+        }
     </thead>
     <tbody>
-        @{ 
-            @foreach (var pm in Model)
+        @{
+            if (ViewBag.paged == null || ViewBag.paged.Count == 0)
             {
+                <tr><td colspan="7" align="center">No products to show!</td></tr>
+            }
+            else
+            {
+                @foreach (var pm in ViewBag.paged)
+                {
                 <tr>
                     <td>@pm.Product.Name</td>
                     <td>@pm.Product.ProductType.Name</td>
                     <td>@pm.Count</td>
-                    <td>@pm.ReceiptPrice</td>
-                    <td>@pm.SalePrice</td>
+
+                    @if (pm is ProductManager)
+                    {
+                        <td>@pm.ReceiptPrice</td>
+                        <td>@pm.Date</td>
+                        <td>@pm.User.UserName</td>
+                    }
+                    @if (pm is ProductOrder)
+                    {
+                        <td>@pm.FinallyPrice</td>
+                        <td>@pm.Order.Date</td>
+                        <td>@pm.Order.User.UserName</td>
+                    }
+                    @if(pm is WriteOut)
+                    {
+                        <td>@pm.Price</td>
+                        <td>@pm.Date</td>
+                        <td>@pm.User.UserName</td>
+                    }
                 </tr>
+                }
             }
-         }
+
+        }
     </tbody>
 </table>
+<a  asp-action="ExcelExport" asp-route-Deal="@Model.Deal" asp-route-DateTo="@Model.DateTo.ToString("yyyy-MM-dd")" asp-route-UserId="@Model.UserId" asp-route-TypeId="@Model.TypeId" asp-route-ProductId="@Model.ProductId" >Export to Excel</a>
+<pager list="@ViewBag.paged" asp-route-Deal="@Model.Deal" asp-route-DateTo="@Model.DateTo.ToString("yyyy-MM-dd")" asp-route-UserId="@Model.UserId" asp-route-pageSize="@Model.PageSize" asp-route-TypeId="@Model.TypeId" asp-route-ProductId="@Model.ProductId" asp-controller="Report" asp-action="Index" />
+@section scripts{
+    <link href="~/css/chosen.min.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/chosen.jquery.min.js"></script>
+    <script>
+        $(() => {
+            $("#Deal").chosen({
+                search_contains: true
+            });
+            $("#TypeId").chosen({
+                search_contains: true
+            });
+
+            $("#ProductId").chosen({
+                search_contains: true
+            });
+            $("#UserId").chosen({
+                search_contains: true
+            });
+
+            $("#TypeId").on("change", function () {
+                var selected = $(this).children("option:selected").val();
+                $.ajax({
+                    url: '/Products/Get',
+                    type: "POST",
+                    data: JSON.stringify(selected),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        $("#ProductId").empty();
+                        $("#ProductId").append("<option selected value=''>All</select>");
+                        data.forEach(function (element) {
+                            $("#ProductId").append("<option value=" + element.id + ">" + element.name + "</option>");
+                        });
+                        $("#ProductId").trigger("chosen:updated");
+                    }
+                });
+            });
+        });
+    </script>
+}
