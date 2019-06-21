@@ -154,18 +154,22 @@ namespace Warehouse.Controllers
             return RedirectToAction("Show", new Dictionary<string, string> { { "id", prodManager.ProductId} });
         }
 
-        //Add to basket
-        [Route("ProductManager/Add/{id}/{quantity}")]
-        [HttpGet]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="quantity"></param>
+        /// <returns></returns>
+        [HttpPost]
         public IActionResult Add(string id, string quantity)
         {
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            _log.LogInformation("Product manager add.User: "+user);
+            _log.LogInformation("Product manager add.User: " + user);
             uint count = Convert.ToUInt32(quantity);
             var product = _context.ProductManagers.FirstOrDefault(pm => pm.ProductId == id);
             if (product != null)
             {
-                var basket = _context.Baskets.Include(p=>p.Product).FirstOrDefault(b => b.UserId == user.Id && b.ProductId == id);
+                var basket = _context.Baskets.Include(p => p.Product).FirstOrDefault(b => b.UserId == user.Id && b.ProductId == id);
                 if (basket == null)
                 {
                     basket = new Basket

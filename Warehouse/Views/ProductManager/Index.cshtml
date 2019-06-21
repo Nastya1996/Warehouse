@@ -29,7 +29,7 @@
             <th>Unit</th>
             @if (User.IsInRole("Worker"))
             {
-                <th>Select quantity</th>
+                @*<th>Select quantity</th>*@
                 <th>Add to Basket</th>
             }
             <th>Show</th>
@@ -51,8 +51,8 @@
                 <td>@productManager.Product.Unit.Name</td>
                 @if (User.IsInRole("Worker"))
                 {
-                    <td><input type="number" min="0" style="width:50px" name="quantity" value="0" /></td>
-                    <td><input type="button" value="Add" name="Add" /></td>
+                    @*<td><input class="quantity" type="number" min="0" style="width:50px" name="quantity" value="0" /></td>*@
+                    <td><a href="#">Add</a></td>
                 }
                 <td><a asp-action="Show" asp-route-id="@productManager.Product.Id">Show</a></td>
             </tr>
@@ -71,80 +71,94 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial.cshtml");}
     <script>
         $(() => {
-            //Before adding to the cart check the quantity of product
-            $("input[name='Add']").on("click", function () {
-                $(this).parent().parent().addClass("select");
-                let $inputQuantity = $(".select").children().find("input[name='quantity']");
-                let $id = $(".select").children().children().val();
-                let $currentCount = $(".select td.currentCount").html();
-                let $quantity = $inputQuantity.val();
-                $(this).parent().parent().removeClass();
-                if (parseInt($quantity) <= parseInt($currentCount) & parseInt($quantity) !== 0) {
-                    $.ajax({
-                        type: 'GET',
-                        url: '/ProductManager/Add/' + $id + '/' + $quantity,
-                        success: function (data) {
-                            if (data) {
-                                $.confirm({
-                                    icon: 'fas fa-check-circle',
-                                    title: 'Warehouse!',
-                                    content: 'Product added to cart!',
-                                    type: 'dark',
-                                    typeAnimated: true,
-                                    closeAnimation: 'rotateXR',
-                                    buttons: {
-                                        close: {
-                                            btnClass: "btn-dark",
-                                            action: function () {
+            $("a:contains('Add')").on("click", function () {
+                var $Id = $(this).parents("tr").children("td:first").children(":input").val();
+                var thisTag = $(this).parents("tr").children("td.currentCount");
+                var $currentCount = parseInt(thisTag.html());
+                $.confirm({
+                    title: 'Write out!',
+                    content: '' +
+                        '<div class="form-group">' +
+                        '<label>Select quantity to add to cart!</label>' +
+                        '<input type="number" placeholder="0" min="0" value="0"  class="quantity form-control" required />' +
+                        '</div>',
+                    buttons: {
+                        formSubmit: {
+                            text: 'Add',
+                            btnClass: 'btn-blue',
+                            action: function () {
+                                var $currentQuantity = parseInt(this.$content.find('.quantity').val());
+                                if ($currentQuantity > $currentCount || $currentQuantity == 0) {
+                                    $.confirm({
+                                        icon: 'fas fa-exclamation-triangle',
+                                        title: 'Warehouse!',
+                                        content: 'An error has occurred. Write the actual amount!',
+                                        type: 'red',
+                                        typeAnimated: true,
+                                        buttons: {
+                                            close: {
+                                                btnClass: "btn-red",
+                                                action: function () {
+                                                }
                                             }
                                         }
-                                    }
-                                });
-                                $inputQuantity.val(0);
-                            }
-                            else {
-                                $.confirm({
-                                    icon: 'fas fa-exclamation-triangle',
-                                    title: 'Warehouse!',
-                                    content: 'An error has occurred. Please, try again!',
-                                    type: 'red',
-                                    typeAnimated: true,
-                                    closeAnimation: 'rotateXR',
-                                    buttons: {
-                                        close: {
-                                            btnClass: "btn-red",
-                                            action: function () {
-                                            }
-                                        }
-                                    }
-                                });
-                            }
-                        }
-                    });
-                }
-                else {
-                    $.confirm({
-                        icon: 'fas fa-exclamation-triangle',
-                        title: 'Warehouse!',
-                        content: 'An error has occurred. Please, select fewer products!',
-                        type: 'red',
-                        typeAnimated: true,
-                        closeAnimation: 'rotateXR',
-                        buttons: {
-                            close: {
-                                btnClass: "btn-red",
-                                action: function () {
+                                    });
+                                    return false;
                                 }
+                                $.ajax({
+                                    type: "POST",
+                                    data: {
+                                        id: $Id,
+                                        quantity: $currentQuantity
+                                    },
+                                    async: false,
+                                    url: "../../ProductManager/Add",
+                                    success: function (result) {
+                                        if (result) {
+                                            error = false;
+                                            $.confirm({
+                                                icon: 'fas fa-check-circle',
+                                                title: 'Warehouse!',
+                                                content: 'Product added to cart!',
+                                                type: 'blue',
+                                                typeAnimated: true,
+                                                buttons: {
+                                                    close: {
+                                                        btnClass: "btn-blue",
+                                                        action: function () {
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                        else {
+                                            error = true;
+                                            $.confirm({
+                                                icon: 'fas fa-exclamation-triangle',
+                                                title: 'Warehouse!',
+                                                content: 'An error has occurred. Please, try again!',
+                                                type: 'red',
+                                                typeAnimated: true,
+                                                buttons: {
+                                                    close: {
+                                                        btnClass: "btn-red",
+                                                        action: function () {
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                                if (error) return false;
                             }
-                        }
-                    });
-                    $inputQuantity.val(0);
-                }
-                $("input[name='quantity']").blur(function () {
-                    $(this).css("border", "1px solid #92a8d1");
+                        },
+                        cancel: function () {
+                            //close
+                        },
+                    },
                 });
             });
-            
         });
     </script>
 }
