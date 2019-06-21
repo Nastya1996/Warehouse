@@ -7,18 +7,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <environment include="Development">
-        <link rel="stylesheet" href="~/lib/CoolAdmin-master/css/theme.css" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
         <link rel="stylesheet" href="~/css/site.css" />
     </environment>
     <environment exclude="Development">
         <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
-              asp-fallback-href="~/lib/CoolAdmin-master/vendor/bootstrap-4.1/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
-        @*<link asp-href-include="~/CoolAdmin-master/vendor/bootstrap-4.1/bootstrap.min.css" />*@
     </environment>
 </head>
-<body class="animsition">
+<body>
     <div class="modal fade" id="myModal" role="dialog">
         <div class="modal-dialog">
 
@@ -29,7 +28,7 @@
                 </div>
                 <form asp-controller="Basket">
                     <div class="modal-body">
-
+                        
                     </div>
                 </form>
                 <div class="modal-footer modal-footer-basket">
@@ -48,95 +47,93 @@
         $(document).ready(function () {
             $("#modalForBasket").mouseover(function () {
                 $.ajax({
-            url: '@Url.Action("IndexForHover", "Basket")',
+                    url: '@Url.Action("IndexForHover", "Basket")',
                     beforeSend: function () { $(".modal-body").html("<p>Loading... </p>")},
                     success: function (response) {
                         $(".modal-body").html(response);
-                }
-            });
+                    }
+                });
                 $('.modal-dialog').css({
-                "position": "absolute",
+                    "position": "absolute",
                     "top": ($("#modalForBasket").position().top + 20),
                     "left": ($("#modalForBasket").position().left - 250)
                 });
                 $("#myModal").modal();
-        });
-        if ($("#myModal").css('display') == 'none')
+            });
+            if ($("#myModal").css('display') == 'none')
                 $("#myModal .modal-body").empty();
-    });
+        });
 
-
+        
     </script>
-        <nav class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Warehouse</a>
-                </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <li>
-                                <a asp-area="Identity" asp-page="/Account/Register">Create new account</a>
-                            </li>
-                            <li><a asp-controller="Admin" asp-action="ShowUsers">Show Users</a></li>
-                            <li><a asp-controller="WareHouse" asp-action="Create">Create Warehouses</a></li>
-                            <li><a asp-controller="WareHouse" asp-action="Index">Show Warehouses</a></li>
-                            <li><a asp-controller="Product" asp-action="Index">Products</a></li>
-                        }
-                        else if (User.IsInRole("Worker"))
-                        {
-                            <li><a asp-controller="ProductManager" asp-action="Index">Product Manager</a></li>
-                            <li><a asp-controller="Order" asp-action="Index">Order</a></li>
-                            <li><a asp-controller="Customer" asp-action="Create">Customer Create</a></li>
-                            <li data-toggle="modal" id="modalForBasket"><a asp-controller="Basket" asp-action="Index"><img src="https://cdn4.iconfinder.com/data/icons/is_beta_accounting/png/400/basket.png" width="20px" alt="Alternate Text" /></a></li>
-
-                        }
-                        else if (User.IsInRole("Storekeeper"))
-                        {
-                            <li><a asp-controller="ProductType" asp-action="Index">ProductType</a></li>
-                            <li><a asp-controller="ProductType" asp-action="Create">ProductType Create</a></li>
-                            <li><a asp-controller="Product" asp-action="Index">Products</a></li>
-                            <li><a asp-controller="Product" asp-action="Create">Create Product</a></li>
-                            <li><a asp-controller="ProductManager" asp-action="Index">Product Manager</a></li>
-                            <li><a asp-controller="ProductManager" asp-action="Create">Create Product Manager</a></li>
-                            <li><a asp-controller="Unit" asp-action="Index">Unit</a></li>
-                        }
-                        else if (User.IsInRole("Report"))
-                        {
-                            <li><a asp-controller="Admin" asp-action="CreateAdmin">Create new account</a></li>
-                            <li><a asp-controller="Admin" asp-action="Index">Show Users</a></li>
-                            <li><a asp-controller="Admin" asp-action="CreateAdmin">Create Warehouses</a></li>
-                            <li><a asp-controller="Admin" asp-action="Index">Show Warehouses</a></li>
-                            <li><a asp-controller="Admin" asp-action="Index">Products</a></li>
-                        }
-                        else
-                        {
-                            <p>Welcom to Warehouse!</p>
-                        }
-
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Warehouse</a>
             </div>
-        </nav>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li>
+                            <a asp-area="Identity" asp-page="/Account/Register">Create new account</a>
+                        </li>
+                        <li><a asp-controller="Admin" asp-action="ShowUsers">Show Users</a></li>
+                        <li><a asp-controller="WareHouse" asp-action="Create">Create Warehouses</a></li>
+                        <li><a asp-controller="WareHouse" asp-action="Index">Show Warehouses</a></li>
+                        <li><a asp-controller="Product" asp-action="Index">Products</a></li>
+                    }
+                    else if (User.IsInRole("Worker"))
+                    {
+                        <li><a asp-controller="ProductManager" asp-action="Index">Product Manager</a></li>
+                        <li><a asp-controller="Order" asp-action="Index">Order</a></li>
+                        <li><a asp-controller="Customer" asp-action="Create">Customer Create</a></li>
+                        <li data-toggle="modal" id="modalForBasket"><a asp-controller="Basket" asp-action="Index"><img src="https://cdn4.iconfinder.com/data/icons/is_beta_accounting/png/400/basket.png" width="20px" alt="Alternate Text" /></a></li>
 
-    <partial name="_CookieConsentPartial" />
-    <div class="page-wrapper">
-        <div class="page-content--bge5">
-            <div class="container">
-                @RenderBody()
-                @*<footer>
-                        <p>&copy; 2019 - Warehouse</p>
-                    </footer>*@
+                    }
+                    else if (User.IsInRole("Storekeeper"))
+                    {
+                        <li><a asp-controller="ProductType" asp-action="Index">ProductType</a></li>
+                        <li><a asp-controller="ProductType" asp-action="Create">ProductType Create</a></li>
+                        <li><a asp-controller="Product" asp-action="Index">Products</a></li>
+                        <li><a asp-controller="Product" asp-action="Create">Create Product</a></li>
+                        <li><a asp-controller="ProductManager" asp-action="Index">Product Manager</a></li>
+                        <li><a asp-controller="ProductManager" asp-action="Create">Create Product Manager</a></li>
+                        <li><a asp-controller="Unit" asp-action="Index">Unit</a></li>
+                    }
+                    else if (User.IsInRole("Report"))
+                    {
+                        <li><a asp-controller="Admin" asp-action="CreateAdmin">Create new account</a></li>
+                        <li><a asp-controller="Admin" asp-action="Index">Show Users</a></li>
+                        <li><a asp-controller="Admin" asp-action="CreateAdmin">Create Warehouses</a></li>
+                        <li><a asp-controller="Admin" asp-action="Index">Show Warehouses</a></li>
+                        <li><a asp-controller="Admin" asp-action="Index">Products</a></li>
+                    }
+                    else
+                    {
+                        <p>Welcom to Warehouse!</p>
+                    }
+
+                </ul>
+                <partial name="_LoginPartial" />
             </div>
         </div>
+    </nav>
+
+    <partial name="_CookieConsentPartial" />
+
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; 2019 - Warehouse</p>
+        </footer>
     </div>
 
     <environment include="Development">
