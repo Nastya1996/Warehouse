@@ -22,11 +22,11 @@ namespace Warehouse.Controllers
         private readonly ILogger<WareHouseController> _logger;
 
         private readonly ApplicationDbContext _context;
-        public WareHouseController(ApplicationDbContext context, ILogger<WareHouseController> log)
+        public WareHouseController(ApplicationDbContext context, ILogger<WareHouseController> log) { }
         public WareHouseController(ApplicationDbContext context, IStringLocalizer<WareHouseController> localizer,
     ILogger<WareHouseController> logger)
         {
-            _log = log;
+            _log = logger;
             _context = context;
             _localizer = localizer;
             _logger = logger;

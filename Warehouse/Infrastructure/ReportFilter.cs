@@ -20,5 +20,6 @@ namespace Warehouse.Infrastructure
         public int PageSize { get; set; } = 10;
         public IQueryable<ProductManager> ProductManagers { get; set; }
         public IQueryable<ProductOrder> ProductOrders { get; set; }
+        public IQueryable<WriteOut> WriteOuts { get; set; }
     }
 }

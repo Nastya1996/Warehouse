@@ -216,5 +216,28 @@ namespace Warehouse.Controllers
             _log.LogInformation("Product manager move to another warehouse.User: "+user);
             return RedirectToAction("Show", "ProductManager", new { id });
         }
+        [HttpPost]
+        public IActionResult WriteOut(string id, string quantity, string price)
+        {
+            var productManager = _context.ProductManagers.Find(id);
+            uint writeOutCount;
+            decimal writeOutPrice;
+            bool IsCount = UInt32.TryParse(quantity,out writeOutCount);
+            bool IsNumber = Decimal.TryParse(price, out writeOutPrice);
+            if (!IsCount || !IsNumber || productManager == null) return Json(false);
+            _context.WriteOuts.Add(new WriteOut {
+                Count = writeOutCount,
+                Price = writeOutPrice,
+                Date = DateTime.Now,
+                ProductId = productManager.ProductId,
+                UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                WarehouseId=productManager.WareHouseId,
+            });
+            productManager.CurrentCount -= writeOutCount;
+            _context.Update(productManager);
+            _context.SaveChanges();
+            return Json(true);
+        }
+
     }
 }

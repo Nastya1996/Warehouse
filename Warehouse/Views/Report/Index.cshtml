@@ -49,14 +49,52 @@
 
 <table class="table table-bordered table-hover">
     <thead>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Count</th>
-            <th>Price</th>
-            <th>Date</th>
-            <th>User</th>
-        </tr>
+        @{
+            if (ViewBag.paged == null || ViewBag.paged.Count == 0)
+            {
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Count</th>
+                    <th>Price</th>
+                    <th>Date</th>
+                    <th>User</th>
+                </tr>
+            }
+            else if (ViewBag.paged[0] is ProductManager)
+            {
+                <tr>
+                    <th>Product name</th>
+                    <th>Product type</th>
+                    <th>Import count</th>
+                    <th>Receipt price</th>
+                    <th>Added date</th>
+                    <th>User</th>
+                </tr>
+            }
+            else if (ViewBag.paged[0] is ProductOrder)
+            {
+                <tr>
+                    <th>Product name</th>
+                    <th>Product type</th>
+                    <th>Count of saled</th>
+                    <th>Receipt price</th>
+                    <th>Date of saled</th>
+                    <th>User</th>
+                </tr>
+            }
+            else if (ViewBag.paged[0] is WriteOut)
+            {
+                <tr>
+                    <th>Product name</th>
+                    <th>Product type</th>
+                    <th>Count of out</th>
+                    <th>Price of out</th>
+                    <th>Date of write out</th>
+                    <th>User</th>
+                </tr>
+            }
+        }
     </thead>
     <tbody>
         @{
@@ -77,13 +115,19 @@
                     {
                         <td>@pm.ReceiptPrice</td>
                         <td>@pm.Date</td>
-                        <td>@pm.User.Name</td>
+                        <td>@pm.User.UserName</td>
                     }
                     @if (pm is ProductOrder)
                     {
                         <td>@pm.FinallyPrice</td>
                         <td>@pm.Order.Date</td>
-                        <td>@pm.Order.User.Name</td>
+                        <td>@pm.Order.User.UserName</td>
+                    }
+                    @if(pm is WriteOut)
+                    {
+                        <td>@pm.Price</td>
+                        <td>@pm.Date</td>
+                        <td>@pm.User.UserName</td>
                     }
                 </tr>
                 }

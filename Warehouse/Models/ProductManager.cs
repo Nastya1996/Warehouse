@@ -25,8 +25,6 @@ namespace Warehouse.Models
         public decimal SalePrice { get; set; }
         public DateTime ReceiptDate { get; set; }
         public DateTime Date { get; set; }
-
-
         public string UserId { get; set; }
         public AppUser User { get; set; }
         public string WareHouseId { get; set; }
@@ -34,6 +32,6 @@ namespace Warehouse.Models
         [Required]
         public string ProductId { get; set; }
         public Product Product { get; set; }
-
+        public bool IsWriteOut { get; set; } = false;
     }
 }

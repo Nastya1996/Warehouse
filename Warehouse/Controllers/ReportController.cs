@@ -67,6 +67,21 @@ namespace Warehouse.Controllers
                 reportFilter.ProductOrders = querySaled;
                 ViewBag.paged = new PagedList<ProductOrder>(querySaled, reportFilter.Page, reportFilter.PageSize);
             }
+            if (reportFilter.Deal.Equals("Export"))
+            {
+                var queryExport = _context.WriteOuts.Include(wo => wo.Product.ProductType)
+                                                  .Include(wo => wo.User)
+                                                  .Include(wo => wo.Warehouse).AsQueryable();
+                if (reportFilter.ProductId != null)
+                    queryExport = queryExport.Where(qe=>qe.ProductId==reportFilter.ProductId);
+                if (reportFilter.TypeId != null)
+                    queryExport = queryExport.Where(qe => qe.Product.ProductTypeId == reportFilter.TypeId);
+                if (reportFilter.UserId != null)
+                    queryExport = queryExport.Where(qe => qe.UserId == reportFilter.UserId);
+                queryExport = queryExport.Where(qe => qe.Date.Date >= reportFilter.DateFrom && qe.Date.Date <= reportFilter.DateTo);
+                reportFilter.WriteOuts = queryExport;
+                ViewBag.paged = new PagedList<WriteOut>(queryExport, reportFilter.Page, reportFilter.PageSize);
+            }
             return View(reportFilter);
         }
         public IActionResult ExcelExport(ReportViewModel reportFilter)
@@ -95,7 +110,7 @@ namespace Warehouse.Controllers
                     queryImport = queryImport.Where(x => x.Product.ProductTypeId == reportFilter.TypeId);
                 if (reportFilter.UserId != null)
                     queryImport = queryImport.Where(x => x.UserId == reportFilter.UserId);
-                queryImport = queryImport.Where(pm => pm.Date >= reportFilter.DateFrom && pm.Date <= reportFilter.DateTo);
+                queryImport = queryImport.Where(pm => pm.Date.Date >= reportFilter.DateFrom && pm.Date.Date <= reportFilter.DateTo);
                 reportFilter.ProductManagers = queryImport;
                 return ExportProductManager(queryImport.ToList());
             }
@@ -109,9 +124,24 @@ namespace Warehouse.Controllers
                     querySaled = querySaled.Where(po => po.Product.ProductTypeId == reportFilter.TypeId);
                 if (reportFilter.UserId != null)
                     querySaled = querySaled.Where(po => po.Order.UserId == reportFilter.UserId);
-                querySaled = querySaled.Where(po => po.Order.Date >= reportFilter.DateFrom && po.Order.Date <= reportFilter.DateTo);
+                querySaled = querySaled.Where(po => po.Order.Date.Date >= reportFilter.DateFrom && po.Order.Date.Date <= reportFilter.DateTo);
                 reportFilter.ProductOrders = querySaled;
                 return ExportProductOrder(querySaled.ToList());
+            }
+            if (reportFilter.Deal.Equals("Export"))
+            {
+                var queryExport = _context.WriteOuts.Include(wo => wo.Product.ProductType)
+                                                  .Include(wo => wo.User)
+                                                  .Include(wo => wo.Warehouse).AsQueryable();
+                if (reportFilter.ProductId != null)
+                    queryExport = queryExport.Where(qe => qe.ProductId == reportFilter.ProductId);
+                if (reportFilter.TypeId != null)
+                    queryExport = queryExport.Where(qe => qe.Product.ProductTypeId == reportFilter.TypeId);
+                if (reportFilter.UserId != null)
+                    queryExport = queryExport.Where(qe => qe.UserId == reportFilter.UserId);
+                queryExport = queryExport.Where(qe => qe.Date.Date >= reportFilter.DateFrom && qe.Date.Date <= reportFilter.DateTo);
+                reportFilter.WriteOuts = queryExport;
+                return ExportWriteOut(queryExport.ToList());
             }
             return RedirectToAction("Index", new Dictionary<string, ReportViewModel> { { "reportFilter", reportFilter } });
 
@@ -138,6 +168,7 @@ namespace Warehouse.Controllers
         }
         public FileStreamResult ExportProductOrder(IList<ProductOrder> list)
         {
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var stream = new MemoryStream();
             using(var package=new ExcelPackage(stream))
             {
@@ -156,7 +187,26 @@ namespace Warehouse.Controllers
             var fileName = $"SaledReport_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
+        public FileStreamResult ExportWriteOut(IList<WriteOut> list)
+        {
+            var stream = new MemoryStream();
+            using (var package = new ExcelPackage(stream))
+            {
+                var sheet = package.Workbook.Worksheets.Add("Loading");
+                sheet.Cells.LoadFromCollection(list.Select(po => new {
+                    ProductName = po.Product.Name,
+                    ProductType = po.Product.ProductType.Name,
+                    Count=po.Count,
+                    Price=po.Price,
+                    WriteOutDate = po.Date.ToString("d"),
+                    UserName = po.User.Name
+                }), true);
+                package.Save();
+            }
+            stream.Position = 0;
+            var fileName = $"ExportReport_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
+            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+        }
 
-        
     }
 }
