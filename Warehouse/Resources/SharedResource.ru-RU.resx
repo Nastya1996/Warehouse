@@ -117,10 +117,121 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Product" xml:space="preserve">
-    <value>Продукт</value>
+  <data name="Accept" xml:space="preserve">
+    <value>Принимать</value>
   </data>
-  <data name="User" xml:space="preserve">
-    <value>Пользователь</value>
+  <data name="CheckOut" xml:space="preserve">
+    <value>Выписывать</value>
+  </data>
+  <data name="Close" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="CreateNewAccount" xml:space="preserve">
+    <value>Создать новый аккаунт</value>
+  </data>
+  <data name="CreateProduct" xml:space="preserve">
+    <value>Создать продукт</value>
+  </data>
+  <data name="CreateProductManager" xml:space="preserve">
+    <value>Создать Продукт-Менеджер</value>
+  </data>
+  <data name="CreateWarehouse" xml:space="preserve">
+    <value>Создать склад</value>
+  </data>
+  <data name="CustomerCreate" xml:space="preserve">
+    <value>Создать клиента</value>
+  </data>
+  <data name="DevelopmentMode" xml:space="preserve">
+    <value>Режим Развития</value>
+  </data>
+  <data name="Error" xml:space="preserve">
+    <value>Ошибка.</value>
+  </data>
+  <data name="Hello" xml:space="preserve">
+    <value>Привет</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Язык</value>
+  </data>
+  <data name="LearnMore" xml:space="preserve">
+    <value>Подробнее</value>
+  </data>
+  <data name="Login" xml:space="preserve">
+    <value>Вход</value>
+  </data>
+  <data name="Logout" xml:space="preserve">
+    <value>Выход</value>
+  </data>
+  <data name="ModalHeader" xml:space="preserve">
+    <value>Modal Header</value>
+  </data>
+  <data name="Name" xml:space="preserve">
+    <value>Имя:</value>
+  </data>
+  <data name="Order" xml:space="preserve">
+    <value>Заказ</value>
+  </data>
+  <data name="PageSize" xml:space="preserve">
+    <value>Размер страницы</value>
+  </data>
+  <data name="ProductManager" xml:space="preserve">
+    <value>Менеджер продукта</value>
+  </data>
+  <data name="Products" xml:space="preserve">
+    <value>Продукты</value>
+  </data>
+  <data name="ProductType" xml:space="preserve">
+    <value>Тип продукта</value>
+  </data>
+  <data name="ProductTypeCreate" xml:space="preserve">
+    <value>Создать тип продукта</value>
+  </data>
+  <data name="Report" xml:space="preserve">
+    <value>Доклад</value>
+  </data>
+  <data name="RequestCultureProvider" xml:space="preserve">
+    <value>Поставщик Языка И Региональных Параметров Запроса:</value>
+  </data>
+  <data name="RequestID" xml:space="preserve">
+    <value>ID запроса:</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>Роль:</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Сохранить</value>
+  </data>
+  <data name="ShowUsers" xml:space="preserve">
+    <value>Показать пользователей</value>
+  </data>
+  <data name="ShowWarehouses" xml:space="preserve">
+    <value> Показать склады</value>
+  </data>
+  <data name="Storekeeper" xml:space="preserve">
+    <value>Кладовщик</value>
+  </data>
+  <data name="ToggleCookieConsentBanner" xml:space="preserve">
+    <value>Переключение баннера согласия cookie</value>
+  </data>
+  <data name="ToggleNavigation" xml:space="preserve">
+    <value>Переключение Навигации</value>
+  </data>
+  <data name="Unit" xml:space="preserve">
+    <value>Единица</value>
+  </data>
+  <data name="UseThisSpaceToSummarizeYourPrivacyAndCookieUsePolicy" xml:space="preserve">
+    <value>Используйте это пространство для обобщения политики конфиденциальности и использования файлов cookie.</value>
+  </data>
+  <data name="ViewAll" xml:space="preserve">
+    <value>Просмотреть Все</value>
+  </data>
+  <data name="Warehouse" xml:space="preserve">
+    <value>Склад</value>
+  </data>
+  <data name="WarehouseNumber" xml:space="preserve">
+    <value>Номер склада</value>
+  </data>
+  <data name="Worker" xml:space="preserve">
+    <value>Работник</value>
   </data>
 </root>

@@ -18,23 +18,17 @@ namespace Warehouse.Controllers
     public class WareHouseController : Controller
     {
         readonly ILogger<WareHouseController> _log;
-        private readonly IStringLocalizer<WareHouseController> _localizer;
-        private readonly ILogger<WareHouseController> _logger;
 
         private readonly ApplicationDbContext _context;
-        public WareHouseController(ApplicationDbContext context, ILogger<WareHouseController> log)
-        public WareHouseController(ApplicationDbContext context, IStringLocalizer<WareHouseController> localizer,
+        public WareHouseController(ApplicationDbContext context, ILogger<WareHouseController> log,
     ILogger<WareHouseController> logger)
         {
             _log = log;
             _context = context;
-            _localizer = localizer;
-            _logger = logger;
         }
 
         public IActionResult Index(string number, string address, int page = 1, int pageSize = 10)
         {
-            _logger.LogInformation(_localizer["Product"]);
             number = number == null ? "" : number.Trim();
             address = address == null ? "" : address.Trim();
 
@@ -47,6 +41,7 @@ namespace Warehouse.Controllers
             PagedList<WareHouse> model = new PagedList<WareHouse>(wareHouses, page, pageSize);
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             _log.LogInformation("Warehouse index. "+user);
+
             return View(model);
         }
 

@@ -1,11 +1,14 @@
 ﻿@*@model IEnumerable<Warehouse.Models.Admin>*@
-    @{
-        ViewData["Title"] = "Index";
-    }
+@using Warehouse.Resources
 
-    <h2>Index</h2>
-    <a asp-for="CreateAdmin" asp-controller="Admin">Create new account</a>
-    <a asp-for="ShowAdmin" asp-controller="Admin">Show users</a>
-    <a asp-for="ShowProducts" asp-controller="Admin">Show products</a>
-    <a asp-for="CreateWarehouse" asp-controller="Admin">Add warehouse</a>
-    <a asp-for="ShowWarehouses" asp-controller="Admin">Show warehouses</a>
+@inject LocService SharedLocalizer
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+<a asp-for="CreateAdmin" asp-controller="Admin">Create new account</a>
+<a asp-for="ShowAdmin" asp-controller="Admin">Show users</a>
+<a asp-for="ShowProducts" asp-controller="Admin">Show products</a>
+<a asp-for="CreateWarehouse" asp-controller="Admin">Add warehouse</a>
+<a asp-for="ShowWarehouses" asp-controller="Admin">Show warehouses</a>

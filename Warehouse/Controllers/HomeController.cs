@@ -8,7 +8,7 @@ using Warehouse.Models;
 
 namespace Warehouse.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
         public IActionResult Index()
         {
