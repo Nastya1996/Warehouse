@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Warehouse.Data;
 
 namespace Warehouse.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190619102157_changeColumnName")]
+    partial class changeColumnName
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -234,20 +236,6 @@ namespace Warehouse.Data.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("Warehouse.Models.FileModelImg", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Name");
-
-                    b.Property<string>("Path");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Files");
-                });
-
             modelBuilder.Entity("Warehouse.Models.Order", b =>
                 {
                     b.Property<string>("Id")
@@ -287,8 +275,6 @@ namespace Warehouse.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(13);
 
-                    b.Property<string>("FileModelImgId");
-
                     b.Property<bool>("IsActive");
 
                     b.Property<string>("Name")
@@ -301,8 +287,6 @@ namespace Warehouse.Data.Migrations
                     b.Property<string>("UnitId");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("FileModelImgId");
 
                     b.HasIndex("ProductTypeId");
 
@@ -334,13 +318,11 @@ namespace Warehouse.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("AddDate");
-
                     b.Property<long>("Count");
 
                     b.Property<long>("CurrentCount");
 
-                    b.Property<bool>("IsWriteOut");
+                    b.Property<DateTime>("Date");
 
                     b.Property<string>("ProductId")
                         .IsRequired();
@@ -443,34 +425,6 @@ namespace Warehouse.Data.Migrations
                     b.ToTable("Warehouses");
                 });
 
-            modelBuilder.Entity("Warehouse.Models.WriteOut", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<long>("Count");
-
-                    b.Property<DateTime>("Date");
-
-                    b.Property<decimal>("Price");
-
-                    b.Property<string>("ProductId");
-
-                    b.Property<string>("UserId");
-
-                    b.Property<string>("WarehouseId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("WarehouseId");
-
-                    b.ToTable("WriteOuts");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")
@@ -547,10 +501,6 @@ namespace Warehouse.Data.Migrations
 
             modelBuilder.Entity("Warehouse.Models.Product", b =>
                 {
-                    b.HasOne("Warehouse.Models.FileModelImg", "FileModelImg")
-                        .WithMany()
-                        .HasForeignKey("FileModelImgId");
-
                     b.HasOne("Warehouse.Models.ProductType", "ProductType")
                         .WithMany()
                         .HasForeignKey("ProductTypeId")
@@ -602,21 +552,6 @@ namespace Warehouse.Data.Migrations
                     b.HasOne("Warehouse.Models.ProductManager", "ProductManager")
                         .WithMany()
                         .HasForeignKey("ProductManagerId");
-                });
-
-            modelBuilder.Entity("Warehouse.Models.WriteOut", b =>
-                {
-                    b.HasOne("Warehouse.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId");
-
-                    b.HasOne("Warehouse.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.HasOne("Warehouse.Models.WareHouse", "Warehouse")
-                        .WithMany()
-                        .HasForeignKey("WarehouseId");
                 });
 #pragma warning restore 612, 618
         }

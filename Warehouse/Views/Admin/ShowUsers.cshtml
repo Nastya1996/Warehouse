@@ -12,12 +12,13 @@
 
         <label class="control-label">Role: </label>
         <select name="role" class="form-control">
+            <option value=""></option>
             <option value="Worker">Worker</option>
             <option value="Storekeeper">Storekeeper</option>
             <option value="Report">Report</option>
         </select>
         <label class="control-label">Warehouse Number: </label>
-        <input type="text" name="whNumber" value="@ViewData["CurrentNumber"]" />
+        <input type="text" name="number" value="@ViewData["CurrentNumber"]" />
 
         <label class="control-label">Page size</label>
         <input type="number" min="1" name="pageSize" value="@ViewData["CurrentSize"]" />

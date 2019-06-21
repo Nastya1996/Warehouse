@@ -30,17 +30,11 @@ namespace Warehouse.Controllers
             _roleManager = roleManager;
         }
 
-        public IActionResult ShowUsers(string name="", string role = "", string number= "", int page = 1, int pageSize = 10)
+        public IActionResult ShowUsers(string name = "", string role = null, string number = "", int page = 1, int pageSize = 10)
         {
 
             name = name == null ? "" : name.Trim();
-            //role = role == null ? "" : role.Trim();
             number = number == null ? "" : number.Trim();
-
-            // var users = //_context.AppUsers
-            //                            .Include(w => w.Warehouse)
-            //                            .Where(us => us.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase)
-            //                                && us.Warehouse != null && us.Warehouse.Number.Contains(number, StringComparison.InvariantCultureIgnoreCase)).ToList();
             IEnumerable<string> userIds = null;
 
             if (role != null)
@@ -53,18 +47,18 @@ namespace Warehouse.Controllers
             }
 
             IEnumerable<AppUser> users;
-
-            if(userIds!=null)
+            var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            if (userIds != null)
             {
                 users = _context.AppUsers
                 .Include(w => w.Warehouse)
-                .Where(u => u.UserName.Contains(name) && userIds.Contains(u.Id) && u.Warehouse.Number.Contains(number));
+                .Where(u => u.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase) && userIds.Contains(u.Id) && u.Warehouse.Number.Contains(number, StringComparison.InvariantCultureIgnoreCase) && u.Id!=currentUserId);
             }
-            else
-                users =_context.AppUsers
+            else { 
+                users = _context.AppUsers
                 .Include(w => w.Warehouse)
-                .Where(u => u.UserName.Contains(name));
-
+                .Where(u => u.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase) && u.Warehouse.Number.Contains(number, StringComparison.InvariantCultureIgnoreCase) && u.Id!=currentUserId);
+            }
 
 
             ViewData["CurrentName"] = name;

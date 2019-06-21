@@ -80,7 +80,7 @@ namespace Warehouse.Controllers
             {
                 var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 var product = _context.Products.Include(u => u.Unit).FirstOrDefault(p => p.Id == productManager.ProductId);
-                productManager.AddDate = DateTime.Now;
+                productManager.Date = DateTime.Now;
                 productManager.UserId = user.Id;
                 productManager.CurrentCount = productManager.Count;
                 productManager.Product = product;
@@ -154,18 +154,22 @@ namespace Warehouse.Controllers
             return RedirectToAction("Show", new Dictionary<string, string> { { "id", prodManager.ProductId} });
         }
 
-        //Add to basket
-        [Route("ProductManager/Add/{id}/{quantity}")]
-        [HttpGet]
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="quantity"></param>
+        /// <returns></returns>
+        [HttpPost]
         public IActionResult Add(string id, string quantity)
         {
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            _log.LogInformation("Product manager add.User: "+user);
+            _log.LogInformation("Product manager add.User: " + user);
             uint count = Convert.ToUInt32(quantity);
             var product = _context.ProductManagers.FirstOrDefault(pm => pm.ProductId == id);
             if (product != null)
             {
-                var basket = _context.Baskets.Include(p=>p.Product).FirstOrDefault(b => b.UserId == user.Id && b.ProductId == id);
+                var basket = _context.Baskets.Include(p => p.Product).FirstOrDefault(b => b.UserId == user.Id && b.ProductId == id);
                 if (basket == null)
                 {
                     basket = new Basket
@@ -186,19 +190,12 @@ namespace Warehouse.Controllers
                     _context.SaveChanges();
                     return Json(true);
                 }
-
             }
             return Json(false);
         }
 
 
-        //Get Products
-        [HttpPost]
-        [Route("Products/Get")]
-        public JsonResult GetProduct([FromBody]string selected)
-        {
-            return Json(_context.Products.Where(p => p.ProductTypeId == selected && p.IsActive != false).ToList());
-        }
+        
 
         [Route("Products/MaxPrice")]
         public JsonResult GetMaxPrice()
@@ -223,5 +220,28 @@ namespace Warehouse.Controllers
             _log.LogInformation("Product manager move to another warehouse.User: "+user);
             return RedirectToAction("Show", "ProductManager", new { id });
         }
+        [HttpPost]
+        public IActionResult WriteOut(string id, string quantity, string price)
+        {
+            var productManager = _context.ProductManagers.Find(id);
+            uint writeOutCount;
+            decimal writeOutPrice;
+            bool IsCount = UInt32.TryParse(quantity,out writeOutCount);
+            bool IsNumber = Decimal.TryParse(price, out writeOutPrice);
+            if (!IsCount || !IsNumber || productManager == null) return Json(false);
+            _context.WriteOuts.Add(new WriteOut {
+                Count = writeOutCount,
+                Price = writeOutPrice,
+                Date = DateTime.Now,
+                ProductId = productManager.ProductId,
+                UserId = User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                WarehouseId=productManager.WareHouseId,
+            });
+            productManager.CurrentCount -= writeOutCount;
+            _context.Update(productManager);
+            _context.SaveChanges();
+            return Json(true);
+        }
+
     }
 }

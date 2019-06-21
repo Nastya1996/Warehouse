@@ -3,19 +3,21 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Warehouse.Data;
 
 namespace Warehouse.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190619115440_Migration2")]
+    partial class Migration2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.8-servicing-32085")
+                .HasAnnotation("ProductVersion", "2.1.11-servicing-32099")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -340,8 +342,6 @@ namespace Warehouse.Data.Migrations
 
                     b.Property<long>("CurrentCount");
 
-                    b.Property<bool>("IsWriteOut");
-
                     b.Property<string>("ProductId")
                         .IsRequired();
 
@@ -441,34 +441,6 @@ namespace Warehouse.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Warehouses");
-                });
-
-            modelBuilder.Entity("Warehouse.Models.WriteOut", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<long>("Count");
-
-                    b.Property<DateTime>("Date");
-
-                    b.Property<decimal>("Price");
-
-                    b.Property<string>("ProductId");
-
-                    b.Property<string>("UserId");
-
-                    b.Property<string>("WarehouseId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("WarehouseId");
-
-                    b.ToTable("WriteOuts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -602,21 +574,6 @@ namespace Warehouse.Data.Migrations
                     b.HasOne("Warehouse.Models.ProductManager", "ProductManager")
                         .WithMany()
                         .HasForeignKey("ProductManagerId");
-                });
-
-            modelBuilder.Entity("Warehouse.Models.WriteOut", b =>
-                {
-                    b.HasOne("Warehouse.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId");
-
-                    b.HasOne("Warehouse.Models.AppUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
-
-                    b.HasOne("Warehouse.Models.WareHouse", "Warehouse")
-                        .WithMany()
-                        .HasForeignKey("WarehouseId");
                 });
 #pragma warning restore 612, 618
         }
