@@ -4,6 +4,14 @@
     ViewData["Title"] = "Index";
 }
 @model IPagedList<WareHouse>
+
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+
+<h2>@Localizer["Product"]</h2>
+<h3>@Localizer["User"]</h3>
 <h1>WareHouse</h1>
 <form method="get" asp-action="Index">
     <div class="form-inline form-group">

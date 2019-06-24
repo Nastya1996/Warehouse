@@ -1,5 +1,7 @@
 ﻿@using Warehouse.Models
+@using Warehouse.Resources
 
+@inject LocService SharedLocalizer
 @{
     ViewData["Title"] = "ShowUsers";
 }
@@ -7,25 +9,25 @@
 <h2>ShowUsers</h2>
 <form method="get" asp-action="ShowUsers">
     <div class="form-inline form-group">
-        <label class="control-label">Name: </label>
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Name")</label>
         <input type="text" name="name" value="@ViewData["CurrentName"]" />
 
-        <label class="control-label">Role: </label>
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Role")</label>
         <select name="role" class="form-control">
             <option value=""></option>
-            <option value="Worker">Worker</option>
-            <option value="Storekeeper">Storekeeper</option>
-            <option value="Report">Report</option>
+            <option value="Worker">@SharedLocalizer.GetLocalizedHtmlString("Worker")</option>
+            <option value="Storekeeper">@SharedLocalizer.GetLocalizedHtmlString("Storekeeper")</option>
+            <option value="Report">@SharedLocalizer.GetLocalizedHtmlString("Report")</option>
         </select>
-        <label class="control-label">Warehouse Number: </label>
-        <input type="text" name="number" value="@ViewData["CurrentNumber"]" />
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("WarehouseNumber")</label>
+                <input type="text" name="number" value="@ViewData["CurrentNumber"]" />
 
-        <label class="control-label">Page size</label>
-        <input type="number" min="1" name="pageSize" value="@ViewData["CurrentSize"]" />
-        <input type="submit" value="Filter" class="btn btn-default" />
-    </div>
+                <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize")</label>
+                <input type="number" min="1" name="pageSize" value="@ViewData["CurrentSize"]" />
+                <input type="submit" value="Filter" class="btn btn-default" />
+</div>
 </form>
-<pager list="@Model" asp-route-pageSize="@ViewData["CurrentSize"]" asp-route-whNumber="@ViewData["CurrentNumber"]" asp-route-role="@ViewData["CurrentRole"]" asp-route-name="@ViewData["CurrentName"]" asp-controller="Admin" asp-action="ShowUsers" />
+<pager list="@Model" asp-route-pageSize="@ViewData["CurrentSize"]" asp-route-number="@ViewData["CurrentNumber"]" asp-route-role="@ViewData["CurrentRole"]" asp-route-name="@ViewData["CurrentName"]" asp-controller="Admin" asp-action="ShowUsers" />
 <table class="table">
     <tr>
         <th>Name</th>

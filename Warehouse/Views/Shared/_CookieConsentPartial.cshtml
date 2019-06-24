@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Http.Features
-
+@using Warehouse.Resources
+@inject LocService SharedLocalizer
 @{
     var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
     var showBanner = !consentFeature?.CanTrack ?? false;
@@ -12,21 +13,22 @@
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#cookieConsent .navbar-collapse">
-                    <span class="sr-only">Toggle cookie consent banner</span>
+                    <span class="sr-only">@SharedLocalizer.GetLocalizedHtmlString("ToggleCookieConsentBanner")</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
-                </button>
+</button>
                 <span class="navbar-brand"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span></span>
             </div>
             <div class="collapse navbar-collapse">
                 <p class="navbar-text">
-                    Use this space to summarize your privacy and cookie use policy.
+                    @SharedLocalizer.GetLocalizedHtmlString("UseThisSpaceToSummarizeYourPrivacyAndCookieUsePolicy")
                 </p>
                 <div class="navbar-right">
-                    <a asp-controller="Home" asp-action="Privacy" class="btn btn-info navbar-btn">Learn More</a>
-                    <button type="button" class="btn btn-default navbar-btn" data-cookie-string="@cookieString">Accept</button>
-                </div>
+                    <a asp-controller="Home" asp-action="Privacy" class="btn btn-info navbar-btn">
+                        @SharedLocalizer.GetLocalizedHtmlString("LearnMore")</a>
+                                        <button type="button" class="btn btn-default navbar-btn" data-cookie-string="@cookieString">@SharedLocalizer.GetLocalizedHtmlString("Accept")</button>
+</div>
             </div>
         </div>
     </nav>
