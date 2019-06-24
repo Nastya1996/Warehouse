@@ -45,7 +45,7 @@
     <script>
 
         $(document).ready(function () {
-            $("#modalForBasket").mouseover(function () {
+            $("#modalForBasket").click(function () {
                 $.ajax({
                     url: '@Url.Action("IndexForHover", "Basket")',
                     beforeSend: function () { $(".modal-body").html("<p>Loading... </p>")},
@@ -94,7 +94,7 @@
                         <li><a asp-controller="ProductManager" asp-action="Index">Product Manager</a></li>
                         <li><a asp-controller="Order" asp-action="Index">Order</a></li>
                         <li><a asp-controller="Customer" asp-action="Create">Customer Create</a></li>
-                        <li data-toggle="modal" id="modalForBasket"><a asp-controller="Basket" asp-action="Index"><img src="https://cdn4.iconfinder.com/data/icons/is_beta_accounting/png/400/basket.png" width="20px" alt="Alternate Text" /></a></li>
+                        <li id="modalForBasket"><a href="#"><img src="https://cdn4.iconfinder.com/data/icons/is_beta_accounting/png/400/basket.png" width="20px" alt="Alternate Text" /></a></li>
 
                     }
                     else if (User.IsInRole("Storekeeper"))
