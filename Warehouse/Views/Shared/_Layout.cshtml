@@ -39,129 +39,131 @@
                 <div class="modal-footer modal-footer-basket">
                     <div>
                         <a asp-controller="Basket" asp-action="Index" class="btn btn-default">@SharedLocalizer.GetLocalizedHtmlString("ViewAll")</a>
-                        <a asp-controller="Order" asp-action="Create" class="btn btn-default" id="chekOutBtn">@SharedLocalizer.GetLocalizedHtmlString("CheckOut")</a><
+                        <a asp-controller="Order" asp-action="Create" class="btn btn-default" id="chekOutBtn">@SharedLocalizer.GetLocalizedHtmlString("CheckOut")</a>
                     </div>
-<button id="close" type="button" class="btn btn-default" data-dismiss="modal">@SharedLocalizer.GetLocalizedHtmlString("Close")</button>
-</div>
-</div>
+                    <button id="close" type="button" class="btn btn-default" data-dismiss="modal">@SharedLocalizer.GetLocalizedHtmlString("Close")</button>
+                </div>
+            </div>
 
-</div>
-</div>
-<script>
-
-$(document).ready(function () {
-$("#modalForBasket").mouseover(function () {
-$.ajax({
-url: '@Url.Action("IndexForHover", "Basket")',
-beforeSend: function () { $(".modal-body").html("<p>Loading... </p>")},
-success: function (response) {
-$(".modal-body").html(response);
-}
-});
-$('.modal-dialog').css({
-"position": "absolute",
-"top": ($("#modalForBasket").position().top + 20),
-"left": ($("#modalForBasket").position().left - 250)
-});
-$("#myModal").modal();
-});
-if ($("#myModal").css('display') == 'none')
-$("#myModal .modal-body").empty();
-});
-
-
-</script>
-<nav class="navbar navbar-inverse navbar-fixed-top">
-<div class="container">
-<div class="navbar-header">
-<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-<span class="sr-only">@SharedLocalizer.GetLocalizedHtmlString("ToggleNavigation")</span>
-<span class="icon-bar"></span>
-<span class="icon-bar"></span>
-<span class="icon-bar"></span>
-</button>
-<a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">@SharedLocalizer.GetLocalizedHtmlString("Warehouse")</a>
-</div>
-<div class="navbar-collapse collapse">
-<ul class="nav navbar-nav">
-@if (User.IsInRole("Admin"))
-{
-<li><a asp-area="Identity" asp-page="/Account/Register">@SharedLocalizer.GetLocalizedHtmlString("CreateNewAccount")</a></li>
-<li><a asp-controller="Admin" asp-action="ShowUsers">@SharedLocalizer.GetLocalizedHtmlString("ShowUsers")</a></li>
-<li><a asp-controller="WareHouse" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("CreateWarehouse")</a></li>
-<li><a asp-controller="WareHouse" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ShowWarehouses")</a></li>
-<li><a asp-controller="Product" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Products")</a></li>
-}
-else if (User.IsInRole("Worker"))
-{
-<li><a asp-controller="ProductManager" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ProductManager")</a></li>
-<li><a asp-controller="Order" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Order")</a></li>
-<li><a asp-controller="Customer" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("CustomerCreate")</a></li>
-<li data-toggle="modal" id="modalForBasket"><a asp-controller="Basket" asp-action="Index"><img src="https://cdn4.iconfinder.com/data/icons/is_beta_accounting/png/400/basket.png" width="20px" alt="Alternate Text" /></a></li>
-
-}
-else if (User.IsInRole("Storekeeper"))
-{
-<li><a asp-controller="ProductType" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ProductType")</a></li>
-<li><a asp-controller="ProductType" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("ProductTypeCreate")</a></li>
-<li><a asp-controller="Product" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Products")</a></li>
-<li><a asp-controller="Product" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("CreateProduct")</a></li>
-<li><a asp-controller="ProductManager" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ProductManager")</a></li>
-<li><a asp-controller="ProductManager" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("CreateProductManager")</a></li>
-<li><a asp-controller="Unit" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Unit")</a></li>
-}
-else if (User.IsInRole("Report"))
-{
-<li><a asp-controller="Admin" asp-action="CreateAdmin">@SharedLocalizer.GetLocalizedHtmlString("CreateNewAccount")</a></li>
-<li><a asp-controller="Admin" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ShowUsers")</a></li>
-<li><a asp-controller="Admin" asp-action="CreateAdmin">@SharedLocalizer.GetLocalizedHtmlString("CreateWarehouses")</a></li>
-<li><a asp-controller="Admin" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ShowWarehouses")</a></li>
-<li><a asp-controller="Admin" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Products")</a></li>
-}
-else
-{
-<p>Welcom to Warehouse!</p>
-}
-
-</ul>
-<partial name="_LoginPartial" />
-</div>
-</div>
-</nav>
-
-<partial name="_CookieConsentPartial" />
-
-<div class="container body-content">
-@RenderBody()
-                    @*@{
-    string currentController = ViewContext.RouteData.Values["Controller"].ToString();
-    string currentAction = ViewContext.RouteData.Values["Action"].ToString();
-    }
-    <footer class="navbar-inverse navbar-fixed-bottom">
-    <div class="container-fluid">
-    <ul class="nav navbar-nav">
-    <li is-active-language asp-route-lang="en"><a asp-controller=@currentController asp-action=@currentAction asp-route-lang="en">English</a></li>
-    <li is-active-language asp-route-lang="et"><a asp-controller=@currentController asp-action=@currentAction asp-route-lang="et">Eesti</a></li>
-    <li is-active-language asp-route-lang="ru"><a asp-controller=@currentController asp-action=@currentAction asp-route-lang="ru">Русский</a></li>
-    </ul>
+        </div>
     </div>
-    <p>&copy; 2019 - Warehouse</p>
-    </footer>*@
-    <footer class="navbar-inverse navbar-fixed-bottom">
-        <nav class="navbar transparent navbar-inverse">
-            @await Html.PartialAsync("_SelectLanguagePartial")
-        </nav>
-        <p>&copy; 2019 - Warehouse</p>
-    </footer>
-</div>
+    <script>
+
+        $(document).ready(function () {
+            $("#modalForBasket").click(function () {
+                $.ajax({
+                    url: '@Url.Action("IndexForHover", "Basket")',
+                    beforeSend: function () { $(".modal-body").html("<p>Loading... </p>")},
+                    success: function (response) {
+                        $(".modal-body").html(response);
+                    }
+                });
+                $('.modal-dialog').css({
+                    "position": "absolute",
+                    "top": ($("#modalForBasket").position().top + 20),
+                    "left": ($("#modalForBasket").position().left - 250)
+                });
+                $("#myModal").modal();
+            });
+            if ($("#myModal").css('display') == 'none')
+                $("#myModal .modal-body").empty();
+        });
+
+
+    </script>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Warehouse</a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li>
+                            <a asp-area="Identity" asp-page="/Account/Register">Create new account</a>
+                        </li>
+                        <li><a asp-controller="Admin" asp-action="ShowUsers">Show Users</a></li>
+                        <li><a asp-controller="WareHouse" asp-action="Create">Create Warehouses</a></li>
+                        <li><a asp-controller="WareHouse" asp-action="Index">Show Warehouses</a></li>
+                        <li><a asp-controller="Product" asp-action="Index">Products</a></li>
+                    }
+                    else if (User.IsInRole("Worker"))
+                    {
+                        <li><a asp-controller="ProductManager" asp-action="Index">Product Manager</a></li>
+                        <li><a asp-controller="Order" asp-action="Index">Order</a></li>
+                        <li><a asp-controller="Customer" asp-action="Create">Customer Create</a></li>
+                        <li id="modalForBasket"><a href="#"><img src="https://cdn4.iconfinder.com/data/icons/is_beta_accounting/png/400/basket.png" width="20px" alt="Alternate Text" /></a></li>
+
+                    }
+                    else if (User.IsInRole("Storekeeper"))
+                    {
+                        <li><a asp-controller="ProductType" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ProductType")</a></li>
+                        <li><a asp-controller="ProductType" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("ProductTypeCreate")</a></li>
+                        <li><a asp-controller="Product" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Products")</a></li>
+                        <li><a asp-controller="Product" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("CreateProduct")</a></li>
+                        <li><a asp-controller="ProductManager" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ProductManager")</a></li>
+                        <li><a asp-controller="ProductManager" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("CreateProductManager")</a></li>
+                        <li><a asp-controller="Unit" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Unit")</a></li>
+                    }
+                    else if (User.IsInRole("Report"))
+                    {
+                        <li><a asp-controller="Admin" asp-action="CreateAdmin">@SharedLocalizer.GetLocalizedHtmlString("CreateNewAccount")</a></li>
+                        <li><a asp-controller="Admin" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ShowUsers")</a></li>
+                        <li><a asp-controller="Admin" asp-action="CreateAdmin">@SharedLocalizer.GetLocalizedHtmlString("CreateWarehouses")</a></li>
+                        <li><a asp-controller="Admin" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ShowWarehouses")</a></li>
+                        <li><a asp-controller="Admin" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Products")</a></li>
+                    }
+                    else
+                    {
+                        <p>Welcom to Warehouse!</p>
+                    }
+
+                </ul>
+                <partial name="_LoginPartial" />
+            </div>
+        </div>
+    </nav>
+
+    <partial name="_CookieConsentPartial" />
+
+    <div class="container body-content">
+        @RenderBody()
+        @*@{
+            string currentController = ViewContext.RouteData.Values["Controller"].ToString();
+            string currentAction = ViewContext.RouteData.Values["Action"].ToString();
+            }
+            <footer class="navbar-inverse navbar-fixed-bottom">
+            <div class="container-fluid">
+            <ul class="nav navbar-nav">
+            <li is-active-language asp-route-lang="en"><a asp-controller=@currentController asp-action=@currentAction asp-route-lang="en">English</a></li>
+            <li is-active-language asp-route-lang="et"><a asp-controller=@currentController asp-action=@currentAction asp-route-lang="et">Eesti</a></li>
+            <li is-active-language asp-route-lang="ru"><a asp-controller=@currentController asp-action=@currentAction asp-route-lang="ru">Русский</a></li>
+            </ul>
+            </div>
+            <p>&copy; 2019 - Warehouse</p>
+            </footer>*@
+        <footer class="navbar-inverse navbar-fixed-bottom">
+            <nav class="navbar transparent navbar-inverse">
+                @await Html.PartialAsync("_SelectLanguagePartial")
+            </nav>
+            <p>&copy; 2019 - Warehouse</p>
+        </footer>
+    </div>
 
     <environment include = "Development" >
         <script src="~/lib/jquery/dist/jquery.js"></script>
-        <script src = "~/lib/bootstrap/dist/js/bootstrap.js" > </script >
+        <script src = "~/lib/bootstrap/dist/js/bootstrap.js"></script >
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
     <environment exclude = "Development" >
-        < script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+        <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
                 asp-fallback-test="window.jQuery"
                 crossorigin="anonymous"
@@ -174,8 +176,27 @@ else
                 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
         </script>
         <script src = "~/js/site.min.js" asp-append-version="true"></script>
+    @*<environment include = "Development" >
+            <script src="~/lib/jquery/dist/jquery.js"></script>
+            <script src = "~/lib/bootstrap/dist/js/bootstrap.js" > </script >
+            <script src="~/js/site.js" asp-append-version="true"></script>
+        </environment>
+        <environment exclude = "Development" >
+            <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
+                    asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+                    asp-fallback-test="window.jQuery"
+                    crossorigin="anonymous"
+                    integrity="sha384-tsQFqpEReu7ZLhBV2VZlAu7zcOV+rXbYlF2cqB8txI/8aZajjp4Bqd+V6D5IgvKT">
+            </script>
+            <script src = "https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+                    asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+                    asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+                    crossorigin="anonymous"
+                    integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+            </script>
+            <script src = "~/js/site.min.js" asp-append-version="true"></script>
 
-    </environment>
+        </environment>*@
 
     @RenderSection("Scripts", required: false)
 </body>
