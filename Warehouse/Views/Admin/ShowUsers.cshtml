@@ -30,11 +30,11 @@
 <pager list="@Model" asp-route-pageSize="@ViewData["CurrentSize"]" asp-route-number="@ViewData["CurrentNumber"]" asp-route-role="@ViewData["CurrentRole"]" asp-route-name="@ViewData["CurrentName"]" asp-controller="Admin" asp-action="ShowUsers" />
 <table class="table">
     <tr>
-        <th>Name</th>
-        <th>Surname</th>
-        <th>Phone</th>
-        <th>Warehouse</th>
-        <th>Disable \ Enable</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("Name")</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("Surname")</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("Phone")</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("Warehouse")</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("DisableEnable")</th>
     </tr>
     @{
         foreach (var user in Model)
@@ -51,11 +51,11 @@
                     </td>
                     @if (user.LockoutEnd == null)
                     {
-                        <td><a href="#" class="Disable">Disable</a></td>
+                        <td><a href="#" class="Disable">@SharedLocalizer.GetLocalizedHtmlString("Disable")</a></td>
                     }
                     else
                     {
-                        <td><a href="#" class="Enable">Enable</a></td>
+                        <td><a href="#" class="Enable">@SharedLocalizer.GetLocalizedHtmlString("Enable")</a></td>
                     }
                 </tr>
             }
@@ -68,13 +68,13 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Warehouses</h4>
+                <h4 class="modal-title">@SharedLocalizer.GetLocalizedHtmlString("Warehouses")</h4>
             </div>
             <div class="modal-body">
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">@SharedLocalizer.GetLocalizedHtmlString("Close")</button>
             </div>
         </div>
 
