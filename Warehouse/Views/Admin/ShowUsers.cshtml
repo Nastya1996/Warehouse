@@ -29,7 +29,7 @@
 </form>
 <pager list="@Model" asp-route-pageSize="@ViewData["CurrentSize"]" asp-route-number="@ViewData["CurrentNumber"]" asp-route-role="@ViewData["CurrentRole"]" asp-route-name="@ViewData["CurrentName"]" asp-controller="Admin" asp-action="ShowUsers" />
 <table class="table">
-    <tr>
+    <tr class="thead-dark">
         <th>@SharedLocalizer.GetLocalizedHtmlString("Name")</th>
         <th>@SharedLocalizer.GetLocalizedHtmlString("Surname")</th>
         <th>@SharedLocalizer.GetLocalizedHtmlString("Phone")</th>
