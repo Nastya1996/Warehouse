@@ -31,7 +31,14 @@ namespace Warehouse.Controllers
             _log = log;
             _context = context;
         }
-
+        /// <summary>
+        /// Show product manager group by product
+        /// </summary>
+        /// <param name="type">Product type</param>
+        /// <param name="name">Product name</param>
+        /// <param name="page">Current page. Default page 1</param>
+        /// <param name="pageSize">Page size. Default size 10</param>
+        /// <returns></returns>
         public IActionResult Index(string type, string name, int page=1, int pageSize=10)
         {
             type = type == null ? "" : type.Trim();
@@ -60,7 +67,12 @@ namespace Warehouse.Controllers
             _log.LogInformation("Product manager index.User: "+user);
             return View(model);
         }
-        //Create
+        
+
+        /// <summary>
+        /// Open the create product manager window
+        /// </summary>
+        /// <returns></returns>
         [Authorize(Roles = "Storekeeper")]
         [HttpGet]
         public IActionResult Create()
@@ -68,6 +80,12 @@ namespace Warehouse.Controllers
             SelectInitial();
             return View();
         }
+
+        /// <summary>
+        /// Create new productManager
+        /// </summary>
+        /// <param name="productManager">ProductManager object</param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult Create(ProductManager productManager)
         {
