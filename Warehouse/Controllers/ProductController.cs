@@ -30,6 +30,17 @@ namespace Warehouse.Controllers
             _context = context;
             _appEnvironment = appEnvironment;
         }
+
+
+        /// <summary>
+        /// Show products
+        /// </summary>
+        /// <param name="name">Product name</param>
+        /// <param name="type">Product type</param>
+        /// <param name="sortOrder">Sorting type</param>
+        /// <param name="page">Current page. Default 1</param>
+        /// <param name="pageSize">Page size. Default 10</param>
+        /// <returns></returns>
         public IActionResult Index(string name, string type, SortState sortOrder = SortState.ProductNameAsc, int page = 1, int pageSize = 10)
         {
             name = name == null ? "" : name.Trim();
@@ -53,7 +64,12 @@ namespace Warehouse.Controllers
         }
 
 
-        //Create
+
+
+        /// <summary>
+        /// Open product creation window
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Create()
         {
@@ -62,6 +78,13 @@ namespace Warehouse.Controllers
         }
 
 
+
+        /// <summary>
+        /// Add new product
+        /// </summary>
+        /// <param name="product">Product type object</param>
+        /// <param name="uploadedFile"></param>
+        /// <returns></returns>
         [HttpPost]
         public async Task<IActionResult> Create(Product product, IFormFile uploadedFile)
         {
@@ -101,7 +124,9 @@ namespace Warehouse.Controllers
         }
 
 
-        //Initial Select tags
+        /// <summary>
+        /// Ini
+        /// </summary>
         void SelectInitial()
         {
             ViewBag.ProductTypes = new SelectList(_context.Types, "Id", "Name");

@@ -31,6 +31,8 @@ namespace Warehouse.Controllers
             _log = log;
             _context = context;
         }
+
+
         /// <summary>
         /// Show product manager group by product
         /// </summary>
@@ -81,6 +83,8 @@ namespace Warehouse.Controllers
             return View();
         }
 
+
+
         /// <summary>
         /// Create new productManager
         /// </summary>
@@ -110,6 +114,12 @@ namespace Warehouse.Controllers
             }
             return View(productManager);
         }
+
+
+
+        /// <summary>
+        /// Initial the select box
+        /// </summary>
         void SelectInitial()
         {
             ViewBag.WareHouses = new SelectList(_context.Warehouses, "Id", "Number");
@@ -117,7 +127,17 @@ namespace Warehouse.Controllers
             ViewBag.ProductTypes = new SelectList(_context.Types, "Id", "Name");
         }
 
-        //Show Product
+        
+
+        /// <summary>
+        /// Show all product managers
+        /// </summary>
+        /// <param name="id">Product id</param>
+        /// <param name="from">Date from</param>
+        /// <param name="before">Date before</param>
+        /// <param name="page">Current page. Default 1</param>
+        /// <param name="pageSize">Page size. Default 10</param>
+        /// <returns></returns>
         public IActionResult Show(string id, decimal from, decimal before, int page=1, int pageSize=1)
         {
             decimal data;
@@ -146,7 +166,13 @@ namespace Warehouse.Controllers
         }
 
 
-        //Edit
+
+
+        /// <summary>
+        /// Open the edit ProductManager window
+        /// </summary>
+        /// <param name="id">ProductManager Id</param>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Edit(string id)
         {
@@ -155,6 +181,15 @@ namespace Warehouse.Controllers
                 return View(productManager);
             return RedirectToAction("Index");
         }
+
+        /// <summary>
+        /// Edit the ProductManager receipt and sale price
+        /// </summary>
+        /// <param name="productManager">ProductManager object</param>
+        /// <returns></returns>
+        /// 
+
+
 
         [HttpPost]
         public IActionResult Edit(ProductManager productManager)
@@ -172,11 +207,13 @@ namespace Warehouse.Controllers
             return RedirectToAction("Show", new Dictionary<string, string> { { "id", prodManager.ProductId} });
         }
 
+
+
         /// <summary>
-        /// 
+        /// Add products to the basket
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="quantity"></param>
+        /// <param name="id">ProductManager Id</param>
+        /// <param name="quantity">Number of products</param>
         /// <returns></returns>
         [HttpPost]
         public IActionResult Add(string id, string quantity)
@@ -214,13 +251,23 @@ namespace Warehouse.Controllers
 
 
         
-
+        /// <summary>
+        /// Get max price in product manager
+        /// </summary>
+        /// <returns></returns>
         [Route("Products/MaxPrice")]
         public JsonResult GetMaxPrice()
         {
             decimal price = _context.ProductManagers.Max(p => p.SalePrice);
             return Json(price);
         }
+
+
+        /// <summary>
+        /// Get warehouse list
+        /// </summary>
+        /// <param name="testPMId">ProductManager Id</param>
+        /// <returns></returns>
         public IActionResult WHList(string testPMId)
         {
             ViewBag.PMId = testPMId;
@@ -238,6 +285,16 @@ namespace Warehouse.Controllers
             _log.LogInformation("Product manager move to another warehouse.User: "+user);
             return RedirectToAction("Show", "ProductManager", new { id });
         }
+
+
+
+        /// <summary>
+        /// Write out ProductManager
+        /// </summary>
+        /// <param name="id">ProductManager Id</param>
+        /// <param name="quantity">Number of products</param>
+        /// <param name="price">Product price</param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult WriteOut(string id, string quantity, string price)
         {
