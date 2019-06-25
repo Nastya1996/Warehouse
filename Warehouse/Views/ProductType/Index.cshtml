@@ -3,16 +3,19 @@
     ViewData["Title"] = "Index";
 }
 @model IPagedList<ProductType>
+@using Warehouse.Resources
+
+@inject LocService SharedLocalizer
 <h2>Index</h2>
 <br />
 <br />
 <br />
 <form method="get" asp-action="Index">
     <div class="form-inline form-group">
-        <label class="control-label">Product Type: </label>
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("ProductType"): </label>
         <input type="text" name="type" value="@ViewData["CurrentType"]" />
 
-        <label class="control-label">Page size:</label>
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
         <input type="number" min="0" name="pageSize" value="@ViewData["CurrentSize"]" />
 
         <input type="submit" value="Filter" class="btn btn-default" />
@@ -22,19 +25,19 @@
 <table class="table table-hover table-bordered">
     <thead class=" bg-primary">
         <tr>
-            <th>Name</th>
-            <th>Edit</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Name")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
         </tr>
     </thead>
     <tbody>
 
         @foreach (var pt in Model)
         {
-        <tr>
-            <td>@pt.Name</td>
-            <td><a asp-action="Edit" asp-route-id="@pt.Id">Edit</a></td>
-        </tr>
+            <tr>
+                <td>@pt.Name</td>
+                <td><a asp-action="Edit" asp-route-id="@pt.Id">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
+            </tr>
         }
-        </tbody>
+    </tbody>
 </table>
-<pager  list="@Model" asp-route-pageSize="@ViewData["CurrentSize"]" asp-route-type="@ViewData["CurrentType"]" asp-controller="ProductType" asp-action="Index" />
+<pager list="@Model" asp-route-pageSize="@ViewData["CurrentSize"]" asp-route-type="@ViewData["CurrentType"]" asp-controller="ProductType" asp-action="Index" />

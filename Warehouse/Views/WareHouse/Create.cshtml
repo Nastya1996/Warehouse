@@ -1,7 +1,9 @@
 ﻿@model Warehouse.Models.WareHouse
+@using Warehouse.Resources
 @{
     ViewData["Title"] = "Create";
 }
+@inject LocService SharedLocalizer
 
 <h1>Create WareHouse</h1>
 
@@ -9,12 +11,12 @@
     <div>
         <div asp-validation-summary="ModelOnly"></div>
         <div class="form-group">
-            <label asp-for="Number">Number of warehouse</label>
-            <input type="number" asp-for="Number" class="form-control" min="0"/>
+            <label asp-for="Number">@SharedLocalizer.GetLocalizedHtmlString("NumberOfWarehouse")</label>
+            <input type="number" asp-for="Number" class="form-control" min="0" />
             <span asp-validation-for="Number"></span>
         </div>
         <div class="form-group">
-            <label asp-for="Address">Address</label>
+            <label asp-for="Address">@SharedLocalizer.GetLocalizedHtmlString("Address")</label>
             <input asp-for="Address" type="text" class="form-control" />
             <span asp-validation-for="Address"></span>
         </div>

@@ -2,7 +2,9 @@
 @{
     ViewData["Title"] = "Index";
 }
+@using Warehouse.Resources
 
+@inject LocService SharedLocalizer
 @model PagedList<Product>
 
 <br />
@@ -10,11 +12,11 @@
 <br />
 <br />
 <form asp-action="Index" method="get">
-    <span>Name</span>
+    <span>@SharedLocalizer.GetLocalizedHtmlString("Name")</span>
     <input type="text" name="name" value="@ViewData["CurrentName"]" />
-    <span>Type</span>
+    <span>@SharedLocalizer.GetLocalizedHtmlString("Type")</span>
     <input type="text" name="type" value="@ViewData["CurrentType"]" />
-    <span>Page size</span>
+    <span>@SharedLocalizer.GetLocalizedHtmlString("PageSize")</span>
     <input type="number" min="1" name="pageSize" value="@ViewData["CurrentSize"]" />
     <input type="submit" value="Filter" />
 </form>
@@ -23,54 +25,54 @@
     <thead class="thead-dark">
         <tr>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.ProductNameSort">Name</a>    
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.ProductNameSort">@SharedLocalizer.GetLocalizedHtmlString("Name")</a>
             </th>
-            <th>Bar Code</th>
-            <th>Product Type</th>
-            <th>Unit</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Barcode")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("ProductType")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Unit")</th>
             @if (User.IsInRole("Admin"))
             {
-                <th>Disable \ Enable</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("DisableEnable")</th>
             }
             else
             {
-                <th>Edit</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
             }
-            <th>Image</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Image")</th>
         </tr>
     </thead>
     <tbody>
         @if (Model.Count() == 0)
         {
-            <tr><td colspan="6" class="text-center">There are no products!</td></tr>
+            <tr><td colspan="6" class="text-center">@SharedLocalizer.GetLocalizedHtmlString("ThereAreNoProducts")</td></tr>
         }
         else
         {
             @foreach (var pt in Model)
             {
-            <tr>
-                <td hidden="hidden"><input id="id" type="hidden" value="@pt.Id" /></td>
-                <td>@pt.Name</td>
-                <td>@pt.Barcode</td>
-                <td>@pt.ProductType?.Name</td>
-                <td>@pt.Unit?.Name</td>
-                @if (User.IsInRole("Admin"))
-                {
-                    @if (pt.IsActive == true)
+                <tr>
+                    <td hidden="hidden"><input id="id" type="hidden" value="@pt.Id" /></td>
+                    <td>@pt.Name</td>
+                    <td>@pt.Barcode</td>
+                    <td>@pt.ProductType?.Name</td>
+                    <td>@pt.Unit?.Name</td>
+                    @if (User.IsInRole("Admin"))
                     {
-                        <td><a href="#" class="Disable">Disable</a></td>
+                        @if (pt.IsActive == true)
+                        {
+                            <td><a href="#" class="Disable">@SharedLocalizer.GetLocalizedHtmlString("Disable")</a></td>
+}
+else
+{
+<td><a href="#" class="Enable">@SharedLocalizer.GetLocalizedHtmlString("Enable")</a></td>
+                        }
                     }
                     else
                     {
-                        <td><a href="#" class="Enable">Enable</a></td>
+                        <td><a asp-action="Edit" asp-route-id="@pt.Id">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
                     }
-                }
-                else
-                {
-                    <td><a asp-action="Edit" asp-route-id="@pt.Id">Edit</a></td>
-                }
-                <td><img src="@Url.Content(pt.FileModelImg?.Path)"></td>
-            </tr>
+                    <td><img src="@Url.Content(pt.FileModelImg?.Path)"></td>
+                </tr>
             }
         }
     </tbody>
