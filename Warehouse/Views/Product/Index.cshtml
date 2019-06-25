@@ -3,27 +3,31 @@
     ViewData["Title"] = "Index";
 }
 
-@model PagedList<Product>
+@model ProductViewModel
 
 <br />
 <br />
 <br />
 <br />
 <form asp-action="Index" method="get">
-    <span>Name</span>
-    <input type="text" name="name" value="@ViewData["CurrentName"]" />
-    <span>Type</span>
-    <input type="text" name="type" value="@ViewData["CurrentType"]" />
-    <span>Page size</span>
-    <input type="number" min="1" name="pageSize" value="@ViewData["CurrentSize"]" />
-    <input type="submit" value="Filter" />
+    <select asp-for="TypeId" asp-items="ViewBag.Types">
+        <option selected value="">All types</option>
+    </select>
+
+    <select asp-for="ProductId" asp-items="ViewBag.Names">
+        <option selected value="">All products</option>
+    </select>
+
+    <label class="control-label">Page size:</label>
+    <input type="number" min="1" asp-for="PageSize" />
+
+    <input type="submit" value="Filter" class="btn btn-default"/>
 </form>
-<pager list="@Model" asp-route-pageSize="@ViewData["CurrentSize"]" asp-route-name="@ViewData["CurrentName"]" asp-route-type="@ViewData["CurrentType"]" asp-controller="Product" asp-action="Index" />
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.ProductNameSort">Name</a>    
+                <a asp-action="Index" asp-route-sortOrder="@ViewBag.ProductNameSort">Name</a>
             </th>
             <th>Bar Code</th>
             <th>Product Type</th>
@@ -40,46 +44,46 @@
         </tr>
     </thead>
     <tbody>
-        @if (Model.Count() == 0)
+        @if (ViewBag.paged.Count == 0)
         {
             <tr><td colspan="6" class="text-center">There are no products!</td></tr>
         }
         else
         {
-            @foreach (var pt in Model)
+            @foreach (var pt in ViewBag.paged)
             {
-            <tr>
-                <td hidden="hidden"><input id="id" type="hidden" value="@pt.Id" /></td>
-                <td>@pt.Name</td>
-                <td>@pt.Barcode</td>
-                <td>@pt.ProductType?.Name</td>
-                <td>@pt.Unit?.Name</td>
-                @if (User.IsInRole("Admin"))
-                {
-                    @if (pt.IsActive == true)
+                <tr>
+                    <td hidden="hidden"><input id="id" type="hidden" value="@pt.Id" /></td>
+                    <td>@pt.Name</td>
+                    <td>@pt.Barcode</td>
+                    <td>@pt.ProductType?.Name</td>
+                    <td>@pt.Unit?.Name</td>
+                    @if (User.IsInRole("Admin"))
                     {
-                        <td><a href="#" class="Disable">Disable</a></td>
+                        @if (pt.IsActive == true)
+                        {
+                            <td><a href="#" class="Disable">Disable</a></td>
+                        }
+                        else
+                        {
+                            <td><a href="#" class="Enable">Enable</a></td>
+                        }
                     }
                     else
                     {
-                        <td><a href="#" class="Enable">Enable</a></td>
+                        <td><a asp-action="Edit" asp-route-id="@pt.Id">Edit</a></td>
                     }
-                }
-                else
-                {
-                    <td><a asp-action="Edit" asp-route-id="@pt.Id">Edit</a></td>
-                }
-                <td><img src="@Url.Content(pt.FileModelImg?.Path)"></td>
-            </tr>
+                    <td><img src="@Url.Content(pt.FileModelImg?.Path)"></td>
+                </tr>
             }
         }
     </tbody>
 </table>
+<pager list="@ViewBag.paged" asp-route-pageSize="@Model.PageSize" asp-route-ProductId="@Model.ProductId" asp-route-TypeId="@Model.TypeId" asp-controller="Product" asp-action="Index" />
 
 
 
 @section scripts{
-    <script src="https://kit.fontawesome.com/b7938c82ea.js"></script>
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial.cshtml");}
     <link href="~/css/jquery.contextMenu.css" rel="stylesheet" />
     <script src="~/js/jquery.contextMenu.js"></script>
@@ -87,4 +91,48 @@
     <link href="~/css/jquery-confirm.min.css" rel="stylesheet" />
     <script src="~/js/jquery-confirm.min.js"></script>
     <script src="~/js/product.js"></script>
+    <script>
+        $("#ProductId").on("chosen:ready", function (evt, params) {
+            let select = $("#TypeId").children("option:selected").val();
+            let name = $("#ProductId").children("option:selected").val();
+            if (select !== "") {
+                GetProducts(select);
+                if (name !== "") {
+                    $("#ProductId").val(name);
+                    $('#ProductId').trigger("chosen:updated");
+                }
+            }
+        });
+        $("#TypeId").chosen({
+            search_contains: true
+        });
+        $("#ProductId").chosen({
+            search_contains: true
+        });
+        $(() => {
+            $("#TypeId").on("change", function () {
+                var selected = $(this).children("option:selected").val();
+                GetProducts(selected);
+                
+            });
+        });
+        function GetProducts(select) {
+            $.ajax({
+                url: '/Products/Get',
+                type: "POST",
+                data: JSON.stringify(select),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                async:false,
+                success: function (data) {
+                    $("#ProductId").empty();
+                    $("#ProductId").append("<option selected value=''>All products</select>");
+                    data.forEach(function (element) {
+                        $("#ProductId").append("<option value=" + element.id + ">" + element.name + "</option>");
+                    });
+                    $("#ProductId").trigger("chosen:updated");
+                }
+            })
+        }
+    </script>
 }

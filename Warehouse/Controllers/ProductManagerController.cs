@@ -50,7 +50,8 @@ namespace Warehouse.Controllers
             ViewData["CurrentSize"] = pageSize;
             var user=_context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var productManagersByGroup = _context.ProductManagers
-                .Where(pm => pm.WareHouseId == user.WarehouseId && pm.Product.IsActive!=false)
+                .Where(pm => pm.WareHouseId == user.WarehouseId && pm.Product.IsActive &&
+                 pm.Product.ProductType.IsActive)
                 .Include(p => p.Product)
                 .Include(p => p.Product.ProductType)
                 .Include(p=>p.Product.Unit)
