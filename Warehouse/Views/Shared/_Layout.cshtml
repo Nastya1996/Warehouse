@@ -80,18 +80,25 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Warehouse</a>
+                <a asp-action="Index" class="navbar-brand">Warehouse</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     @if (User.IsInRole("Admin"))
                     {
-                        <li>
-                            <a asp-area="Identity" asp-page="/Account/Register">Create new account</a>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" asp-controller="Admin" asp-action="ShowUsers">Users<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a asp-area="Identity" asp-page="/Account/Register">New user</a></li>
+                                <li><a asp-controller="Admin" asp-action="ShowUsers">Show</a></li>
+                            </ul>
                         </li>
-                        <li><a asp-controller="Admin" asp-action="ShowUsers">Show Users</a></li>
-                        <li><a asp-controller="WareHouse" asp-action="Create">Create Warehouses</a></li>
-                        <li><a asp-controller="WareHouse" asp-action="Index">Show Warehouses</a></li>
+                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" asp-controller="WareHouse" asp-action="Create">Create Warehouses<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a asp-controller="WareHouse" asp-action="Create">New warehouse</a></li>
+                                <li><a asp-controller="WareHouse" asp-action="Index">Show</a></li>
+                            </ul>
+                        </li>
                         <li><a asp-controller="Product" asp-action="Index">Products</a></li>
                     }
                     else if (User.IsInRole("Worker"))
@@ -104,13 +111,33 @@
                     }
                     else if (User.IsInRole("Storekeeper"))
                     {
-                        <li><a asp-controller="ProductType" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ProductType")</a></li>
-                        <li><a asp-controller="ProductType" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("ProductTypeCreate")</a></li>
-                        <li><a asp-controller="Product" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Products")</a></li>
-                        <li><a asp-controller="Product" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("CreateProduct")</a></li>
-                        <li><a asp-controller="ProductManager" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ProductManager")</a></li>
-                        <li><a asp-controller="ProductManager" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("CreateProductManager")</a></li>
-                        <li><a asp-controller="Unit" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Unit")</a></li>
+                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" asp-controller="ProductType" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ProductType")<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a asp-controller="ProductType" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ProductType")</a></li>
+                                <li><a asp-controller="ProductType" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("ProductTypeCreate")</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" asp-controller="Product" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Products")<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a asp-controller="Product" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Products")</a></li>
+                                <li><a asp-controller="Product" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("CreateProduct")</a></li>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" asp-controller="ProductManager" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ProductManager")<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a asp-controller="ProductManager" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ProductManager")</a></li>
+                                <li><a asp-controller="ProductManager" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("CreateProductManager")</a></li>
+                            </ul>
+                        </li>
+ 
+                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" asp-controller="Unit" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Unit")<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a asp-controller="Unit" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Unit")</a></li>
+                                <li><a asp-controller="Unit" asp-action="Create">New unit</a></li>
+                            </ul>
+                        </li>
                     }
                     else if (User.IsInRole("Report"))
                     {
