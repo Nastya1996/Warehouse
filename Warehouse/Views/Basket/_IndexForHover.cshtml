@@ -8,6 +8,7 @@
     {
         <script>
             $("#chekOutBtn").removeAttr("disabled");
+            $("#chekOutBtn").css('pointer-events', 'all');
         </script>
         <table class="table table-bordered table-hover">
             <thead>
@@ -33,6 +34,7 @@
     {
         <script>
             $("#chekOutBtn").attr('disabled', 'true');
+            $("#chekOutBtn").css('pointer-events', 'none');
         </script>
         <p>No products to show!</p>
     }
