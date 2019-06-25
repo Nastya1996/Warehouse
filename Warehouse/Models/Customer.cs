@@ -22,5 +22,7 @@ namespace Warehouse.Models
         [Required(ErrorMessage = "*The field is not filled")]
         [RegularExpression(@"^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{3})$",ErrorMessage = "Entered phone format is not valid.")]
         public string Phone { get; set; }
+
+        public string FullName { get; set; }
     }
 }

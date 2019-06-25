@@ -5,7 +5,6 @@
 }
 
 <h2>Index</h2>
-
 <table class="table table-bordered table-hover">
     <tr>
         <th>Price</th>
@@ -18,17 +17,18 @@
         foreach (var o in Model)
         {
             <tr>
+                <td hidden="hidden"><input type="hidden" value="@o.Id"/></td>
                 <td>@o.Price</td>
                 <td>@o.Sale</td>
                 <td>@o.FinallPrice</td>
                 <td>@o.Date</td>
-                @{ 
+                @{
                     if (o.OrderType == OrderType.InProgress)
                     {
                         <td>
                             <a asp-action="Continue" asp-route-id="@o.Id">Continue</a>
                             /
-                            <a asp-action="Delete" asp-route-id="@o.Id">Delete</a>
+                            <a>Delete</a>
                         </td>
                     }
                     else if (o.OrderType == OrderType.Saled)
@@ -40,3 +40,85 @@
         }
     }
 </table>
+
+@section scripts{
+    <script src="https://kit.fontawesome.com/b7938c82ea.js"></script>
+    <link href="~/css/jquery.contextMenu.css" rel="stylesheet" />
+    <script src="~/js/jquery.contextMenu.js"></script>
+    <script src="~/js/jquery.ui.position.js"></script>
+    <link href="~/css/jquery-confirm.min.css" rel="stylesheet" />
+    <script src="~/js/jquery-confirm.min.js"></script>
+    <script>
+        $("a:contains('Delete')").on("click", function () {
+            let $link = $(this);
+            $(this).parent().parent().addClass(".select");
+            $link.addClass('context-menu-one');
+            $.contextMenu({
+                selector: '.context-menu-one',
+                trigger: 'left',
+                callback: function (key, options) {
+                },
+                position: function (opt, x, y) {
+                    opt.$menu.css({ top: y + 10, left: x - 90 });
+                },
+                items: {
+                    "Yes": {
+                        name: 'Yes', icon: 'fas fa-check-circle',
+                        callback: function () {
+                            let $link = $(this);
+                            let $row = $(this).parent().parent().addClass(".select");
+                            let orderId = $row.children().children().val();
+                            $.ajax({
+                                url: '/Order/Delete',
+                                type: "POST",
+                                data: { id: orderId },
+                                    async: false,
+                                    success: function (result) {
+                                        if (result) {
+                                            $.confirm({
+                                                icon: 'fas fa-check-circle',
+                                                title: 'Warehouse!',
+                                                content: 'Product successfully removed!',
+                                                type: 'blue',
+                                                typeAnimated: true,
+                                                buttons: {
+                                                    close: {
+                                                        btnClass: "btn-blue",
+                                                        action: function () {
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                            $link.parents("tr").remove();
+                                            $row.removeClass();
+                                        }
+                                        else {
+                                            $.confirm({
+                                                icon: 'fas fa-exclamation-triangle',
+                                                title: 'Warehouse!',
+                                                content: 'An error occurred. Please, try again!',
+                                                type: 'red',
+                                                typeAnimated: true,
+                                                buttons: {
+                                                    close: {
+                                                        btnClass: "btn-red",
+                                                        action: function () {
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            $row.removeClass();
+                            $link.removeClass();
+                        }
+                    },
+                    "sep1": "---------",
+                    "Cansel": { name: "Cansel", icon: 'far fa-times-circle' }
+                }
+            });
+
+        });
+    </script>
+}

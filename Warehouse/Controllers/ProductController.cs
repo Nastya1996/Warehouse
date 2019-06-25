@@ -83,8 +83,8 @@ namespace Warehouse.Controllers
         /// Add new product
         /// </summary>
         /// <param name="product">Product type object</param>
-        /// <param name="uploadedFile"></param>
-        /// <returns></returns>
+        /// <param name="uploadedFile">Select filte to upload</param>
+        /// <returns>Show products</returns>
         [HttpPost]
         public async Task<IActionResult> Create(Product product, IFormFile uploadedFile)
         {
@@ -125,16 +125,20 @@ namespace Warehouse.Controllers
 
 
         /// <summary>
-        /// Ini
+        /// Initial the select tags
         /// </summary>
         void SelectInitial()
         {
             ViewBag.ProductTypes = new SelectList(_context.Types, "Id", "Name");
             ViewBag.Units = new SelectList(_context.Units, "Id", "Name");
         }
-        
 
-        //Edit
+
+        /// <summary>
+        /// Open product edition window
+        /// </summary>
+        /// <param name="id">Product Id</param>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Edit(string id)
         {
@@ -143,6 +147,13 @@ namespace Warehouse.Controllers
             return View(_context.Products.Include(x => x.ProductType).Include(x => x.Unit).FirstOrDefault(x => x.Id == id));
         }
 
+
+
+        /// <summary>
+        /// Edit Product
+        /// </summary>
+        /// <param name="product">Product type object</param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult Edit(Product product)
         {
@@ -160,7 +171,11 @@ namespace Warehouse.Controllers
             return View(product);
         }
 
-        //Details
+        /// <summary>
+        /// Show product details
+        /// </summary>
+        /// <param name="id">Product Id</param>
+        /// <returns></returns>
         [HttpGet]
         public IActionResult Details(string id)
         {
@@ -169,7 +184,13 @@ namespace Warehouse.Controllers
             return View(_context.Products.Include(x=>x.ProductType).Include(x=>x.Unit).FirstOrDefault(x => x.Id == id));
         }
 
-        //Disable product
+
+
+        /// <summary>
+        /// Disable product
+        /// </summary>
+        /// <param name="productId">Product Id</param>
+        /// <returns>Disable product</returns>
         [HttpPost]
         [Route("Products/Disable/")]
         public JsonResult Disable([FromBody]string productId)
@@ -189,7 +210,12 @@ namespace Warehouse.Controllers
             return Json(false);
         }
 
-        //Enable product
+
+        /// <summary>
+        /// Enable product
+        /// </summary>
+        /// <param name="productId">Product Id</param>
+        /// <returns>Enable product</returns>
         [HttpPost]
         [Route("Products/Enable/")]
         public JsonResult Enable([FromBody]string productId)
@@ -209,7 +235,13 @@ namespace Warehouse.Controllers
             return Json(false);
         }
 
-        //Get Products
+
+
+        /// <summary>
+        /// Receive products depending on the type selected
+        /// </summary>
+        /// <param name="selected">Product type</param>
+        /// <returns>Products</returns>
         [HttpPost]
         [Route("Products/Get")]
         public JsonResult GetProduct([FromBody]string selected)
