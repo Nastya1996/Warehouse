@@ -122,7 +122,8 @@
         $(() => {
             var phone;
             $("#SelectCustomer").chosen({
-                search_contains: true
+                search_contains: true,
+                width:"150px"
             });
 
             $("#registerCustomer").on("click", () => {
@@ -174,13 +175,15 @@
                             $("#message2").hide();
                             $("#Registration")[0].reset();
                             $.ajax({
+                                beforeSend: function () {
+                                },
                                 url: '/Customer/Get',
                                 type: "POST",
                                 success: function (data) {
                                     $("#SelectCustomer").empty();
-                                    $("#SelectCustomer").append("<option selected disabled value=''>Select Customer...</select>");
+                                    $("#SelectCustomer").append("<option selected value=''>Without customer!</select>");
                                     data.forEach(function (element) {
-                                        $("#SelectCustomer").append("<option value=" + element.id + ">" + element.name + "</option>");
+                                        $("#SelectCustomer").append("<option value=" + element.id + ">" +element.fullName + "</option>");
                                     });
                                     $("#SelectCustomer").trigger("chosen:updated");
                                 }

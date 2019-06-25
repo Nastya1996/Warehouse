@@ -22,7 +22,7 @@
 </form>
 <pager list="@Model" asp-route-pageSize="@ViewData["CurrentSize"]" asp-route-name="@ViewData["CurrentName"]" asp-route-type="@ViewData["CurrentType"]" asp-controller="Product" asp-action="Index" />
 <table class="table table-bordered table-hover">
-    <thead class="thead-dark">
+    <thead>
         <tr>
             <th>
                 <a asp-action="Index" asp-route-sortOrder="@ViewBag.ProductNameSort">@SharedLocalizer.GetLocalizedHtmlString("Name")</a>

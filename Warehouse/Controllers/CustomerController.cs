@@ -89,6 +89,7 @@ namespace Warehouse.Controllers
         {
             if (_context.Customers.FirstOrDefault(c => c.Phone == customer.Phone) != null)
                 return Json(false);
+            customer.FullName = customer.Name + " " + customer.Phone;
             _context.Customers.Add(customer);
             _context.SaveChanges();
             return Json(true);
