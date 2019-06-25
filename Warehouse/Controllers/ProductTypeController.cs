@@ -23,6 +23,15 @@ namespace Warehouse.Controllers
             _log = log;
             _context = context;
         }
+
+
+        /// <summary>
+        /// Show product types
+        /// </summary>
+        /// <param name="type">Product type</param>
+        /// <param name="page">Current page. Default 1</param>
+        /// <param name="pageSize">Page size. Default 10</param>
+        /// <returns>Product types</returns>
         public IActionResult Index(string type, int page=1, int pageSize=10)
         {
             type = type == null ? "" : type.Trim();
@@ -36,12 +45,23 @@ namespace Warehouse.Controllers
         }
 
 
-        //Create
+        /// <summary>
+        /// Open product type creation window
+        /// </summary>
+        /// <returns>Product type creation window</returns>
         [HttpGet]
         public IActionResult Create()
         {
             return View();
         }
+
+
+
+        /// <summary>
+        /// Add new product type
+        /// </summary>
+        /// <param name="productType">ProductType type object</param>
+        /// <returns>Product types</returns>
         [HttpPost]
         public IActionResult Create(ProductType productType)
         {
@@ -61,12 +81,23 @@ namespace Warehouse.Controllers
         }
 
 
-        //Edit
+        /// <summary>
+        /// Open product edition window
+        /// </summary>
+        /// <param name="id">Product type id</param>
+        /// <returns>Product edition window</returns>
         [HttpGet]
         public IActionResult Edit(string id)
         {
             return View(_context.Types.FirstOrDefault(x => x.Id == id));
         }
+
+
+        /// <summary>
+        /// Edit product type
+        /// </summary>
+        /// <param name="productType">ProductType type object</param>
+        /// <returns>Show product types</returns>
         [HttpPost]
         public IActionResult Edit(ProductType productType)
         {

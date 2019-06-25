@@ -157,7 +157,7 @@ namespace Warehouse.Controllers
             _context.SaveChanges();
 
             ViewBag.Baskets = baskets;
-            ViewBag.Custemers = new SelectList(_context.Customers.ToList(), "Id", "Name");
+            ViewBag.Custemers = new SelectList(_context.Customers.ToList(), "Id", "FullName");
             
             //_context.Baskets.RemoveRange(basket);
             _context.SaveChanges();
@@ -241,13 +241,18 @@ namespace Warehouse.Controllers
             _log.LogInformation("Continue order."+user);
             return RedirectToAction("Index", "ProductManager");
         }
-        public IActionResult Delete(string id)
+
+
+        [HttpPost]
+        public JsonResult Delete(string id)
         {
-            _context.Orders.Remove(_context.Orders.Find(id));
+            var order = _context.Orders.Find(id);
+            if (order==null) return Json(false);
+            _context.Orders.Remove(order);
             _context.SaveChanges();
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             _log.LogInformation("Deleted order."+user);
-            return RedirectToAction("Index");
+            return Json(true);
         }
     }
 }
