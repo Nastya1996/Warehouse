@@ -5,7 +5,6 @@
 @using Warehouse.Resources
 
 @inject LocService SharedLocalizer
-@model PagedList<Product>
 @model ProductViewModel
 
 <br />
@@ -21,17 +20,10 @@
         <option selected value="">All products</option>
     </select>
 
-    <label class="control-label">Page size:</label>
+    <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
     <input type="number" min="1" asp-for="PageSize" />
 
     <input type="submit" value="Filter" class="btn btn-default"/>
-    <span>@SharedLocalizer.GetLocalizedHtmlString("Name")</span>
-    <input type="text" name="name" value="@ViewData["CurrentName"]" />
-    <span>@SharedLocalizer.GetLocalizedHtmlString("Type")</span>
-    <input type="text" name="type" value="@ViewData["CurrentType"]" />
-    <span>@SharedLocalizer.GetLocalizedHtmlString("PageSize")</span>
-    <input type="number" min="1" name="pageSize" value="@ViewData["CurrentSize"]" />
-    <input type="submit" value="Filter" />
 </form>
 <table class="table table-bordered table-hover">
     <thead>
@@ -73,10 +65,10 @@
                         @if (pt.IsActive == true)
                         {
                             <td><a href="#" class="Disable">@SharedLocalizer.GetLocalizedHtmlString("Disable")</a></td>
-}
-else
-{
-<td><a href="#" class="Enable">@SharedLocalizer.GetLocalizedHtmlString("Enable")</a></td>
+                        }
+                        else
+                        {
+                            <td><a href="#" class="Enable">@SharedLocalizer.GetLocalizedHtmlString("Enable")</a></td>
                         }
                     }
                     else
@@ -114,10 +106,12 @@ else
             }
         });
         $("#TypeId").chosen({
-            search_contains: true
+            search_contains: true,
+            width:"15%"
         });
         $("#ProductId").chosen({
-            search_contains: true
+            search_contains: true,
+            width: "15%"
         });
         $(() => {
             $("#TypeId").on("change", function () {

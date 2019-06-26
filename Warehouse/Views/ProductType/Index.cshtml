@@ -1,10 +1,7 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Index";
 }
-@model IPagedList<ProductType>
 @using Warehouse.Resources
-
 @inject LocService SharedLocalizer
 @model ProductTypeViewModel
 <h2>Index</h2>
@@ -13,28 +10,22 @@
 <br />
 <form method="get" asp-action="Index">
     <div class="form-inline form-group">
-
-        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
-        <input type="number" min="0" name="pageSize" value="@ViewData["CurrentSize"]" />
         <select asp-for="TypeId" asp-items="@ViewBag.Types">
             <option selected value="">All types</option>
         </select>
 
-        <label class="control-label">Page size:</label>
-        <input type="number" min="1" name="pageSize" value="@ViewData["CurrentSize"]" />
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
+        <input type="number" min="0" name="pageSize" value="@ViewData["CurrentSize"]" />
 
         <input type="submit" value="Filter" class="btn btn-default" />
     </div>
 </form>
-
 <table class="table table-hover table-bordered">
     <thead class="bg-primary">
         <tr>
-            <th>Name</th>
-            <th>Edit</th>
-            <th>Disable / Enable</th>
             <th>@SharedLocalizer.GetLocalizedHtmlString("Name")</th>
             <th>@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
+            <th>Disable / Enable</th>
         </tr>
     </thead>
     <tbody>
@@ -44,23 +35,20 @@
             <tr>
                 <td hidden="hidden"><input type="hidden" value="@pt.Id" /></td>
                 <td>@pt.Name</td>
-                <td><a asp-action="Edit" asp-route-id="@pt.Id">Edit</a></td>
-                @if (User.IsInRole("Admin"))
-                {
-                    @if (pt.IsActive)
-                    {
-                        <td><a class="Disable" href="#">Disable</a></td>
-                    }
-                    else
-                    {
-                        <td><a class="Enable" href="#">Enable</a></td>
-                    }
+                <td><a asp-action="Edit" asp-route-id="@pt.Id">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
+            @if (User.IsInRole("Admin"))
+            {
+                @if (pt.IsActive)
+                 {
+                    <td><a class="Disable" href="#">Disable</a></td>
+                 }
+                 else
+                 {
+                    <td><a class="Enable" href="#">Enable</a></td>
+                 }
                 }
             </tr>
-            <tr>
-                <td>@pt.Name</td>
-                <td><a asp-action="Edit" asp-route-id="@pt.Id">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
-            </tr>
+           
         }
     </tbody>
 </table>

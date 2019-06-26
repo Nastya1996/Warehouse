@@ -17,7 +17,7 @@ using Warehouse.Infrastructure;
 using Warehouse.Models;
 namespace Warehouse.Controllers
 {
-    [Authorize(Roles = "Storekeeper, Admin")]
+    //[Authorize(Roles = "Storekeeper, Admin")]
     public class ProductController : Controller
     {
         
@@ -42,6 +42,7 @@ namespace Warehouse.Controllers
         /// <param name="page">Current page. Default 1</param>
         /// <param name="pageSize">Page size. Default 10</param>
         /// <returns></returns>
+        [Authorize(Roles = "Storekeeper, Admin")]
         public IActionResult Index(ProductViewModel viewModel, SortState sortOrder = SortState.ProductNameAsc)
         {
             if (viewModel.PageSize < 1) {
@@ -76,6 +77,7 @@ namespace Warehouse.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [Authorize(Roles = "Storekeeper")]
         public IActionResult Create()
         {
             SelectInitial();
@@ -90,6 +92,7 @@ namespace Warehouse.Controllers
         /// <param name="product">Product type object</param>
         /// <param name="uploadedFile">Select filte to upload</param>
         /// <returns>Show products</returns>
+        [Authorize(Roles = "Storekeeper")]
         [HttpPost]
         public async Task<IActionResult> Create(Product product, IFormFile uploadedFile)
         {
@@ -132,6 +135,7 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Initial the select tags
         /// </summary>
+        [NonAction]
         void SelectInitial()
         {
             ViewBag.ProductTypes = new SelectList(_context.Types.Where(pt=>pt.IsActive), "Id", "Name");
@@ -144,6 +148,7 @@ namespace Warehouse.Controllers
         /// </summary>
         /// <param name="id">Product Id</param>
         /// <returns></returns>
+        [Authorize(Roles = "Storekeeper")]
         [HttpGet]
         public IActionResult Edit(string id)
         {
@@ -158,6 +163,7 @@ namespace Warehouse.Controllers
         /// </summary>
         /// <param name="product">Product type object</param>
         /// <returns></returns>
+        [Authorize(Roles = "Storekeeper")]
         [HttpPost]
         public IActionResult Edit(Product product)
         {
@@ -195,6 +201,7 @@ namespace Warehouse.Controllers
         /// </summary>
         /// <param name="productId">Product Id</param>
         /// <returns>Disable product</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("Products/Disable/")]
         public JsonResult Disable([FromBody]string productId)
@@ -224,6 +231,7 @@ namespace Warehouse.Controllers
         /// </summary>
         /// <param name="productId">Product Id</param>
         /// <returns>Enable product</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("Products/Enable/")]
         public JsonResult Enable([FromBody]string productId)
@@ -259,6 +267,5 @@ namespace Warehouse.Controllers
                 products = products.Where(p => p.ProductTypeId == selected && p.IsActive);
             return Json(products.ToList());
         }
-
     }
 }

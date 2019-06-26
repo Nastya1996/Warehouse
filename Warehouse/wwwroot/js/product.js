@@ -54,8 +54,8 @@ $(() => {
                                         $row.removeClass();
                                     }
                                     else {
+                                        $link.text("Enable").css("color", "green");
                                         $.confirm({
-                                            $link.text("Enable").css("color", "green");
                                             icon: 'fas fa-exclamation-triangle',
                                             title: 'Warehouse!',
                                             content: 'An error occurred. There may be products left in warehouse. Please, try again!',
