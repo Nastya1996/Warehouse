@@ -142,11 +142,7 @@ else if (User.IsInRole("Storekeeper"))
 }
 else if (User.IsInRole("Report"))
 {
-<li><a asp-controller="Admin" asp-action="CreateAdmin">@SharedLocalizer.GetLocalizedHtmlString("CreateNewAccount")</a></li>
-<li><a asp-controller="Admin" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ShowUsers")</a></li>
-<li><a asp-controller="Admin" asp-action="CreateAdmin">@SharedLocalizer.GetLocalizedHtmlString("CreateWarehouse")</a></li>
-<li><a asp-controller="Admin" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ShowWarehouses")</a></li>
-<li><a asp-controller="Admin" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Products")</a></li>
+                        <li><a asp-controller="Report" asp-action="Index">Report</a></li>
 }
 else
 {

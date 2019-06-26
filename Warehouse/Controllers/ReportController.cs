@@ -17,7 +17,7 @@ using Warehouse.Models;
 
 namespace Warehouse.Controllers
 {
-    //[Authorize(Roles = "Report")]
+    [Authorize(Roles = "Report")]
     public class ReportController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -148,6 +148,7 @@ namespace Warehouse.Controllers
             return RedirectToAction("Index", new Dictionary<string, ReportViewModel> { { "reportFilter", reportFilter } });
 
         }
+        [NonAction]
         public FileStreamResult ExportProductManager(IList<ProductManager> list)
         {
             var stream = new MemoryStream();
@@ -168,6 +169,7 @@ namespace Warehouse.Controllers
             var fileName = $"InputReport_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
+        [NonAction]
         public FileStreamResult ExportProductOrder(IList<ProductOrder> list)
         {
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -189,6 +191,7 @@ namespace Warehouse.Controllers
             var fileName = $"SaledReport_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
+        [NonAction]
         public FileStreamResult ExportWriteOut(IList<WriteOut> list)
         {
             var stream = new MemoryStream();

@@ -27,7 +27,7 @@
         <select asp-for="TypeId" asp-items="ViewBag.Types">
             <option selected value="">@SharedLocalizer.GetLocalizedHtmlString("All")</option>
         </select>
-        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Name"):</label>
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Name")</label>
         <select asp-for="ProductId" asp-items="ViewBag.Names">
             <option selected value="">@SharedLocalizer.GetLocalizedHtmlString("All")</option>
         </select>
@@ -146,37 +146,57 @@
     <script>
         $(() => {
             $("#Deal").chosen({
-                search_contains: true
-            });
-            $("#TypeId").chosen({
-                search_contains: true
-            });
-
-            $("#ProductId").chosen({
-                search_contains: true
+                search_contains: true,
+                width:"10%"
             });
             $("#UserId").chosen({
                 search_contains: true
             });
+            $("#ProductId").on("chosen:ready", function (evt, params) {
+                let select = $("#TypeId").children("option:selected").val();
+                let name = $("#ProductId").children("option:selected").val();
+                if (select !== "") {
+                    GetProducts(select);
+                    if (name !== "") {
+                        $("#ProductId").val(name);
+                        $('#ProductId').trigger("chosen:updated");
+                    }
+                }
+            });
+            $("#TypeId").chosen({
+                search_contains: true,
+                width: "15%"
+            });
+            $("#ProductId").chosen({
+                search_contains: true,
+                width: "15%"
+            });
+            $(() => {
+                $("#TypeId").on("change", function () {
+                    var selected = $(this).children("option:selected").val();
+                    GetProducts(selected);
 
-            $("#TypeId").on("change", function () {
-                var selected = $(this).children("option:selected").val();
+                });
+            });
+            function GetProducts(select) {
                 $.ajax({
                     url: '/Products/Get',
                     type: "POST",
-                    data: JSON.stringify(selected),
+                    data: JSON.stringify(select),
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
+                    async: false,
                     success: function (data) {
                         $("#ProductId").empty();
-                        $("#ProductId").append("<option selected value=''>All</select>");
+                        $("#ProductId").append("<option selected value=''>All products</select>");
                         data.forEach(function (element) {
                             $("#ProductId").append("<option value=" + element.id + ">" + element.name + "</option>");
                         });
                         $("#ProductId").trigger("chosen:updated");
                     }
-                });
-            });
+                })
+            }
+            
         });
     </script>
 }
