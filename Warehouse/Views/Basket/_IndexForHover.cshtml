@@ -2,20 +2,24 @@
 @{
     Layout = null;
 }
+@using Warehouse.Resources
+
+@inject LocService SharedLocalizer
 
 
 @{if (Model.Count() > 0)
     {
         <script>
             $("#chekOutBtn").removeAttr("disabled");
+            $("#chekOutBtn").css('pointer-events', 'all');
         </script>
         <table class="table table-bordered table-hover">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Count</th>
-                    <th>Delete</th>
-                </tr>
+                    <th>@SharedLocalizer.GetLocalizedHtmlString("Name")</th>
+                    <th>@SharedLocalizer.GetLocalizedHtmlString("Count")</th>
+                    <th>@SharedLocalizer.GetLocalizedHtmlString("Delete")</th>
+</tr>
             </thead>
             <tbody>
                 @foreach (var pb in Model)
@@ -23,7 +27,7 @@
                     <tr>
                         <td>@pb.Product.Name</td>
                         <td>@pb.Count</td>
-                        <td><a asp-action="Delete" asp-route-id="@pb.Id">Delete</a></td>
+                        <td><a asp-action="Delete" asp-route-id="@pb.Id">@SharedLocalizer.GetLocalizedHtmlString("Delete")</a></td>
                     </tr>
                 }
             </tbody>
@@ -33,8 +37,9 @@
     {
         <script>
             $("#chekOutBtn").attr('disabled', 'true');
+            $("#chekOutBtn").css('pointer-events', 'none');
         </script>
-        <p>No products to show!</p>
+        <p>@SharedLocalizer.GetLocalizedHtmlString("NoProductsToShow")</p>
     }
 }
 

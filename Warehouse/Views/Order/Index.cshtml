@@ -3,15 +3,17 @@
 @{
     ViewData["Title"] = "Index";
 }
+@using Warehouse.Resources
 
+@inject LocService SharedLocalizer
 <h2>Index</h2>
 <table class="table table-bordered table-hover">
     <tr>
-        <th>Price</th>
-        <th>Sale</th>
-        <th>Final Price</th>
-        <th>Date</th>
-        <th>Status</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("Price")</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("Sale")</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("FinalPrice")</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("Date")</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("Status")</th>
     </tr>
     @{
         foreach (var o in Model)
@@ -26,16 +28,15 @@
                     if (o.OrderType == OrderType.InProgress)
                     {
                         <td>
-                            <a asp-action="Continue" asp-route-id="@o.Id">Continue</a>
-                            /
-                            <a href="#">Delete</a>
+                            <a asp-action="Continue" asp-route-id="@o.Id">@SharedLocalizer.GetLocalizedHtmlString("Continue")</a>
+                            <a asp-action="Delete" asp-route-id="@o.Id">@SharedLocalizer.GetLocalizedHtmlString("Delete")</a>
                         </td>
                     }
                     else if (o.OrderType == OrderType.Saled)
                     {
-                        <td><a asp-action="Back" asp-route-id="@o.Id">Back</a></td>
+                        <td><a asp-action="Back" asp-route-id="@o.Id">@SharedLocalizer.GetLocalizedHtmlString("Back")</a></td>
                     }
-                }
+    }
             </tr>
         }
     }

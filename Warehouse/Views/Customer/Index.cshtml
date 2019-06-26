@@ -2,25 +2,27 @@
 @{
     ViewData["Title"] = "Index";
 }
+@using Warehouse.Resources
 
+@inject LocService SharedLocalizer
 
 <br />
 <br />
 <br />
 <br />
 <form asp-action="Index" method="get">
-    <span>Page size</span>
+    <span>@SharedLocalizer.GetLocalizedHtmlString("PageSize")</span>
     <input type="number" min="1" name="pageSize" value="@ViewData["CurrentSize"]" />
     <input type="submit" value="Filter" />
 </form>
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Surname</th>
-            <th>Phone</th>
-            <th>Edit</th>
-            <th>Delete</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Name")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Surname")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Phone")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Delete")</th>
         </tr>
     </thead>
     <tbody>
@@ -30,8 +32,8 @@
                 <td>@Html.DisplayFor(x => i.Name)</td>
                 <td>@Html.DisplayFor(x => i.Surname)</td>
                 <td>@Html.DisplayFor(x => i.Phone)</td>
-                <td><a asp-action="Edit" asp-route-id="@i.Id">Edit</a></td>
-                <td><a asp-action="Delete" asp-route-id="@i.Id">Delete</a></td>
+                <td><a asp-action="Edit" asp-route-id="@i.Id">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
+                <td><a asp-action="Delete" asp-route-id="@i.Id">@SharedLocalizer.GetLocalizedHtmlString("Delete")</a></td>
             </tr>
         }
     </tbody>

@@ -2,10 +2,12 @@
 @{
     ViewData["Title"] = "Details";
 }
+@using Warehouse.Resources
 
-<h1>Details</h1>
+@inject LocService SharedLocalizer
+<h1>@SharedLocalizer.GetLocalizedHtmlString("Details")</h1>
 <p>Name: @Model.Name</p><br />
 <p>Barcode: @Model.Barcode</p><br />
 <p>Product type: @Model.ProductType.Name </p><br />
 <p>Unit: @Model.Unit.Name</p><br />
-<a asp-action="Index">Go back</a>
+<a asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("GoBack")</a>

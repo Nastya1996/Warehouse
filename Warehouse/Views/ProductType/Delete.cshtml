@@ -3,9 +3,12 @@
     ViewData["Title"] = "Delete";
 }
 @model ProductType
-<h2>Are you sure?</h2>
-    <ins>@Model.Name</ins>
-    <a asp-action="Deleted" asp-route-id="@Model.Id">Delete</a>
-    <a asp-action="Index">Go Back</a>
+@using Warehouse.Resources
+
+@inject LocService SharedLocalizer
+<h2>@SharedLocalizer.GetLocalizedHtmlString("Are you sure?")</h2>
+<ins>@Model.Name</ins>
+<a asp-action="Deleted" asp-route-id="@Model.Id">@SharedLocalizer.GetLocalizedHtmlString("Delete")</a>
+<a asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("GoBack")</a>
 
 

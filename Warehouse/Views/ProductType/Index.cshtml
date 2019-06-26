@@ -2,6 +2,10 @@
 @{
     ViewData["Title"] = "Index";
 }
+@model IPagedList<ProductType>
+@using Warehouse.Resources
+
+@inject LocService SharedLocalizer
 @model ProductTypeViewModel
 <h2>Index</h2>
 <br />
@@ -10,6 +14,8 @@
 <form method="get" asp-action="Index">
     <div class="form-inline form-group">
 
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
+        <input type="number" min="0" name="pageSize" value="@ViewData["CurrentSize"]" />
         <select asp-for="TypeId" asp-items="@ViewBag.Types">
             <option selected value="">All types</option>
         </select>
@@ -27,6 +33,8 @@
             <th>Name</th>
             <th>Edit</th>
             <th>Disable / Enable</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Name")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
         </tr>
     </thead>
     <tbody>
@@ -48,6 +56,10 @@
                         <td><a class="Enable" href="#">Enable</a></td>
                     }
                 }
+            </tr>
+            <tr>
+                <td>@pt.Name</td>
+                <td><a asp-action="Edit" asp-route-id="@pt.Id">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
             </tr>
         }
     </tbody>

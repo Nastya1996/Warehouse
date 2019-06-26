@@ -2,12 +2,14 @@
 @{
     ViewData["Title"] = "Delete";
 }
+@using Warehouse.Resources
 
-<h2>Delete</h2>
+@inject LocService SharedLocalizer
+<h2>@SharedLocalizer.GetLocalizedHtmlString("Delete")</h2>
 <p>Are you sureto delete it?</p>
 <p>@Html.DisplayFor(i => Model.Name)</p>
 <p>@Html.DisplayFor(i => Model.Surname)</p>
 <p>@Html.DisplayFor(i => Model.Phone)</p>
 
-<a asp-action="DeleteCustomer" asp-route-id="@Model.Id">Delete</a>
-<a asp-action="Back">Back to list</a>
+<a asp-action="DeleteCustomer" asp-route-id="@Model.Id">@SharedLocalizer.GetLocalizedHtmlString("Delete")</a>
+<a asp-action="Back">@SharedLocalizer.GetLocalizedHtmlString("BackToList")</a>

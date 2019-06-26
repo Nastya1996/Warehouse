@@ -3,42 +3,45 @@
     ViewData["Title"] = "Create";
 }
 @model ProductManager
+@using Warehouse.Resources
+
+@inject LocService SharedLocalizer
 @{
     var date = DateTime.Now.ToString("yyyy-MM-dd");
 }
-<h1>Create ProductManager</h1>
+<h1>@SharedLocalizer.GetLocalizedHtmlString("CreateProductManager")</h1>
 <form onsubmit="return Stop()" asp-action="Create" asp-antiforgery="true">
     <div>
         <div asp-validation-summary="ModelOnly"></div>
         <div id="TypeDiv" class="form-group">
-            <label>Product type</label>
+            <label>@SharedLocalizer.GetLocalizedHtmlString("ProductType")</label>
             <select id="type" class="form-control" asp-items="ViewBag.ProductTypes">
-                <option selected disabled value="">Select type...</option>
+                <option selected disabled value="">@SharedLocalizer.GetLocalizedHtmlString("SelectType")</option>
             </select>
         </div>
         <div id="NameDiv" class="form-group">
-            <label asp-for="ProductId">Product name</label>
+            <label asp-for="ProductId">@SharedLocalizer.GetLocalizedHtmlString("ProductName")</label>
             <select asp-for="ProductId" class="form-control" asp-items="ViewBag.Products">
-                <option value="">Select name...</option>
+                <option value="">@SharedLocalizer.GetLocalizedHtmlString("SelectName")</option>
             </select>
         </div>
         <div class="form-group">
-            <label asp-for="Count">Count</label>
+            <label asp-for="Count">@SharedLocalizer.GetLocalizedHtmlString("Count")</label>
             <input asp-for="Count" type="number" class="form-control" placeholder="0" min="0" />
             <span asp-validation-for="Count"></span>
         </div>
         <div class="form-group">
-            <label asp-for="ReceiptPrice">Receipt price</label>
+            <label asp-for="ReceiptPrice">@SharedLocalizer.GetLocalizedHtmlString("ReceiptPrice")</label>
             <input asp-for="ReceiptPrice" class="form-control" placeholder="0" />
             <span asp-validation-for="ReceiptPrice"></span>
         </div>
         <div class="form-group">
-            <label asp-for="SalePrice">Sale price</label>
+            <label asp-for="SalePrice">@SharedLocalizer.GetLocalizedHtmlString("SalePrice")</label>
             <input asp-for="SalePrice" class="form-control" placeholder="0" />
             <span asp-validation-for="SalePrice"></span>
         </div>
         <div class="form-group">
-            <label asp-for="ReceiptDate">Receipt date</label>
+            <label asp-for="ReceiptDate">@SharedLocalizer.GetLocalizedHtmlString("ReceiptDate")</label>
             <input type="date" asp-for="ReceiptDate" value="@date" min="2000-01-01" max="@date" class="form-control" />
             <span asp-validation-for="ReceiptDate"></span>
         </div>

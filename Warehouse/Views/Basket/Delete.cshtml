@@ -2,10 +2,12 @@
 @{
     ViewData["Title"] = "Delete";
 }
+@using Warehouse.Resources
 
-<h2>Delete</h2>
-<p>Delete? </p>
+@inject LocService SharedLocalizer
+<h2>@SharedLocalizer.GetLocalizedHtmlString("Delete")</h2>
+<p>@SharedLocalizer.GetLocalizedHtmlString("Delete")?</p>
 
-<a asp-action="DeleteYes" asp-controller="Basket" asp-route-id="@Model.Id">Yes!</a>
-<a asp-action="Index" asp-controller="Basket">No!</a>
+<a asp-action="DeleteYes" asp-controller="Basket" asp-route-id="@Model.Id">@SharedLocalizer.GetLocalizedHtmlString("Yes")!</a>
+<a asp-action="Index" asp-controller="Basket">@SharedLocalizer.GetLocalizedHtmlString("No")!</a>
 

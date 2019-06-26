@@ -32,7 +32,13 @@
                 }
         </tbody>
     </table>*@
-<partial name="../Basket/_IndexForHover" />
+<partial name="_IndexForHover" />
+@{
+    if (Model.Count() > 0)
+    {
+        <a asp-controller="Order" asp-action="Create" class="btn btn-default" id="chekOutBtn">Check out</a>
+    }
+}
 @*@Html.Partial("_IndexForHover");*@
 
 

@@ -2,41 +2,43 @@
 @{
     ViewData["Title"] = "Show";
 }
+@using Warehouse.Resources
 
+@inject LocService SharedLocalizer
 <h2>Show</h2>
 
 <table class="table table-striped">
     <tr>
-        <th>Product</th>
-        <th>Barcode</th>
-        <th>ProductType</th>
-        <th>Count</th>
-        <th>ChangeCount</th>
-        <th>Unit</th>
-        <th>Price</th>
-        <th>FinallyPrice</th>
-        <th>User</th>
-        <th>Back</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("Product")</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("Barcode")</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("ProductType")</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("Count")</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("ChangeCount")</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("Unit")</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("Price")</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("FinallyPrice")</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("User")</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("Back")</th>
     </tr>
     @{
         foreach (var p in Model)
         {
-    <tr>
-        @{
-            var count = p.Count - p.ReturnedCount;
-        }
-        <td hidden="hidden"><input id="id" type="hidden" value="@p.Id" /></td>
-        <td>@p.Product.Name</td>
-        <td>@p.Product.Barcode</td>
-        <td>@p.Product.ProductType.Name</td>
-        <td class="maxCount">@count</td>
-        <td><input type="number" name="count" id="count" min="0" /></td>
-        <td>@p.Product.Unit.Name</td>
-        <td>@p.Price</td>
-        <td>@p.FinallyPrice</td>
-        <td>@p.ProductManager.User.Name</td>
-        <td><a name="back">Back</a></td>
-    </tr>
+            <tr>
+                @{
+                    var count = p.Count - p.ReturnedCount;
+                }
+                <td hidden="hidden"><input id="id" type="hidden" value="@p.Id" /></td>
+                <td>@p.Product.Name</td>
+                <td>@p.Product.Barcode</td>
+                <td>@p.Product.ProductType.Name</td>
+                <td class="maxCount">@count</td>
+                <td><input type="number" name="count" id="count" min="0" /></td>
+                <td>@p.Product.Unit.Name</td>
+                <td>@p.Price</td>
+                <td>@p.FinallyPrice</td>
+                <td>@p.ProductManager.User.Name</td>
+                <td><a name="back">@SharedLocalizer.GetLocalizedHtmlString("Back")</a></td>
+</tr>
         }
     }
 </table>
@@ -56,7 +58,7 @@
                 let $id = $(".select").children().children().val();
                 let $maxCount = $(".select td.maxCount").html();
                 let $quantity = $inputCount.val();
-                if (parseInt($quantity) <= parseInt($maxCount) && parseInt($quantity)!==0) {
+                if (parseInt($quantity) <= parseInt($maxCount) && parseInt($quantity) !== 0) {
                     $(this).parent().parent().removeClass();
                     $.ajax({
                         type: 'POST',
@@ -100,7 +102,7 @@
                             }
                         }
                     });
-                }else {
+                } else {
                     $.confirm({
                         icon: 'fas fa-exclamation-triangle',
                         title: 'Warehouse!',

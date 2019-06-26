@@ -3,13 +3,15 @@
     ViewData["Title"] = "Edit";
 }
 @model ProductType
+@using Warehouse.Resources
 
+@inject LocService SharedLocalizer
 
 <form asp-action="Edit" asp-antiforgery="true">
     <div>
         <div asp-validation-summary="ModelOnly"></div>
         <div>
-            <label asp-for="Name">Name</label><br />
+            <label asp-for="Name">@SharedLocalizer.GetLocalizedHtmlString("Name")</label><br />
             <input type="text" asp-for="Name" />
             <span asp-validation-for="Name"></span>
         </div>

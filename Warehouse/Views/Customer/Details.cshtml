@@ -2,8 +2,10 @@
 @{
     ViewData["Title"] = "Details";
 }
+@using Warehouse.Resources
 
-<h2>Details</h2>
+@inject LocService SharedLocalizer
+<h2>@SharedLocalizer.GetLocalizedHtmlString("Details")</h2>
 <p>@Html.DisplayFor(i => Model.Id)</p>
 <p>@Html.DisplayFor(i => Model.Name)</p>
 <p>@Html.DisplayFor(i => Model.Surname)</p>

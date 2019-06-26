@@ -235,21 +235,225 @@
     <value>Работник</value>
   </data>
   <data name="Disable" xml:space="preserve">
-    <value>Disable</value>
+    <value>Деактивировать</value>
   </data>
   <data name="DisableEnable" xml:space="preserve">
-    <value>Disable / Enable</value>
+    <value>Деактивировать / Активировать</value>
   </data>
   <data name="Enable" xml:space="preserve">
-    <value>Enable</value>
+    <value>Активировать</value>
   </data>
   <data name="Phone" xml:space="preserve">
-    <value>Phone</value>
+    <value>Телефон</value>
   </data>
   <data name="Surname" xml:space="preserve">
-    <value>Surname</value>
+    <value>Фамилия</value>
   </data>
   <data name="Warehouses" xml:space="preserve">
-    <value>Warehouses</value>
+    <value>Склады</value>
+  </data>
+  <data name="AddedDate" xml:space="preserve">
+    <value>Дата добавления</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Адрес</value>
+  </data>
+  <data name="AddToBasket" xml:space="preserve">
+    <value>Добавить в корзину</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Назад</value>
+  </data>
+  <data name="BackToList" xml:space="preserve">
+    <value>Вернуться к списку</value>
+  </data>
+  <data name="Barcode" xml:space="preserve">
+    <value>Штрих-код</value>
+  </data>
+  <data name="ChangeCount" xml:space="preserve">
+    <value>Изменить количество</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Продолжать</value>
+  </data>
+  <data name="Count" xml:space="preserve">
+    <value>Количество</value>
+  </data>
+  <data name="CreateCustomer" xml:space="preserve">
+    <value>Создать Клиента</value>
+  </data>
+  <data name="CurrentCount" xml:space="preserve">
+    <value>Текущее количество</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Дата</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Удалить</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Подробности</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Редактировать</value>
+  </data>
+  <data name="EditProduct" xml:space="preserve">
+    <value>Редактировать Продукт</value>
+  </data>
+  <data name="ErrorMessage" xml:space="preserve">
+    <value>Сообщение Об Ошибке! Ваша Регистрация Не Завершена.</value>
+  </data>
+  <data name="FinallyPrice" xml:space="preserve">
+    <value>Окончательная цена</value>
+  </data>
+  <data name="GoBack" xml:space="preserve">
+    <value>Вернуться</value>
+  </data>
+  <data name="Image" xml:space="preserve">
+    <value>Изображение</value>
+  </data>
+  <data name="Move" xml:space="preserve">
+    <value>Переместить</value>
+  </data>
+  <data name="NewUnit" xml:space="preserve">
+    <value>Новая единица</value>
+  </data>
+  <data name="NewUser" xml:space="preserve">
+    <value>Новый пользователь</value>
+  </data>
+  <data name="NewWarehouse" xml:space="preserve">
+    <value>Новый склад</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Нет</value>
+  </data>
+  <data name="NoProductsToShow" xml:space="preserve">
+    <value>Нет товаров для показа!</value>
+  </data>
+  <data name="NumberOfWarehouse" xml:space="preserve">
+    <value>Номер склада</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Цена</value>
+  </data>
+  <data name="ProductName" xml:space="preserve">
+    <value>Имя продукта</value>
+  </data>
+  <data name="ReceiptDate" xml:space="preserve">
+    <value>Дата поступления</value>
+  </data>
+  <data name="ReceiptPrice" xml:space="preserve">
+    <value>Цена получения</value>
+  </data>
+  <data name="RegErrorMessage" xml:space="preserve">
+    <value>Сообщение Об Ошибке! Такой Покупатель Уже Зарегистрирован.</value>
+  </data>
+  <data name="Registration" xml:space="preserve">
+    <value>Регистрация</value>
+  </data>
+  <data name="RegistrationCustomer" xml:space="preserve">
+    <value>Регистрация Клиента</value>
+  </data>
+  <data name="RegSuccessMessage" xml:space="preserve">
+    <value>Сообщение Об Успехе! Ваша Регистрация Завершена.</value>
+  </data>
+  <data name="Sale" xml:space="preserve">
+    <value>Скидка</value>
+  </data>
+  <data name="SalePrice" xml:space="preserve">
+    <value>Цена продажи</value>
+  </data>
+  <data name="SelectCustomer" xml:space="preserve">
+    <value>Выбрать клиента</value>
+  </data>
+  <data name="SelectName" xml:space="preserve">
+    <value>Выберите имя</value>
+  </data>
+  <data name="SelectType" xml:space="preserve">
+    <value>Выберите тип</value>
+  </data>
+  <data name="SelectUnit" xml:space="preserve">
+    <value>Выберите единицу</value>
+  </data>
+  <data name="Show" xml:space="preserve">
+    <value>Показать</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Статус</value>
+  </data>
+  <data name="ThereAreNoProducts" xml:space="preserve">
+    <value>Там нет продуктов!</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Пользователи</value>
+  </data>
+  <data name="WriteOut" xml:space="preserve">
+    <value>Выписать</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Да</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>Все</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Вы уверены?</value>
+  </data>
+  <data name="AreYouSureToDelete" xml:space="preserve">
+    <value>Вы уверены, что хотите удалить?</value>
+  </data>
+  <data name="CountOfOut" xml:space="preserve">
+    <value>Воличество выписки</value>
+  </data>
+  <data name="CountOfSaled" xml:space="preserve">
+    <value>Количество продажи</value>
+  </data>
+  <data name="CreateUnit" xml:space="preserve">
+    <value>Создать единицу</value>
+  </data>
+  <data name="DateOfSaled" xml:space="preserve">
+    <value>Дата продажи</value>
+  </data>
+  <data name="DateOfWriteOut" xml:space="preserve">
+    <value>Дата выписки</value>
+  </data>
+  <data name="Deal" xml:space="preserve">
+    <value>Договор</value>
+  </data>
+  <data name="DeletePage" xml:space="preserve">
+    <value>Страница удаления</value>
+  </data>
+  <data name="EditUnit" xml:space="preserve">
+    <value>Редактирование единиц измерения</value>
+  </data>
+  <data name="EditWareHouse" xml:space="preserve">
+    <value>Редактирование Склада</value>
+  </data>
+  <data name="Expoert" xml:space="preserve">
+    <value>Экспорт</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>От</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Импорт</value>
+  </data>
+  <data name="ImportCount" xml:space="preserve">
+    <value>Количество импорта</value>
+  </data>
+  <data name="PriceOfOut" xml:space="preserve">
+    <value>Цена выписки</value>
+  </data>
+  <data name="Saled" xml:space="preserve">
+    <value>Продано</value>
+  </data>
+  <data name="SelectTheDeal" xml:space="preserve">
+    <value>Выберите тип сделки</value>
+  </data>
+  <data name="To" xml:space="preserve">
+    <value>До</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>Пользователь</value>
   </data>
 </root>
