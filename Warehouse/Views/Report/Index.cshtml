@@ -18,7 +18,7 @@
         <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Deal"):</label>
         <select asp-for="Deal">
             <option selected disabled value="">@SharedLocalizer.GetLocalizedHtmlString("SelectTheDeal")</option>
-<option>@SharedLocalizer.GetLocalizedHtmlString("Import")</option>
+            <option>@SharedLocalizer.GetLocalizedHtmlString("Import")</option>
             <option>@SharedLocalizer.GetLocalizedHtmlString("Saled")</option>
             <option>@SharedLocalizer.GetLocalizedHtmlString("Export")</option>
         </select>
@@ -44,7 +44,7 @@
         <input class="form-control" asp-for="DateTo" type="date" min="01.01.2000" max="@date" />
 
         <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
-        <input class="form-control form-inline" asp-for="PageSize" type="number" min="0" />
+        <input class="form-control form-inline" asp-for="PageSize" type="number" min="1" />
         <input type="submit" value="Filter" class="btn btn-default" />
     </div>
 </form>

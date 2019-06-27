@@ -149,7 +149,7 @@ namespace Warehouse.Controllers
 
         }
         [NonAction]
-        public FileStreamResult ExportProductManager(IList<ProductManager> list)
+        FileStreamResult ExportProductManager(IList<ProductManager> list)
         {
             var stream = new MemoryStream();
             using (var package = new ExcelPackage(stream))
@@ -170,7 +170,7 @@ namespace Warehouse.Controllers
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
         [NonAction]
-        public FileStreamResult ExportProductOrder(IList<ProductOrder> list)
+        FileStreamResult ExportProductOrder(IList<ProductOrder> list)
         {
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var stream = new MemoryStream();
@@ -192,7 +192,7 @@ namespace Warehouse.Controllers
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
         [NonAction]
-        public FileStreamResult ExportWriteOut(IList<WriteOut> list)
+        FileStreamResult ExportWriteOut(IList<WriteOut> list)
         {
             var stream = new MemoryStream();
             using (var package = new ExcelPackage(stream))
@@ -212,6 +212,7 @@ namespace Warehouse.Controllers
             var fileName = $"ExportReport_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
+        
 
     }
 }
