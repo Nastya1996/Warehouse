@@ -408,6 +408,9 @@
   <data name="CountOfSaled" xml:space="preserve">
     <value>Count of saled</value>
   </data>
+  <data name="CreateNew" xml:space="preserve">
+    <value>Create New</value>
+  </data>
   <data name="CreateUnit" xml:space="preserve">
     <value>Create unit</value>
   </data>
@@ -450,10 +453,16 @@
   <data name="SelectTheDeal" xml:space="preserve">
     <value>Select the deal</value>
   </data>
+  <data name="ThereAreNoWarehouses" xml:space="preserve">
+    <value>There are no warehouses!</value>
+  </data>
   <data name="To" xml:space="preserve">
     <value>To</value>
   </data>
   <data name="User" xml:space="preserve">
     <value>User</value>
+  </data>
+  <data name="WarehouseAddress" xml:space="preserve">
+    <value>Warehouse Address</value>
   </data>
 </root>

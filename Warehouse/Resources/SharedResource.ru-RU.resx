@@ -408,6 +408,9 @@
   <data name="CountOfSaled" xml:space="preserve">
     <value>Количество продажи</value>
   </data>
+  <data name="CreateNew" xml:space="preserve">
+    <value>Создать новый</value>
+  </data>
   <data name="CreateUnit" xml:space="preserve">
     <value>Создать единицу</value>
   </data>
@@ -450,10 +453,16 @@
   <data name="SelectTheDeal" xml:space="preserve">
     <value>Выберите тип сделки</value>
   </data>
+  <data name="ThereAreNoWarehouses" xml:space="preserve">
+    <value>Нет никаких складов!</value>
+  </data>
   <data name="To" xml:space="preserve">
     <value>До</value>
   </data>
   <data name="User" xml:space="preserve">
     <value>Пользователь</value>
+  </data>
+  <data name="WarehouseAddress" xml:space="preserve">
+    <value>Адрес склада</value>
   </data>
 </root>

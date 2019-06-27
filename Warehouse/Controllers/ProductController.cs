@@ -95,6 +95,8 @@ namespace Warehouse.Controllers
                 ModelState.AddModelError("", "The unit not selected");
             if (_context.Products.FirstOrDefault(p => p.Name == product.Name) != null)
                 ModelState.AddModelError("", "This name of product is available in the database");
+            if (_context.Products.FirstOrDefault(p => p.Barcode == product.Barcode && p.Name != product.Name) != null)
+                ModelState.AddModelError("", "This barcode corresponds to another product");
             if (ModelState.IsValid)
             {
                 if (uploadedFile != null)

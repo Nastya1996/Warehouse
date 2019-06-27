@@ -28,7 +28,7 @@ namespace Warehouse.Controllers
         {
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             _log.LogInformation("Order index."+user);
-            return View(_context.Orders.Where(o => o.UserId == user.Id).ToList());
+            return View(_context.Orders.Where(o => o.UserId == user.Id).OrderByDescending(o=>o.Date).ToList());
         }
         [HttpGet]
         public IActionResult Back(string id)

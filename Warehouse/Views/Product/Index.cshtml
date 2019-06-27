@@ -7,10 +7,6 @@
 @inject LocService SharedLocalizer
 @model PagedList<Product>
 
-<br />
-<br />
-<br />
-<br />
 <form asp-action="Index" method="get">
     <span>@SharedLocalizer.GetLocalizedHtmlString("Name")</span>
     <input type="text" name="name" value="@ViewData["CurrentName"]" />

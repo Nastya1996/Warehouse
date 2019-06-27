@@ -14,14 +14,18 @@
         .ToList();
 }
 
-<div title="@Localizer["RequestCultureProvider"] @requestCulture?.Provider?.GetType().Name">
-    <form class="form-inline" id="selectLanguage" asp-controller="SetLanguage" asp-action="SetLanguage" asp-route-returnUrl="@Context.Request.Path" method="post" class="form-horizontal" role="form">
+<div title="@Localizer["RequestCultureProvider"] @requestCulture?.Provider?.GetType().Name" style="display:inline-block; float:right;">
+    <form class="form-inline form-horizontal" id="selectLanguage" asp-controller="SetLanguage" asp-action="SetLanguage" asp-route-returnUrl="@Context.Request.Path" method="post" role="form">
         <label class="form-label" style="padding-right:5px">@SharedLocalizer.GetLocalizedHtmlString("Language"): </label>
         <div class="input-group">
-            <select class="custom-select" name="culture" asp-for="@requestCulture.RequestCulture.UICulture.Name" asp-items="cultureItems"></select>
-            <div class="input-group-append">
-                <button type="submit" class="btn btn-outline-secondary">@SharedLocalizer.GetLocalizedHtmlString("Save")</button>
-            </div>
+            <select class="custom-select" name="culture" asp-for="@requestCulture.RequestCulture.UICulture.Name" asp-items="cultureItems" style="color:#000;"></select>
+                <button type="submit" class="btn btn-outline-secondary" style="color:#000;">@SharedLocalizer.GetLocalizedHtmlString("Save")</button>
         </div>
     </form>
 </div>
+@*<div class="container-fluid" title="@Localizer["RequestCultureProvider"] @requestCulture?.Provider?.GetType().Name">
+    <ul class="nav navbar-nav">
+        <li is-active-language asp-route-lang="en"><a asp-route-lang="en">English</a></li>
+        <li is-active-language asp-route-lang="ru"><a asp-route-lang="ru">Русский</a></li>
+    </ul>
+</div>*@
