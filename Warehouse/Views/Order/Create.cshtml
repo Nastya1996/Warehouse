@@ -31,14 +31,12 @@
             @for (int i = 0; i < Model.ProductOrders.Count; ++i)
             {
                 <tr>
-
                     <td hidden="hidden"><input hidden="hidden" asp-for="@Model.ProductOrders[i].Id" /></td>
                     <td>@Model.ProductOrders[i].Product.Name</td>
                     <td>@Model.ProductOrders[i].Count</td>
                     <td>@Model.ProductOrders[i].Price</td>
                     <td><input type="number" max="100" min="0" asp-for="@Model.ProductOrders[i].Sale" /></td>
                     <td>@Model.ProductOrders[i].FinallyPrice</td>
-
                 </tr>
             }
         </tbody>
@@ -126,6 +124,10 @@
 
             $("#registerCustomer").on("click", () => {
                 $("#ShowModalCustomer").modal();
+                $("#Registration")[0].reset();
+                $("#Name").css("background", "#FFFFFF");
+                $("#SurName").css("background", "#FFFFFF");
+                $("#Phone").css("background", "#FFFFFF");
                 $("#message0").hide();
                 $("#message1").hide();
                 $("#message2").hide();
@@ -165,9 +167,11 @@
                 $.ajax({
                     type: "Post",
                     data: data,
+                    beforeSend: function () { $("#register").prop("disabled", true);},
                     url: "/Customer/Register",
                     success: function (result) {
                         if (result) {
+                            $("#register").prop("disabled", false);
                             $("#message0").hide();
                             $("#message1").show();
                             $("#message2").hide();
@@ -190,6 +194,7 @@
                         else {
                             $("#message0").val("ErrorMessage! Such A Buyer Has Already Been Registered");
                             $("#Phone").css("background", "#F2DEDE");
+                            $("#register").prop("disabled", false);
                             $("#message0").show();
                             $("#message1").hide();
                             $("#message2").hide();

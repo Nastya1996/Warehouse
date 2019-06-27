@@ -13,7 +13,7 @@ namespace Warehouse.Models
         [Required(ErrorMessage = "*The field is not filled")]
         [StringLength(20, MinimumLength =3, ErrorMessage = "*The type name must be between 3 and 20 characters")]
         public string Name { get; set; }
-
+        public bool IsActive { set; get; }
         public override string ToString() => Name;
     }
 }

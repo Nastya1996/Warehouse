@@ -9,10 +9,13 @@ using Microsoft.AspNetCore.Authorization;
 using PagedList.Core;
 using Microsoft.Extensions.Logging;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
+using Warehouse.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Warehouse.Controllers
 {
-    [Authorize(Roles = "Storekeeper")]
+    [Authorize(Roles = "Storekeeper, Admin")]
     public class ProductTypeController : Controller
     {
         
@@ -32,18 +35,34 @@ namespace Warehouse.Controllers
         /// <param name="page">Current page. Default 1</param>
         /// <param name="pageSize">Page size. Default 10</param>
         /// <returns>Product types</returns>
-        public IActionResult Index(string type, int page=1, int pageSize=10)
+        //public IActionResult Index(string type, int page=1, int pageSize=10)
+        //{
+        //    var query = _context.Types.AsQueryable();
+        //    if (type != null)
+        //    {
+        //        type = type.Trim();
+        //        query = query.Where(pt => pt.Name.Contains(type, StringComparison.InvariantCultureIgnoreCase));
+        //    }
+        //    ViewData["CurrentSize"] = pageSize;
+        //    ViewData["CurrentType"] = type;
+        //    PagedList<ProductType> model = new PagedList<ProductType>(query, page,pageSize);
+        //    var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        //    _log.LogInformation("Product type index.User: "+user);
+        //    return View(model);
+        //}
+        public IActionResult Index(ProductTypeViewModel viewModel)
         {
-            type = type == null ? "" : type.Trim();
-            ViewData["CurrentSize"] = pageSize;
-            ViewData["CurrentType"] = type;
-            var types = _context.Types.Where(t => t.Name.Contains(type,StringComparison.InvariantCultureIgnoreCase)).AsQueryable();
-            PagedList<ProductType> model = new PagedList<ProductType>(types, page,pageSize);
+            if (viewModel.PageSize < 1) return NotFound();
+            var query = _context.Types.AsQueryable();
+            if (viewModel.TypeId != null)
+                query = query.Where(pt => pt.Id == viewModel.TypeId);
+            ViewData["CurrentSize"] = viewModel.PageSize;
+            ViewBag.paged = new PagedList<ProductType>(query, viewModel.Page, viewModel.PageSize);
+            ViewBag.Types = new SelectList(_context.Types.Where(pt => pt.IsActive),"Id","Name");
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             _log.LogInformation("Product type index.User: "+user);
-            return View(model);
+            return View(viewModel);
         }
-
 
         /// <summary>
         /// Open product type creation window
@@ -71,6 +90,7 @@ namespace Warehouse.Controllers
             }
             if (ModelState.IsValid)
             {
+                productType.IsActive = true;
                 _context.Types.Add(productType);
                 _context.SaveChanges();
                 var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -115,28 +135,7 @@ namespace Warehouse.Controllers
             }
             return View(productType);
         }
-
-
-        //Delete
-        [HttpGet]
-        public IActionResult Delete(string id)
-        {
-            return View(_context.Types.FirstOrDefault(x => x.Id == id));
-        }
-
-        [HttpGet]
-        public IActionResult Deleted(string id)
-        {
-            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var obj = _context.Types.Find(id);
-            if (obj == null) return NotFound();
-            _context.Remove(_context.Types.Find(id));
-            _context.SaveChanges();
-            _log.LogInformation("Product type deleted.User: "+user);
-            return RedirectToAction("Index");
-        }
-
-
+        
         //Details
         [HttpGet]
         public IActionResult Details(string id)
@@ -144,6 +143,66 @@ namespace Warehouse.Controllers
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             _log.LogInformation("Product type details.User: "+user);
             return View(_context.Types.FirstOrDefault(x=>x.Id==id));
+        }
+
+        [HttpPost]
+        public JsonResult Enable([FromBody]string productTypeId)
+        {
+            var type = _context.Types.Find(productTypeId);
+            if (type == null)
+                return Json(false);
+            else if (!type.IsActive)
+            {
+                var products = _context.Products.Where(p => p.ProductTypeId == productTypeId);
+                foreach (var p in products)
+                    p.IsActive = true;
+                type.IsActive = true;
+                _context.Update(type);
+                _context.SaveChanges();
+                var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                _log.LogInformation("Product type enabled." + user);
+                return Json(true);
+            }
+            return Json(false);
+        }
+
+
+        [HttpPost]
+        public JsonResult Disable([FromBody]string productTypeId)
+        {
+            var type = _context.Types.Find(productTypeId);
+            if (type==null)
+                return Json(false);
+            else
+            {
+                bool okey = true;
+                var products = _context.Products.Where(p => p.ProductTypeId == productTypeId);
+                foreach(var product in products)
+                {
+                    var productManager = _context.ProductManagers.Where(p => p.ProductId == product.Id);
+                    foreach(var pmGroup in productManager)
+                    {
+                        if (pmGroup.CurrentCount != 0)
+                        {
+                            okey = false;
+                            break;
+                        }
+                    }
+                    if (!okey) return Json(false);
+                }
+                if (okey)
+                {
+                    type.IsActive = false;
+                    foreach (var p in products)
+                        p.IsActive = false;
+                    _context.Update(type);
+                    _context.SaveChanges();
+                    var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                    _log.LogInformation("Product type and all products disabled. " + user);
+                    return Json(true);
+                }
+            }
+            return Json(false);
         }
     }
 }

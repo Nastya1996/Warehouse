@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
+using Warehouse.Infrastructure;
 
 namespace Warehouse.Controllers
 {
@@ -41,35 +42,31 @@ namespace Warehouse.Controllers
         /// <param name="page">Current page. Default page 1</param>
         /// <param name="pageSize">Page size. Default size 10</param>
         /// <returns></returns>
-        public IActionResult Index(string type, string name, int page=1, int pageSize=10)
+        public IActionResult Index(ProductManagerViewModel viewModel)
         {
-            type = type == null ? "" : type.Trim();
-            name = name == null ? "" : name.Trim();
-            ViewData["CurrentType"] = type;
-            ViewData["CurrentName"] = name;
-            ViewData["CurrentSize"] = pageSize;
-            var user=_context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var productManagersByGroup = _context.ProductManagers
-                .Where(pm => pm.WareHouseId == user.WarehouseId && pm.Product.IsActive!=false)
-                .Include(p => p.Product)
+            var user= _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var query = _context.ProductManagers
+                .Where(pm => pm.WareHouseId == user.WarehouseId && pm.Product.IsActive &&
+                 pm.Product.ProductType.IsActive)
                 .Include(p => p.Product.ProductType)
-                .Include(p=>p.Product.Unit)
-                .GroupBy(pm => pm.Product)
-                .Where(s => s.Key.ProductType.Name.Contains(type, StringComparison.InvariantCultureIgnoreCase) &&
-                s.Key.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase))
-                .Select(item => new
-                {
-                    Product = item.Key,
-                    Count = item.Sum(p => p.Count),
-                    CurrentCount = item.Sum(p => p.CurrentCount)
+                .Include(p => p.Product.Unit).AsQueryable();
+            if (viewModel.TypeId != null)
+                query = query.Where(pm => pm.Product.ProductTypeId == viewModel.TypeId);
+            if (viewModel.ProductId != null)
+                query = query.Where(pm => pm.ProductId == viewModel.ProductId);
+            var queryGroup=query.GroupBy(pm=>pm.Product).Select(item => new
+                       {
+                           Product = item.Key,
+                           Count = item.Sum(p => p.Count),
+                           CurrentCount = item.Sum(p => p.CurrentCount)
 
-                })
-                .Select(c => c.ToExpando());
-            PagedList<ExpandoObject> model = new PagedList<ExpandoObject>(productManagersByGroup, page, pageSize);
-            _log.LogInformation("Product manager index.User: "+user);
-            return View(model);
+                       }).Select(c=>c.ToExpando());
+            ViewBag.paged = new PagedList<ExpandoObject>(queryGroup, viewModel.Page, viewModel.PageSize);
+            ViewBag.Types = new SelectList(_context.Types.Where(pt => pt.IsActive), "Id", "Name");
+            ViewBag.Products = new SelectList(_context.Products.Where(p => p.IsActive), "Id", "Name");
+            _log.LogInformation("Product manager index.User: " + user);
+            return View(viewModel);
         }
-        
 
         /// <summary>
         /// Open the create product manager window

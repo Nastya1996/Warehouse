@@ -405,6 +405,8 @@ namespace Warehouse.Data.Migrations
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<bool>("IsActive");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(20);
