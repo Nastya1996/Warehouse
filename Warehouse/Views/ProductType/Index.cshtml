@@ -23,7 +23,10 @@
         <tr>
             <th>@SharedLocalizer.GetLocalizedHtmlString("Name")</th>
             <th>@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
+            @if (User.IsInRole("Admin"))
+            {
             <th>Disable / Enable</th>
+            }
         </tr>
     </thead>
     <tbody>

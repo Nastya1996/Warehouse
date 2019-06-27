@@ -34,13 +34,13 @@ namespace Warehouse.Controllers
 
 
         /// <summary>
-        /// Show products
-        /// </summary>
-        /// <param name="name">Product name</param>
-        /// <param name="type">Product type</param>
-        /// <param name="sortOrder">Sorting type</param>
-        /// <param name="page">Current page. Default 1</param>
-        /// <param name="pageSize">Page size. Default 10</param>
+        ///// Show products
+        ///// </summary>
+        ///// <param name="name">Product name</param>
+        ///// <param name="type">Product type</param>
+        ///// <param name="sortOrder">Sorting type</param>
+        ///// <param name="page">Current page. Default 1</param>
+        ///// <param name="pageSize">Page size. Default 10</param>
         /// <returns></returns>
         [Authorize(Roles = "Storekeeper, Admin")]
         public IActionResult Index(ProductViewModel viewModel, SortState sortOrder = SortState.ProductNameAsc)
@@ -88,9 +88,9 @@ namespace Warehouse.Controllers
 
         /// <summary>
         /// Add new product
-        /// </summary>
-        /// <param name="product">Product type object</param>
-        /// <param name="uploadedFile">Select filte to upload</param>
+        ///// </summary>
+        ///// <param name="product">Product type object</param>
+        ///// <param name="uploadedFile">Select filte to upload</param>
         /// <returns>Show products</returns>
         [Authorize(Roles = "Storekeeper")]
         [HttpPost]
@@ -148,7 +148,7 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Open product edition window
         /// </summary>
-        /// <param name="id">Product Id</param>
+        ///// <param name="id">Product Id</param>
         /// <returns></returns>
         [Authorize(Roles = "Storekeeper")]
         [HttpGet]
@@ -163,7 +163,7 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Edit Product
         /// </summary>
-        /// <param name="product">Product type object</param>
+        ///// <param name="product">Product type object</param>
         /// <returns></returns>
         [Authorize(Roles = "Storekeeper")]
         [HttpPost]
@@ -186,7 +186,7 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Show product details
         /// </summary>
-        /// <param name="id">Product Id</param>
+        ///// <param name="id">Product Id</param>
         /// <returns></returns>
         [HttpGet]
         public IActionResult Details(string id)
@@ -201,7 +201,7 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Disable product
         /// </summary>
-        /// <param name="productId">Product Id</param>
+        ///// <param name="productId">Product Id</param>
         /// <returns>Disable product</returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
@@ -231,7 +231,7 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Enable product
         /// </summary>
-        /// <param name="productId">Product Id</param>
+        ///// <param name="productId">Product Id</param>
         /// <returns>Enable product</returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
@@ -258,7 +258,7 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Receive products depending on the type selected
         /// </summary>
-        /// <param name="selected">Product type</param>
+        ///// <param name="selected">Product type</param>
         /// <returns>Products</returns>
         [HttpPost]
         [Route("Products/Get")]
