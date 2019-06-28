@@ -28,6 +28,7 @@ namespace Warehouse.Controllers
         }
         public IActionResult Index(ReportViewModel reportFilter)
         {
+            if (!FilterValid()) return BadRequest();
             reportFilter.DateFrom = reportFilter.DateFrom == DateTime.MinValue
                                                 ? _context.ProductManagers.Min(d => d.Date)
                                                 : reportFilter.DateFrom;
@@ -46,11 +47,14 @@ namespace Warehouse.Controllers
                                                 .Include(pm => pm.Product.ProductType)
                                                 .Include(pm => pm.User).AsQueryable();
                 if (reportFilter.ProductId!=null)
+                    if(_context.Products.Find(reportFilter.ProductId)!=null)
                     queryImport = queryImport.Where(x => x.ProductId == reportFilter.ProductId);
                 if (reportFilter.TypeId != null)
-                    queryImport = queryImport.Where(x => x.Product.ProductTypeId == reportFilter.TypeId);
+                    if(_context.Types.Find(reportFilter.TypeId)!=null)
+                        queryImport = queryImport.Where(x => x.Product.ProductTypeId == reportFilter.TypeId);
                 if (reportFilter.UserId != null)
-                    queryImport = queryImport.Where(x => x.UserId == reportFilter.UserId);
+                    if(_context.Users.Find(reportFilter.UserId)!=null)
+                        queryImport = queryImport.Where(x => x.UserId == reportFilter.UserId);
                 queryImport = queryImport.Where(pm => pm.Date >= reportFilter.DateFrom && pm.Date <= reportFilter.DateTo);
                 reportFilter.ProductManagers = queryImport;
                 ViewBag.paged = new PagedList<ProductManager>(queryImport, reportFilter.Page, reportFilter.PageSize);
@@ -88,7 +92,7 @@ namespace Warehouse.Controllers
         }
         public IActionResult ExcelExport(ReportViewModel reportFilter)
         {
-            
+            if (!FilterValid()) return BadRequest();
             reportFilter.DateFrom = reportFilter.DateFrom == DateTime.MinValue
                                                 ? _context.ProductManagers.Min(d => d.Date)
                                                 : reportFilter.DateFrom;
@@ -212,7 +216,20 @@ namespace Warehouse.Controllers
             var fileName = $"ExportReport_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
-        
-
+        [NonAction]
+        private bool FilterValid()
+        {
+            if (Request.Query.Count != 0)
+            {
+                if (!byte.TryParse(Request.Query["PageSize"], out byte size) && size>0 && size<101) return false;
+                if (!DateTime.TryParse(Request.Query["DateTo"], out DateTime date)) return false;
+                if (!DateTime.TryParse(Request.Query["DateFrom"], out date)) return false;
+                if (Request.Query.Keys.Contains("Page"))
+                {
+                    if (!(uint.TryParse(Request.Query["Page"], out uint page) && page>0) ) return false;
+                }
+            }
+            return true;
+        }
     }
 }

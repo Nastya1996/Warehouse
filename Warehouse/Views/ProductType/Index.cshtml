@@ -15,7 +15,7 @@
         </select>
 
         <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
-        <input type="number" min="0" name="pageSize" value="@ViewData["CurrentSize"]" />
+        <input type="number" min="0" max="100" name="pageSize" value="@ViewData["CurrentSize"]" />
 
         <input type="submit" value="Filter" class="btn btn-default" />
     </div>
@@ -24,28 +24,40 @@
     <thead class="bg-primary">
         <tr>
             <th>@SharedLocalizer.GetLocalizedHtmlString("Name")</th>
-            <th>@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
-            <th>Disable / Enable</th>
+            @if (User.IsInRole("Storekeeper"))
+            {
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
+            }
+            @if (User.IsInRole("Admin"))
+            {
+                <th>Disable / Enable</th>
+            }
         </tr>
     </thead>
     <tbody>
-
+        @if (ViewBag.paged.Count == 0)
+        {
+            <tr><td colspan="2">No types to show!</td></tr>
+        }
         @foreach (var pt in ViewBag.paged)
         {
             <tr>
                 <td hidden="hidden"><input type="hidden" value="@pt.Id" /></td>
                 <td>@pt.Name</td>
-                <td><a asp-action="Edit" asp-route-id="@pt.Id">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
-            @if (User.IsInRole("Admin"))
-            {
-                @if (pt.IsActive)
-                 {
-                    <td><a class="Disable" href="#">Disable</a></td>
-                 }
-                 else
-                 {
-                    <td><a class="Enable" href="#">Enable</a></td>
-                 }
+                @if (User.IsInRole("Storekeeper"))
+                {
+                    <td><a asp-action="Edit" asp-route-id="@pt.Id">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
+                }
+                @if (User.IsInRole("Admin"))
+                {
+                    @if (pt.IsActive)
+                    {
+                        <td><a class="Disable" href="#">Disable</a></td>
+                    }
+                    else
+                    {
+                        <td><a class="Enable" href="#">Enable</a></td>
+                    }
                 }
             </tr>
            

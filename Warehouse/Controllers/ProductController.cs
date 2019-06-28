@@ -45,19 +45,18 @@ namespace Warehouse.Controllers
         [Authorize(Roles = "Storekeeper, Admin")]
         public IActionResult Index(ProductViewModel viewModel, SortState sortOrder = SortState.ProductNameAsc)
         {
-            if (viewModel.PageSize < 1) {
-                viewModel.PageSize = 10;
-                return View(viewModel);
-            }
+            if (!FilterValid()) return BadRequest();
             ViewBag.Types = new SelectList(_context.Types.Where(t => t.IsActive), "Id", "Name");
             ViewBag.Names = new SelectList(_context.Products.Where(p => p.IsActive), "Id", "Name");
             ViewData["CurrentSize"] = viewModel.PageSize;
             ViewBag.ProductNameSort = sortOrder == SortState.ProductNameAsc ? SortState.ProductNameDesc : SortState.ProductNameAsc;
             var query = _context.Products.Where(p => p.IsActive).AsQueryable();
             if (viewModel.TypeId != null)
-                query = query.Where(p => p.ProductTypeId == viewModel.TypeId);
+                if(_context.Types.Find(viewModel.TypeId)!=null)
+                    query = query.Where(p => p.ProductTypeId == viewModel.TypeId);
             if (viewModel.ProductId != null)
-                query = query.Where(p => p.Id == viewModel.ProductId);
+                if(_context.Products.Find(viewModel.ProductId)!=null)
+                    query = query.Where(p => p.Id == viewModel.ProductId);
             switch (sortOrder)
             {
                 case SortState.ProductNameDesc:
@@ -266,6 +265,19 @@ namespace Warehouse.Controllers
             if (selected != "")
                 products = products.Where(p => p.ProductTypeId == selected && p.IsActive);
             return Json(products.ToList());
+        }
+        bool FilterValid()
+        {
+            if (Request.Query.Count != 0)
+            {
+                if (Request.Query.Count != 0)
+                {
+                    if (!(byte.TryParse(Request.Query["PageSize"], out byte size) && size > 0 && size < 101)) return false;
+                    if (Request.Query.Keys.Contains("Page"))
+                        if (!(uint.TryParse(Request.Query["Page"], out uint page) && page > 0)) return false;
+                }
+            }
+            return true;
         }
     }
 }

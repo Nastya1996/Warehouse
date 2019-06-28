@@ -456,4 +456,7 @@
   <data name="User" xml:space="preserve">
     <value>User</value>
   </data>
+  <data name="ProductTypes" xml:space="preserve">
+    <value>Product types</value>
+  </data>
 </root>

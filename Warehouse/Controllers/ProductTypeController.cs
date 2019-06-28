@@ -35,30 +35,26 @@ namespace Warehouse.Controllers
         /// <param name="page">Current page. Default 1</param>
         /// <param name="pageSize">Page size. Default 10</param>
         /// <returns>Product types</returns>
-        //public IActionResult Index(string type, int page=1, int pageSize=10)
-        //{
-        //    var query = _context.Types.AsQueryable();
-        //    if (type != null)
-        //    {
-        //        type = type.Trim();
-        //        query = query.Where(pt => pt.Name.Contains(type, StringComparison.InvariantCultureIgnoreCase));
-        //    }
-        //    ViewData["CurrentSize"] = pageSize;
-        //    ViewData["CurrentType"] = type;
-        //    PagedList<ProductType> model = new PagedList<ProductType>(query, page,pageSize);
-        //    var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-        //    _log.LogInformation("Product type index.User: "+user);
-        //    return View(model);
-        //}
+     
         public IActionResult Index(ProductTypeViewModel viewModel)
         {
-            if (viewModel.PageSize < 1) return NotFound();
-            var query = _context.Types.AsQueryable();
+            if (!FilterValid()) return BadRequest();
+            IQueryable<ProductType> query = null;
+            if (User.IsInRole("Admin"))
+            {
+                query = _context.Types.AsQueryable();
+                ViewBag.Types = new SelectList(_context.Types, "Id", "Name");
+            }
+            else
+            {
+                query = _context.Types.Where(pt => pt.IsActive).AsQueryable();
+                ViewBag.Types = new SelectList(_context.Types.Where(pt => pt.IsActive), "Id", "Name");
+            }
             if (viewModel.TypeId != null)
-                query = query.Where(pt => pt.Id == viewModel.TypeId);
+                if(_context.Types.Find(viewModel.TypeId)!=null)
+                    query = query.Where(pt => pt.Id == viewModel.TypeId);
             ViewData["CurrentSize"] = viewModel.PageSize;
             ViewBag.paged = new PagedList<ProductType>(query, viewModel.Page, viewModel.PageSize);
-            ViewBag.Types = new SelectList(_context.Types.Where(pt => pt.IsActive),"Id","Name");
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             _log.LogInformation("Product type index.User: "+user);
             return View(viewModel);
@@ -165,8 +161,7 @@ namespace Warehouse.Controllers
             }
             return Json(false);
         }
-
-
+        
         [HttpPost]
         public JsonResult Disable([FromBody]string productTypeId)
         {
@@ -203,6 +198,16 @@ namespace Warehouse.Controllers
                 }
             }
             return Json(false);
+        }
+        bool FilterValid()
+        {
+            if (Request.Query.Count != 0)
+            {
+                if (!(byte.TryParse(Request.Query["PageSize"], out byte size) && size > 0 && size < 101)) return false;
+                if (Request.Query.Keys.Contains("Page"))
+                    if (!(uint.TryParse(Request.Query["Page"], out uint page) && page > 0)) return false;
+            }
+            return true;
         }
     }
 }
