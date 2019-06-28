@@ -4,7 +4,9 @@
     ViewData["Title"] = "Index";
 }
 @model IPagedList<WareHouse>
+@using Warehouse.Resources
 
+@inject LocService SharedLocalizer
 
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
@@ -15,32 +17,32 @@
 <h1>WareHouse</h1>
 <form method="get" asp-action="Index">
     <div class="form-inline form-group">
-        <label class="control-label">Warehouse Number: </label>
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("WarehouseNumber"): </label>
         <input type="text" name="number" value="@ViewData["CurrentNumber"]" />
 
-        <label class="control-label">Warehouse Address: </label>
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("WarehouseAddress"): </label>
         <input type="text" name="address" value="@ViewData["CurrentAddress"]" />
 
-        <label class="control-label">Page size</label>
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize")</label>
         <input type="number" min="1" name="pageSize" value="@ViewData["CurrentSize"]" />
         <input type="submit" value="Filter" class="btn btn-default" />
     </div>
 </form>
 <pager list="@Model" asp-route-pageSize="@ViewData["CurrentSize"]" asp-route-number="@ViewData["CurrentNumber"]" asp-route-address="@ViewData["CurrentAddress"]" asp-controller="WareHouse" asp-action="Index" />
-<a asp-action="Create" asp-controller="WareHouse">Create New</a>
+<a asp-action="Create" asp-controller="WareHouse">@SharedLocalizer.GetLocalizedHtmlString("CreateNew")</a>
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
-            <th>Number</th>
-            <th>Address</th>
-            <th>Edit</th>
-            <th>Disable</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Number")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Address")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Disable")</th>
         </tr>
     </thead>
     <tbody>
         @if (Model.Count() == 0)
         {
-            <tr><td colspan="8" class="text-center">There are no warehouses!</td></tr>
+            <tr><td colspan="8" class="text-center">@SharedLocalizer.GetLocalizedHtmlString("There are no warehouses!")</td></tr>
         }
         @{
             foreach (var wh in Model)
@@ -48,8 +50,8 @@
                 <tr>
                     <td>@wh.Number</td>
                     <td>@wh.Address</td>
-                    <td><a asp-action="Edit" asp-route-id="@wh.Id">Edit</a></td>
-                    <td><a asp-action="" asp-route-id="@wh.Id">Disable</a></td>
+                    <td><a asp-action="Edit" asp-route-id="@wh.Id">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
+                    <td><a asp-action="" asp-route-id="@wh.Id">@SharedLocalizer.GetLocalizedHtmlString("Disable")</a></td>
                 </tr>
             }
         }

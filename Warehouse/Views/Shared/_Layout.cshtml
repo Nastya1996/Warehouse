@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Warehouse</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <environment include="Development">
@@ -20,7 +21,7 @@
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
 </head>
-<body>
+<body style="margin:15vh;">
     <div class="modal fade" id="myModal" role="dialog">
         <div class="modal-dialog">
 
@@ -71,7 +72,7 @@
 
 
     </script>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-inverse navbar-fixed-top" style="position:fixed;">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -80,45 +81,48 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-action="Index" class="navbar-brand">Warehouse</a>
+                <a asp-action="Index" class="navbar-brand">@SharedLocalizer.GetLocalizedHtmlString("Warehouse")</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     @if (User.IsInRole("Admin"))
                     {
                         <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" asp-controller="Admin" asp-action="ShowUsers">Users<span class="caret"></span></a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" asp-controller="Admin" asp-action="ShowUsers">@SharedLocalizer.GetLocalizedHtmlString("Users")<span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a asp-area="Identity" asp-page="/Account/Register">New user</a></li>
-                                <li><a asp-controller="Admin" asp-action="ShowUsers">Show</a></li>
+                                <li><a asp-area="Identity" asp-page="/Account/Register">@SharedLocalizer.GetLocalizedHtmlString("NewUser")</a></li>
+                                <li><a asp-controller="Admin" asp-action="ShowUsers">@SharedLocalizer.GetLocalizedHtmlString("Show")</a></li>
                             </ul>
                         </li>
-                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" asp-controller="WareHouse" asp-action="Create">Create Warehouses<span class="caret"></span></a>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" asp-controller="WareHouse" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("Warehouses")<span class="caret"></span></a>
                             <ul class="dropdown-menu">
-                                <li><a asp-controller="WareHouse" asp-action="Create">New warehouse</a></li>
-                                <li><a asp-controller="WareHouse" asp-action="Index">Show</a></li>
+                                <li><a asp-controller="WareHouse" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("NewWarehouse")</a></li>
+                                <li><a asp-controller="WareHouse" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Show")</a></li>
                             </ul>
                         </li>
-                        <li><a asp-controller="Product" asp-action="Index">Products</a></li>
+                        <li><a asp-controller="Product" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Products")</a></li>
                     }
                     else if (User.IsInRole("Worker"))
                     {
-                        <li><a asp-controller="ProductManager" asp-action="Index">Product Manager</a></li>
-                        <li><a asp-controller="Order" asp-action="Index">Order</a></li>
-                        <li><a asp-controller="Customer" asp-action="Create">Customer Create</a></li>
+                        <li><a asp-controller="ProductManager" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ProductManager")</a></li>
+                        <li><a asp-controller="Order" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Order")</a></li>
+                        <li><a asp-controller="Customer" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("CustomerCreate")</a></li>
                         <li id="modalForBasket"><a href="#"><img src="https://cdn4.iconfinder.com/data/icons/is_beta_accounting/png/400/basket.png" width="20px" alt="Alternate Text" /></a></li>
 
                     }
                     else if (User.IsInRole("Storekeeper"))
                     {
-                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" asp-controller="ProductType" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ProductType")<span class="caret"></span></a>
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" asp-controller="ProductType" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ProductType")<span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a asp-controller="ProductType" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ProductType")</a></li>
                                 <li><a asp-controller="ProductType" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("ProductTypeCreate")</a></li>
                             </ul>
                         </li>
-                        
-                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" asp-controller="Product" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Products")<span class="caret"></span></a>
+
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" asp-controller="Product" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Products")<span class="caret"></span></a>
                             <ul class="dropdown-menu">
                                 <li><a asp-controller="Product" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Products")</a></li>
                                 <li><a asp-controller="Product" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("CreateProduct")</a></li>
@@ -131,26 +135,22 @@
                                 <li><a asp-controller="ProductManager" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("CreateProductManager")</a></li>
                             </ul>
                         </li>
- 
-                        <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" asp-controller="Unit" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Unit")<span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a asp-controller="Unit" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Unit")</a></li>
-                                <li><a asp-controller="Unit" asp-action="Create">New unit</a></li>
-                            </ul>
-                        </li>
-                    }
-                    else if (User.IsInRole("Report"))
-                    {
-                        <li><a asp-controller="Admin" asp-action="CreateAdmin">@SharedLocalizer.GetLocalizedHtmlString("CreateNewAccount")</a></li>
-                        <li><a asp-controller="Admin" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ShowUsers")</a></li>
-                        <li><a asp-controller="Admin" asp-action="CreateAdmin">@SharedLocalizer.GetLocalizedHtmlString("CreateWarehouses")</a></li>
-                        <li><a asp-controller="Admin" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("ShowWarehouses")</a></li>
-                        <li><a asp-controller="Admin" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Products")</a></li>
-                    }
-                    else
-                    {
-                        <p>Welcom to Warehouse!</p>
-                    }
+
+<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" asp-controller="Unit" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Unit")<span class="caret"></span></a>
+<ul class="dropdown-menu">
+<li><a asp-controller="Unit" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Unit")</a></li>
+<li><a asp-controller="Unit" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("NewUnit")</a></li>
+</ul>
+</li>
+}
+else if (User.IsInRole("Report"))
+{
+                        <li><a asp-controller="Report" asp-action="Index">Report</a></li>
+}
+else
+{
+<p>Welcome to Warehouse!</p>
+}
 
                 </ul>
                 <partial name="_LoginPartial" />
@@ -160,35 +160,38 @@
 
     <partial name="_CookieConsentPartial" />
 
-    <div class="container body-content">
-        @RenderBody()
-        @*@{
-            string currentController = ViewContext.RouteData.Values["Controller"].ToString();
-            string currentAction = ViewContext.RouteData.Values["Action"].ToString();
-            }
-            <footer class="navbar-inverse navbar-fixed-bottom">
-            <div class="container-fluid">
-            <ul class="nav navbar-nav">
-            <li is-active-language asp-route-lang="en"><a asp-controller=@currentController asp-action=@currentAction asp-route-lang="en">English</a></li>
-            <li is-active-language asp-route-lang="et"><a asp-controller=@currentController asp-action=@currentAction asp-route-lang="et">Eesti</a></li>
-            <li is-active-language asp-route-lang="ru"><a asp-controller=@currentController asp-action=@currentAction asp-route-lang="ru">Русский</a></li>
-            </ul>
-            </div>
-            <p>&copy; 2019 - Warehouse</p>
-            </footer>*@
+    @*<div class="container body-content">*@
+    @*@{
+        string currentController = ViewContext.RouteData.Values["Controller"].ToString();
+        string currentAction = ViewContext.RouteData.Values["Action"].ToString();
+        }
         <footer class="navbar-inverse navbar-fixed-bottom">
-            <nav class="navbar transparent navbar-inverse">
-                @await Html.PartialAsync("_SelectLanguagePartial")
-            </nav>
-            <p>&copy; 2019 - Warehouse</p>
-        </footer>
-    </div>
+        <div class="container-fluid">
+        <ul class="nav navbar-nav">
+        <li is-active-language asp-route-lang="en"><a asp-controller=@currentController asp-action=@currentAction asp-route-lang="en">English</a></li>
+        <li is-active-language asp-route-lang="ru"><a asp-controller=@currentController asp-action=@currentAction asp-route-lang="ru">Русский</a></li>
+        </ul>
+        </div>
+        <p>&copy; 2019 - Warehouse</p>
+        </footer>*@
 
-    @*<environment include = "Development" >
-            <script src="~/lib/jquery/dist/jquery.js"></script>
-            <script src = "~/lib/bootstrap/dist/js/bootstrap.js" > </script >
-            <script src="~/js/site.js" asp-append-version="true"></script>
-        </environment>
+    @RenderBody()
+
+    <footer class="navbar-inverse navbar-fixed-bottom" style="font-size:16px; color:#CCC;">
+        <p style="display:inline-block; float:left;">&copy Warehouse 2019</p>
+        @await Html.PartialAsync("_SelectLanguagePartial")        
+    </footer>
+
+
+
+
+
+    @*</div>*@
+    @*environment include = "Development" >
+                <script src="~/lib/jquery/dist/jquery.js"></script>
+                <script src = "~/lib/bootstrap/dist/js/bootstrap.js" > </script >
+                <script src="~/js/site.js" asp-append-version="true"></script>
+            </environment>
         <environment exclude = "Development" >
             <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.3.1.min.js"
                     asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
@@ -205,7 +208,6 @@
             <script src = "~/js/site.min.js" asp-append-version="true"></script>
 
         </environment>*@
-
     @RenderSection("Scripts", required: false)
 </body>
 </html>

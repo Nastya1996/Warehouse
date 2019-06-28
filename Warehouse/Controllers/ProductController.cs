@@ -13,10 +13,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PagedList.Core;
 using Warehouse.Data;
+using Warehouse.Infrastructure;
 using Warehouse.Models;
 namespace Warehouse.Controllers
 {
-    [Authorize(Roles = "Storekeeper, Admin")]
+    //[Authorize(Roles = "Storekeeper, Admin")]
     public class ProductController : Controller
     {
         
@@ -33,36 +34,41 @@ namespace Warehouse.Controllers
 
 
         /// <summary>
-        /// Show products
-        /// </summary>
-        /// <param name="name">Product name</param>
-        /// <param name="type">Product type</param>
-        /// <param name="sortOrder">Sorting type</param>
-        /// <param name="page">Current page. Default 1</param>
-        /// <param name="pageSize">Page size. Default 10</param>
+        ///// Show products
+        ///// </summary>
+        ///// <param name="name">Product name</param>
+        ///// <param name="type">Product type</param>
+        ///// <param name="sortOrder">Sorting type</param>
+        ///// <param name="page">Current page. Default 1</param>
+        ///// <param name="pageSize">Page size. Default 10</param>
         /// <returns></returns>
-        public IActionResult Index(string name, string type, SortState sortOrder = SortState.ProductNameAsc, int page = 1, int pageSize = 10)
+        [Authorize(Roles = "Storekeeper, Admin")]
+        public IActionResult Index(ProductViewModel viewModel, SortState sortOrder = SortState.ProductNameAsc)
         {
-            name = name == null ? "" : name.Trim();
-            type = type == null ? "" : type.Trim();
-            IQueryable<Product> products = _context.Products.Where(p=>p.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase) && p.ProductType.Name.Contains(type, StringComparison.InvariantCultureIgnoreCase)).Include(x => x.ProductType).Include(x => x.Unit).Include(f => f.FileModelImg);
+            if (viewModel.PageSize < 1) {
+                viewModel.PageSize = 10;
+                return View(viewModel);
+            }
+            ViewBag.Types = new SelectList(_context.Types.Where(t => t.IsActive), "Id", "Name");
+            ViewBag.Names = new SelectList(_context.Products.Where(p => p.IsActive), "Id", "Name");
+            ViewData["CurrentSize"] = viewModel.PageSize;
             ViewBag.ProductNameSort = sortOrder == SortState.ProductNameAsc ? SortState.ProductNameDesc : SortState.ProductNameAsc;
+            var query = _context.Products.Where(p => p.IsActive).AsQueryable();
+            if (viewModel.TypeId != null)
+                query = query.Where(p => p.ProductTypeId == viewModel.TypeId);
+            if (viewModel.ProductId != null)
+                query = query.Where(p => p.Id == viewModel.ProductId);
             switch (sortOrder)
             {
                 case SortState.ProductNameDesc:
-                    products = products.OrderByDescending(s => s.Name);
+                    query = query.OrderByDescending(s => s.Name);
                     break;
             }
-
-            ViewData["CurrentName"] = name;
-            ViewData["CurrentType"] = type;
-            ViewData["CurrentSize"] = pageSize;
-            PagedList<Product> model = new PagedList<Product>(products, page, pageSize);
+            ViewBag.paged = new PagedList<Product>(query, viewModel.Page, viewModel.PageSize);
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            _log.LogInformation("Product index.User: "+user);
-            return View(model);
+            _log.LogInformation("Product index.User: " + user);
+            return View(viewModel);
         }
-
 
 
 
@@ -71,6 +77,7 @@ namespace Warehouse.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [Authorize(Roles = "Storekeeper")]
         public IActionResult Create()
         {
             SelectInitial();
@@ -81,10 +88,11 @@ namespace Warehouse.Controllers
 
         /// <summary>
         /// Add new product
-        /// </summary>
-        /// <param name="product">Product type object</param>
-        /// <param name="uploadedFile">Select filte to upload</param>
+        ///// </summary>
+        ///// <param name="product">Product type object</param>
+        ///// <param name="uploadedFile">Select filte to upload</param>
         /// <returns>Show products</returns>
+        [Authorize(Roles = "Storekeeper")]
         [HttpPost]
         public async Task<IActionResult> Create(Product product, IFormFile uploadedFile)
         {
@@ -95,6 +103,8 @@ namespace Warehouse.Controllers
                 ModelState.AddModelError("", "The unit not selected");
             if (_context.Products.FirstOrDefault(p => p.Name == product.Name) != null)
                 ModelState.AddModelError("", "This name of product is available in the database");
+            if (_context.Products.FirstOrDefault(p => p.Barcode == product.Barcode && p.Name != product.Name) != null)
+                ModelState.AddModelError("", "This barcode corresponds to another product");
             if (ModelState.IsValid)
             {
                 if (uploadedFile != null)
@@ -127,9 +137,10 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Initial the select tags
         /// </summary>
+        [NonAction]
         void SelectInitial()
         {
-            ViewBag.ProductTypes = new SelectList(_context.Types, "Id", "Name");
+            ViewBag.ProductTypes = new SelectList(_context.Types.Where(pt=>pt.IsActive), "Id", "Name");
             ViewBag.Units = new SelectList(_context.Units, "Id", "Name");
         }
 
@@ -137,13 +148,13 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Open product edition window
         /// </summary>
-        /// <param name="id">Product Id</param>
+        ///// <param name="id">Product Id</param>
         /// <returns></returns>
+        [Authorize(Roles = "Storekeeper")]
         [HttpGet]
         public IActionResult Edit(string id)
         {
-            ViewBag.ProductTypes = new SelectList(_context.Types, "Id", "Name");
-            ViewBag.Units = new SelectList(_context.Units, "Id", "Name");
+            SelectInitial();
             return View(_context.Products.Include(x => x.ProductType).Include(x => x.Unit).FirstOrDefault(x => x.Id == id));
         }
 
@@ -152,8 +163,9 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Edit Product
         /// </summary>
-        /// <param name="product">Product type object</param>
+        ///// <param name="product">Product type object</param>
         /// <returns></returns>
+        [Authorize(Roles = "Storekeeper")]
         [HttpPost]
         public IActionResult Edit(Product product)
         {
@@ -174,7 +186,7 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Show product details
         /// </summary>
-        /// <param name="id">Product Id</param>
+        ///// <param name="id">Product Id</param>
         /// <returns></returns>
         [HttpGet]
         public IActionResult Details(string id)
@@ -189,8 +201,9 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Disable product
         /// </summary>
-        /// <param name="productId">Product Id</param>
+        ///// <param name="productId">Product Id</param>
         /// <returns>Disable product</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("Products/Disable/")]
         public JsonResult Disable([FromBody]string productId)
@@ -200,6 +213,10 @@ namespace Warehouse.Controllers
                 return Json(false);
             else if(product.IsActive==true)
             {
+                var productManager = _context.ProductManagers.Where(p => p.ProductId == productId);
+                foreach(var item in productManager)
+                    if (item.CurrentCount != 0)
+                        return Json(false);
                 product.IsActive = false;
                 _context.Update(product);
                 _context.SaveChanges();
@@ -214,8 +231,9 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Enable product
         /// </summary>
-        /// <param name="productId">Product Id</param>
+        ///// <param name="productId">Product Id</param>
         /// <returns>Enable product</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("Products/Enable/")]
         public JsonResult Enable([FromBody]string productId)
@@ -240,14 +258,16 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Receive products depending on the type selected
         /// </summary>
-        /// <param name="selected">Product type</param>
+        ///// <param name="selected">Product type</param>
         /// <returns>Products</returns>
         [HttpPost]
         [Route("Products/Get")]
         public JsonResult GetProduct([FromBody]string selected)
         {
-            return Json(_context.Products.Where(p => p.ProductTypeId == selected && p.IsActive != false).ToList());
+            var products = _context.Products.AsQueryable();
+            if (selected != "")
+                products = products.Where(p => p.ProductTypeId == selected && p.IsActive);
+            return Json(products.ToList());
         }
-
     }
 }

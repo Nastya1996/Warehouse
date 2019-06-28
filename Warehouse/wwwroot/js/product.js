@@ -54,10 +54,11 @@ $(() => {
                                         $row.removeClass();
                                     }
                                     else {
+                                        $link.text("Enable").css("color", "green");
                                         $.confirm({
                                             icon: 'fas fa-exclamation-triangle',
                                             title: 'Warehouse!',
-                                            content: 'An error occurred. Please, try again!',
+                                            content: 'An error occurred. There may be products left in warehouse. Please, try again!',
                                             type: 'red',
                                             typeAnimated: true,
                                             closeAnimation: 'rotateXR',
@@ -102,10 +103,11 @@ $(() => {
                                         $row.removeClass();
                                     }
                                     else {
+                                        $link.text("Disable").css("color", "red");
                                         $.confirm({
                                             icon:'fas fa-exclamation-triangle',
                                             title: 'Warehouse',
-                                            content: 'An error occurred. Please, try again!',
+                                            content: 'An error occurred. There may be products left in warehouse. Please, try again!',
                                             type: 'red',
                                             typeAnimated: true,
                                             closeAnimation: 'rotateXR',

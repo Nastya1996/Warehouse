@@ -252,4 +252,217 @@
   <data name="Warehouses" xml:space="preserve">
     <value>Warehouses</value>
   </data>
+  <data name="AddedDate" xml:space="preserve">
+    <value>Added Date</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="AddToBasket" xml:space="preserve">
+    <value>Add to basket</value>
+  </data>
+  <data name="Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="BackToList" xml:space="preserve">
+    <value>Back to list</value>
+  </data>
+  <data name="Barcode" xml:space="preserve">
+    <value>Barode</value>
+  </data>
+  <data name="ChangeCount" xml:space="preserve">
+    <value>Change Count</value>
+  </data>
+  <data name="Continue" xml:space="preserve">
+    <value>Continue</value>
+  </data>
+  <data name="Count" xml:space="preserve">
+    <value>Count</value>
+  </data>
+  <data name="CreateCustomer" xml:space="preserve">
+    <value>Create Customer</value>
+  </data>
+  <data name="CurrentCount" xml:space="preserve">
+    <value>Current count</value>
+  </data>
+  <data name="Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="EditCustomer" xml:space="preserve">
+    <value>Edit Customer</value>
+  </data>
+  <data name="EditProduct" xml:space="preserve">
+    <value>Edit Product</value>
+  </data>
+  <data name="ErrorMessage" xml:space="preserve">
+    <value>Error Message! Your Registration Is Not Complete.</value>
+  </data>
+  <data name="FinallyPrice" xml:space="preserve">
+    <value>Finally Price</value>
+  </data>
+  <data name="GoBack" xml:space="preserve">
+    <value>Go Back</value>
+  </data>
+  <data name="Image" xml:space="preserve">
+    <value>Image</value>
+  </data>
+  <data name="Move" xml:space="preserve">
+    <value>Move</value>
+  </data>
+  <data name="NewUnit" xml:space="preserve">
+    <value>New Unit</value>
+  </data>
+  <data name="NewUser" xml:space="preserve">
+    <value>New User</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="NoProductsToShow" xml:space="preserve">
+    <value>No products to show!</value>
+  </data>
+  <data name="NumberOfWarehouse" xml:space="preserve">
+    <value>Number of warehouse</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="ProductName" xml:space="preserve">
+    <value>ProductName</value>
+  </data>
+  <data name="ReceiptDate" xml:space="preserve">
+    <value>Receipt date</value>
+  </data>
+  <data name="ReceiptPrice" xml:space="preserve">
+    <value>Receipt Price</value>
+  </data>
+  <data name="RegErrorMessage" xml:space="preserve">
+    <value>ErrorMessage! Such A Buyer Has Already Been Registered.</value>
+  </data>
+  <data name="Registration" xml:space="preserve">
+    <value>Registration</value>
+  </data>
+  <data name="RegistrationCustomer" xml:space="preserve">
+    <value>Registration Customer</value>
+  </data>
+  <data name="RegSuccessMessage" xml:space="preserve">
+    <value>Success Message! Your Registration Is Complete.</value>
+  </data>
+  <data name="Sale" xml:space="preserve">
+    <value>Sale</value>
+  </data>
+  <data name="SalePrice" xml:space="preserve">
+    <value>Sale price</value>
+  </data>
+  <data name="SelectCustomer" xml:space="preserve">
+    <value>Select Customer</value>
+  </data>
+  <data name="SelectName" xml:space="preserve">
+    <value>Select the name</value>
+  </data>
+  <data name="SelectType" xml:space="preserve">
+    <value>Select the type</value>
+  </data>
+  <data name="SelectUnit" xml:space="preserve">
+    <value>Select the unit</value>
+  </data>
+  <data name="Show" xml:space="preserve">
+    <value>Show</value>
+  </data>
+  <data name="Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="ThereAreNoProducts" xml:space="preserve">
+    <value>There are no products!</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="WriteOut" xml:space="preserve">
+    <value>Write out</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="AreYouSure" xml:space="preserve">
+    <value>Are you sure?</value>
+  </data>
+  <data name="AreYouSureToDelete" xml:space="preserve">
+    <value>Are you sure to delete?</value>
+  </data>
+  <data name="CountOfOut" xml:space="preserve">
+    <value>Count of out</value>
+  </data>
+  <data name="CountOfSaled" xml:space="preserve">
+    <value>Count of saled</value>
+  </data>
+  <data name="CreateNew" xml:space="preserve">
+    <value>Create New</value>
+  </data>
+  <data name="CreateUnit" xml:space="preserve">
+    <value>Create unit</value>
+  </data>
+  <data name="DateOfSaled" xml:space="preserve">
+    <value>Date of saled</value>
+  </data>
+  <data name="DateOfWriteOut" xml:space="preserve">
+    <value>Date of write out</value>
+  </data>
+  <data name="Deal" xml:space="preserve">
+    <value>Deal</value>
+  </data>
+  <data name="DeletePage" xml:space="preserve">
+    <value>Delete page</value>
+  </data>
+  <data name="EditUnit" xml:space="preserve">
+    <value>Edit unit</value>
+  </data>
+  <data name="EditWareHouse" xml:space="preserve">
+    <value>Edit Warehouse</value>
+  </data>
+  <data name="Export" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="From" xml:space="preserve">
+    <value>From</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="ImportCount" xml:space="preserve">
+    <value>Import count</value>
+  </data>
+  <data name="PriceOfOut" xml:space="preserve">
+    <value>Price of out</value>
+  </data>
+  <data name="Saled" xml:space="preserve">
+    <value>Saled</value>
+  </data>
+  <data name="SelectTheDeal" xml:space="preserve">
+    <value>Select the deal</value>
+  </data>
+  <data name="ThereAreNoWarehouses" xml:space="preserve">
+    <value>There are no warehouses!</value>
+  </data>
+  <data name="To" xml:space="preserve">
+    <value>To</value>
+  </data>
+  <data name="User" xml:space="preserve">
+    <value>User</value>
+  </data>
+  <data name="WarehouseAddress" xml:space="preserve">
+    <value>Warehouse Address</value>
+  </data>
 </root>

@@ -2,34 +2,36 @@
 @{
     ViewData["Title"] = "Show";
 }
-<br />
+@using Warehouse.Resources
+
+@inject LocService SharedLocalizer
 <form method="get" asp-action="Show">
-    <label class="control-label">Price:</label>
+    <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Price"):</label>
     <input type="number" min="0" name="from" value="@ViewData["CurrentFrom"]" placeholder="0" />
 
-    <label class="control-label">From -</label>
+    <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("From") -</label>
     <label class="control-label"> Before</label>
     <input type="number" min="0" name="before" value="@ViewData["CurrentBefore"]" placeholder="0" />
 
-    <label class="control-label">Page size</label>
+    <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize")</label>
     <input type="number" name="pageSize" min="1" value="@ViewData["CurrentSize"]" />
     <input type="submit" id="send" value="Filter" class="btn btn-default" />
 </form>
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
-            <th>Name</th>
-            <th>Count</th>
-            <th>Current count</th>
-            <th>Unit</th>
-            <th>Receipt price</th>
-            <th>Sale price</th>
-            <th>Receipt date</th>
-            <th>Added date</th>
-            <th>Warehouse</th>
-            <th>Move</th>
-            <th>Edit</th>
-            <td>Write out</td>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Name")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Count")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("CurrentCount")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Unit")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("ReceiptPrice")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("SalePrice")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("ReceiptDate")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("AddedDate")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Warehouse")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Move")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
+            <td>@SharedLocalizer.GetLocalizedHtmlString("WriteOut")</td>
         </tr>
     </thead>
 
@@ -48,9 +50,9 @@
                 <td>@product.Date</td>
                 <td>@product.WareHouse.Number</td>
                 <td>
-                    <a class="moveProduct" id="@product.Id" href="#">Move</a>
+                    <a class="moveProduct" id="@product.Id" href="#">@SharedLocalizer.GetLocalizedHtmlString("Move")</a>
                 </td>
-                <td><a asp-action="Edit" asp-route-id="@(product.Id)">Edit</a></td>
+                <td><a asp-action="Edit" asp-route-id="@(product.Id)">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
                 <td><a>Write out</a></td>
             </tr>
         }
@@ -67,13 +69,13 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Warehouses</h4>
+                <h4 class="modal-title">@SharedLocalizer.GetLocalizedHtmlString("Warehouses")</h4>
             </div>
             <div class="modal-body">
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">@SharedLocalizer.GetLocalizedHtmlString("Close")</button>
             </div>
         </div>
 

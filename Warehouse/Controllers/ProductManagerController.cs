@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
+using Warehouse.Infrastructure;
 
 namespace Warehouse.Controllers
 {
@@ -33,43 +34,39 @@ namespace Warehouse.Controllers
         }
 
 
-        /// <summary>
-        /// Show product manager group by product
-        /// </summary>
-        /// <param name="type">Product type</param>
-        /// <param name="name">Product name</param>
-        /// <param name="page">Current page. Default page 1</param>
-        /// <param name="pageSize">Page size. Default size 10</param>
+        ///// <summary>
+        ///// Show product manager group by product
+        ///// </summary>
+        ///// <param name="type">Product type</param>
+        ///// <param name="name">Product name</param>
+        ///// <param name="page">Current page. Default page 1</param>
+        ///// <param name="pageSize">Page size. Default size 10</param>
         /// <returns></returns>
-        public IActionResult Index(string type, string name, int page=1, int pageSize=10)
+        public IActionResult Index(ProductManagerViewModel viewModel)
         {
-            type = type == null ? "" : type.Trim();
-            name = name == null ? "" : name.Trim();
-            ViewData["CurrentType"] = type;
-            ViewData["CurrentName"] = name;
-            ViewData["CurrentSize"] = pageSize;
-            var user=_context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var productManagersByGroup = _context.ProductManagers
-                .Where(pm => pm.WareHouseId == user.WarehouseId && pm.Product.IsActive!=false)
-                .Include(p => p.Product)
+            var user= _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var query = _context.ProductManagers
+                .Where(pm => pm.WareHouseId == user.WarehouseId && pm.Product.IsActive &&
+                 pm.Product.ProductType.IsActive)
                 .Include(p => p.Product.ProductType)
-                .Include(p=>p.Product.Unit)
-                .GroupBy(pm => pm.Product)
-                .Where(s => s.Key.ProductType.Name.Contains(type, StringComparison.InvariantCultureIgnoreCase) &&
-                s.Key.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase))
-                .Select(item => new
-                {
-                    Product = item.Key,
-                    Count = item.Sum(p => p.Count),
-                    CurrentCount = item.Sum(p => p.CurrentCount)
+                .Include(p => p.Product.Unit).AsQueryable();
+            if (viewModel.TypeId != null)
+                query = query.Where(pm => pm.Product.ProductTypeId == viewModel.TypeId);
+            if (viewModel.ProductId != null)
+                query = query.Where(pm => pm.ProductId == viewModel.ProductId);
+            var queryGroup=query.GroupBy(pm=>pm.Product).Select(item => new
+                       {
+                           Product = item.Key,
+                           Count = item.Sum(p => p.Count),
+                           CurrentCount = item.Sum(p => p.CurrentCount)
 
-                })
-                .Select(c => c.ToExpando());
-            PagedList<ExpandoObject> model = new PagedList<ExpandoObject>(productManagersByGroup, page, pageSize);
-            _log.LogInformation("Product manager index.User: "+user);
-            return View(model);
+                       }).Select(c=>c.ToExpando());
+            ViewBag.paged = new PagedList<ExpandoObject>(queryGroup, viewModel.Page, viewModel.PageSize);
+            ViewBag.Types = new SelectList(_context.Types.Where(pt => pt.IsActive), "Id", "Name");
+            ViewBag.Products = new SelectList(_context.Products.Where(p => p.IsActive), "Id", "Name");
+            _log.LogInformation("Product manager index.User: " + user);
+            return View(viewModel);
         }
-        
 
         /// <summary>
         /// Open the create product manager window
@@ -88,7 +85,7 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Create new productManager
         /// </summary>
-        /// <param name="productManager">ProductManager object</param>
+        ///// <param name="productManager">ProductManager object</param>
         /// <returns></returns>
         [HttpPost]
         public IActionResult Create(ProductManager productManager)
@@ -132,11 +129,11 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Show all product managers
         /// </summary>
-        /// <param name="id">Product id</param>
-        /// <param name="from">Date from</param>
-        /// <param name="before">Date before</param>
-        /// <param name="page">Current page. Default 1</param>
-        /// <param name="pageSize">Page size. Default 10</param>
+        ///// <param name="id">Product id</param>
+        ///// <param name="from">Date from</param>
+        ///// <param name="before">Date before</param>
+        ///// <param name="page">Current page. Default 1</param>
+        ///// <param name="pageSize">Page size. Default 10</param>
         /// <returns></returns>
         public IActionResult Show(string id, decimal from, decimal before, int page=1, int pageSize=1)
         {
@@ -171,7 +168,7 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Open the edit ProductManager window
         /// </summary>
-        /// <param name="id">ProductManager Id</param>
+        ///// <param name="id">ProductManager Id</param>
         /// <returns></returns>
         [HttpGet]
         public IActionResult Edit(string id)
@@ -182,12 +179,12 @@ namespace Warehouse.Controllers
             return RedirectToAction("Index");
         }
 
-        /// <summary>
-        /// Edit the ProductManager receipt and sale price
-        /// </summary>
-        /// <param name="productManager">ProductManager object</param>
-        /// <returns></returns>
-        /// 
+        ///// <summary>
+        ///// Edit the ProductManager receipt and sale price
+        ///// </summary>
+        ///// <param name="productManager">ProductManager object</param>
+        ///// <returns></returns>
+        ///// 
 
 
 
@@ -209,12 +206,12 @@ namespace Warehouse.Controllers
 
 
 
-        /// <summary>
-        /// Add products to the basket
-        /// </summary>
-        /// <param name="id">ProductManager Id</param>
-        /// <param name="quantity">Number of products</param>
-        /// <returns></returns>
+        ///// <summary>
+        ///// Add products to the basket
+        ///// </summary>
+        ///// <param name="id">ProductManager Id</param>
+        ///// <param name="quantity">Number of products</param>
+        ///// <returns></returns>
         [HttpPost]
         public IActionResult Add(string id, string quantity)
         {
@@ -288,13 +285,13 @@ namespace Warehouse.Controllers
 
 
 
-        /// <summary>
-        /// Write out ProductManager
-        /// </summary>
-        /// <param name="id">ProductManager Id</param>
-        /// <param name="quantity">Number of products</param>
-        /// <param name="price">Product price</param>
-        /// <returns></returns>
+        ///// <summary>
+        ///// Write out ProductManager
+        ///// </summary>
+        ///// <param name="id">ProductManager Id</param>
+        ///// <param name="quantity">Number of products</param>
+        ///// <param name="price">Product price</param>
+        ///// <returns></returns>
         [HttpPost]
         public IActionResult WriteOut(string id, string quantity, string price)
         {

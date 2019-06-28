@@ -2,19 +2,16 @@
 @{
     ViewData["Title"] = "Index";
 }
+@using Warehouse.Resources
 
-<br />
-<br />
-<h3>Выберите файл для загрузки</h3>
-
+@inject LocService SharedLocalizer
 <a asp-action="Create" asp-controller="Unit">Create new</a>
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
             <th>@Html.DisplayNameFor(m => m.Name)</th>
-            <th>Edit</th>
-            <th>Delete</th>
-            <th>Details</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Delete")</th>
         </tr>
     </thead>
     <tbody>
@@ -23,9 +20,8 @@
             {
                 <tr>
                     <td>@Html.DisplayFor(item => unit.Name)</td>
-                    <td><a asp-action="Edit" asp-route-id="@unit.Id">Edit</a></td>
-                    <td><a asp-action="Delete" asp-route-id="@unit.Id">Delete</a></td>
-                    <td><a asp-action="Details" asp-route-id="@unit.Id">Details</a></td>
+                    <td><a asp-action="Edit" asp-route-id="@unit.Id">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
+                    <td><a asp-action="Delete" asp-route-id="@unit.Id">@SharedLocalizer.GetLocalizedHtmlString("Delete")</a></td>
                 </tr>
             }
         }

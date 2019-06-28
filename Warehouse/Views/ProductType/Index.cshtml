@@ -1,40 +1,197 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Index";
 }
-@model IPagedList<ProductType>
+@using Warehouse.Resources
+@inject LocService SharedLocalizer
+@model ProductTypeViewModel
 <h2>Index</h2>
-<br />
-<br />
 <br />
 <form method="get" asp-action="Index">
     <div class="form-inline form-group">
-        <label class="control-label">Product Type: </label>
-        <input type="text" name="type" value="@ViewData["CurrentType"]" />
+        <select asp-for="TypeId" asp-items="@ViewBag.Types">
+            <option selected value="">All types</option>
+        </select>
 
-        <label class="control-label">Page size:</label>
-        <input type="number" min="0" name="pageSize" value="@ViewData["CurrentSize"]" />
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
+        <input type="number" min="1" name="pageSize" value="@ViewData["CurrentSize"]" />
 
         <input type="submit" value="Filter" class="btn btn-default" />
     </div>
 </form>
-
 <table class="table table-hover table-bordered">
     <thead class="bg-primary">
         <tr>
-            <th>Name</th>
-            <th>Edit</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Name")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
+            @if (User.IsInRole("Admin"))
+            {
+            <th>Disable / Enable</th>
+            }
         </tr>
     </thead>
     <tbody>
 
-        @foreach (var pt in Model)
+        @foreach (var pt in ViewBag.paged)
         {
-        <tr>
-            <td>@pt.Name</td>
-            <td><a asp-action="Edit" asp-route-id="@pt.Id">Edit</a></td>
-        </tr>
+            <tr>
+                <td hidden="hidden"><input type="hidden" value="@pt.Id" /></td>
+                <td>@pt.Name</td>
+                <td><a asp-action="Edit" asp-route-id="@pt.Id">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
+            @if (User.IsInRole("Admin"))
+            {
+                @if (pt.IsActive)
+                 {
+                    <td><a class="Disable" href="#">Disable</a></td>
+                 }
+                 else
+                 {
+                    <td><a class="Enable" href="#">Enable</a></td>
+                 }
+                }
+            </tr>
+           
         }
-        </tbody>
+    </tbody>
 </table>
-<pager  list="@Model" asp-route-pageSize="@ViewData["CurrentSize"]" asp-route-type="@ViewData["CurrentType"]" asp-controller="ProductType" asp-action="Index" />
+<pager list="@ViewBag.paged" asp-route-PageSize="@Model.PageSize" asp-route-TypeId="@Model.TypeId" asp-controller="ProductType" asp-action="Index" />
+
+@section scripts{
+    <link href="~/css/chosen.min.css" rel="stylesheet" />
+    <link href="~/css/jquery.contextMenu.css" rel="stylesheet" />
+    <script src="~/js/jquery.contextMenu.js"></script>
+    <script src="~/js/jquery.ui.position.js"></script>
+    <link href="~/css/jquery-confirm.min.css" rel="stylesheet" />
+    <script src="~/js/jquery-confirm.min.js"></script>
+    <script src="~/lib/jquery/dist/chosen.jquery.min.js"></script>
+    <script>
+        $(() => {
+            $("[href='#']").on("click", function () {
+                let $link = $(this);
+                $(this).parent().parent().addClass(".select");
+                $link.addClass('context-menu-one');
+                $.contextMenu({
+                    selector: '.context-menu-one',
+                    trigger: 'left',
+                    callback: function (key, options) {
+                    },
+                    position: function (opt, x, y) {
+                        opt.$menu.css({ top: y + 10, left: x - 90 });
+                    },
+                    items: {
+                        "Yes": {
+                            name: "Yes", icon: "fas fa-check-circle",
+                            callback: function (key, options) {
+                                let $link = $(this);
+                                let $row = $(this).parent().parent().addClass(".select");
+                                let productTypeId = $row.children().children().val();
+                                if ($link.text() === 'Enable') {
+                                    $.ajax({
+                                        url: '/ProductType/Enable',
+                                        type: "POST",
+                                        data: JSON.stringify(productTypeId),
+                                        contentType: "application/json; charset=utf-8",
+                                        dataType: "json",
+                                        async: false,
+                                        success: function (data) {
+                                            if (data) {
+                                                $.confirm({
+                                                    icon: 'fas fa-check-circle',
+                                                    title: 'Warehouse!',
+                                                    content: 'Product type has been activated!',
+                                                    type: 'blue',
+                                                    typeAnimated: true,
+                                                    buttons: {
+                                                        close: {
+                                                            btnClass: "btn-blue",
+                                                            action: function () {
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                                $link.text("Disable").css("color", "red");
+                                                $row.removeClass();
+                                            }
+                                            else {
+                                                $link.text("Enable").css("color", "green");
+                                                $.confirm({
+                                                    icon: 'fas fa-exclamation-triangle',
+                                                    title: 'Warehouse!',
+                                                    content: 'An error occurred. There may be products of this type in warehouse. Please, try again!',
+                                                    type: 'red',
+                                                    typeAnimated: true,
+                                                    buttons: {
+                                                        close: {
+                                                            btnClass: "btn-red",
+                                                            action: function () {
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    })
+                                }
+                                else if ($link.text() === 'Disable') {
+                                    $.ajax({
+                                        url: '/ProductType/Disable',
+                                        type: "POST",
+                                        data: JSON.stringify(productTypeId),
+                                        contentType: "application/json; charset=utf-8",
+                                        dataType: "json",
+                                        async: false,
+                                        success: function (data) {
+                                            if (data) {
+                                                $.confirm({
+                                                    icon: 'fas fa-check-circle',
+                                                    title: 'Warehouse',
+                                                    content: 'Product type has been deactivated!',
+                                                    type: 'blue',
+                                                    typeAnimated: true,
+                                                    buttons: {
+                                                        close: {
+                                                            btnClass: "btn-blue",
+                                                            action: function () {
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                                $link.text("Enable").css("color", "green");
+                                                $row.removeClass();
+                                            }
+                                            else {
+                                                $link.text("Disable").css("color", "red");
+                                                $.confirm({
+                                                    icon: 'fas fa-exclamation-triangle',
+                                                    title: 'Warehouse',
+                                                    content: 'An error occurred. There may be products of this type in warehouse. Please, try again!',
+                                                    type: 'red',
+                                                    typeAnimated: true,
+                                                    buttons: {
+                                                        close: {
+                                                            btnClass: "btn-red",
+                                                            action: function () {
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    })
+                                }
+                                $row.removeClass();
+                                $link.removeClass();
+                            }
+                        },
+                        "sep1": "---------",
+                        "Cansel": { name: "Cansel", icon: 'far fa-times-circle' }
+                    }
+                });
+            });
+        });
+        $(() => {
+            $("#TypeId").chosen({
+                search_contains: true
+            });
+        });
+    </script>
+}

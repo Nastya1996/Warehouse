@@ -17,7 +17,7 @@ using Warehouse.Models;
 
 namespace Warehouse.Controllers
 {
-    //[Authorize(Roles = "Report")]
+    [Authorize(Roles = "Report")]
     public class ReportController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -148,7 +148,8 @@ namespace Warehouse.Controllers
             return RedirectToAction("Index", new Dictionary<string, ReportViewModel> { { "reportFilter", reportFilter } });
 
         }
-        public FileStreamResult ExportProductManager(IList<ProductManager> list)
+        [NonAction]
+        FileStreamResult ExportProductManager(IList<ProductManager> list)
         {
             var stream = new MemoryStream();
             using (var package = new ExcelPackage(stream))
@@ -168,7 +169,8 @@ namespace Warehouse.Controllers
             var fileName = $"InputReport_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
-        public FileStreamResult ExportProductOrder(IList<ProductOrder> list)
+        [NonAction]
+        FileStreamResult ExportProductOrder(IList<ProductOrder> list)
         {
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var stream = new MemoryStream();
@@ -189,7 +191,8 @@ namespace Warehouse.Controllers
             var fileName = $"SaledReport_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
-        public FileStreamResult ExportWriteOut(IList<WriteOut> list)
+        [NonAction]
+        FileStreamResult ExportWriteOut(IList<WriteOut> list)
         {
             var stream = new MemoryStream();
             using (var package = new ExcelPackage(stream))
@@ -209,6 +212,7 @@ namespace Warehouse.Controllers
             var fileName = $"ExportReport_{DateTime.Now.ToString("yyyyMMddHHmmss")}.xlsx";
             return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
+        
 
     }
 }

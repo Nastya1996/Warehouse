@@ -3,31 +3,34 @@
     ViewData["Title"] = "Edit";
 }
 @model Product
-<h1>Edit Product</h1>
+@using Warehouse.Resources
+
+@inject LocService SharedLocalizer
+<h1>@SharedLocalizer.GetLocalizedHtmlString("EditProduct")</h1>
 
 <form asp-action="Edit" asp-antiforgery="true">
     <div>
         <div asp-validation-summary="ModelOnly"></div>
         <div class="form-group">
-            <label asp-for="Name">Name</label>
+            <label asp-for="Name">@SharedLocalizer.GetLocalizedHtmlString("Name")</label>
             <input asp-for="Name" type="text" class="form-control" />
             <span asp-validation-for="Name"></span>
         </div>
         <div class="form-group">
-            <label asp-for="Barcode">Bar Code</label>
+            <label asp-for="Barcode">@SharedLocalizer.GetLocalizedHtmlString("Barcode")</label>
             <input asp-for="Barcode" type="text" class="form-control" />
             <span asp-validation-for="Barcode"></span>
         </div>
         <div class="form-group">
-            <label asp-for="ProductTypeId" class="control-label">Product Type</label>
+            <label asp-for="ProductTypeId" class="control-label">@SharedLocalizer.GetLocalizedHtmlString("ProductType")</label>
             <select asp-for="ProductTypeId" asp-items="ViewBag.ProductTypes" class="form-control">
-                <option selected disabled value="">Select type...</option>
+                <option selected disabled value="">@SharedLocalizer.GetLocalizedHtmlString("SelectType")</option>
             </select>
         </div>
         <div class="form-group">
-            <label asp-for="UnitId" class="control-label">Unit</label>
+            <label asp-for="UnitId" class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Unit")</label>
             <select asp-for="UnitId" asp-items="ViewBag.Units" class="form-control">
-                <option selected disabled value="">Select unit...</option>
+                <option selected disabled value="">@SharedLocalizer.GetLocalizedHtmlString("SelectUnit")</option>
             </select>
         </div>
         <div><input type="submit" value="Edit" class="btn-primary" /></div>
