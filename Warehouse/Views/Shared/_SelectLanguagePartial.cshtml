@@ -23,7 +23,7 @@
         </div>
     </form>
 </div>*@
-<div class="container-fluid" title="@Localizer["RequestCultureProvider"] @requestCulture?.Provider?.GetType().Name">
+<div class="container-fluid" >
     <ul class="nav navbar-nav">
         <li><a asp-controller="SetLanguage" asp-action="SetLanguage" asp-route-culture="en-US" asp-route-returnUrl="@Context.Request.Path">English</a></li>
         <li><a asp-controller="SetLanguage" asp-action="SetLanguage" asp-route-culture="ru-RU" asp-route-returnUrl="@Context.Request.Path">Русский</a></li>

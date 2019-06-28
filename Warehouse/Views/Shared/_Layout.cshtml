@@ -136,21 +136,22 @@
                             </ul>
                         </li>
 
-<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" asp-controller="Unit" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Unit")<span class="caret"></span></a>
-<ul class="dropdown-menu">
-<li><a asp-controller="Unit" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Unit")</a></li>
-<li><a asp-controller="Unit" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("NewUnit")</a></li>
-</ul>
-</li>
-}
-else if (User.IsInRole("Report"))
-{
+                        <li class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" asp-controller="Unit" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Unit")<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a asp-controller="Unit" asp-action="Index">@SharedLocalizer.GetLocalizedHtmlString("Unit")</a></li>
+                                <li><a asp-controller="Unit" asp-action="Create">@SharedLocalizer.GetLocalizedHtmlString("NewUnit")</a></li>
+                            </ul>
+                        </li>
+                    }
+                    else if (User.IsInRole("Report"))
+                    {
                         <li><a asp-controller="Report" asp-action="Index">Report</a></li>
-}
-else
-{
-<p>Welcome to Warehouse!</p>
-}
+                    }
+                    else
+                    {
+                        <p>Welcome to Warehouse!</p>
+                    }
 
                 </ul>
                 <partial name="_LoginPartial" />
@@ -179,7 +180,7 @@ else
 
     <footer class="navbar-inverse navbar-fixed-bottom" style="font-size:16px; color:#CCC;">
         <p style="display:inline-block; float:left;">&copy Warehouse 2019</p>
-        @await Html.PartialAsync("_SelectLanguagePartial")        
+        @await Html.PartialAsync("_SelectLanguagePartial")
     </footer>
 
 
