@@ -198,8 +198,9 @@ namespace Warehouse.Controllers
                 item.FinallyPrice = item.Price * (100-sale)/100;
             }
 
-            orderDb.Price = orderDb.ProductOrders.Sum(p => p.FinallyPrice * p.Count);
-            orderDb.FinallPrice = orderDb.Price * (100 - order.Sale)/100;
+            //orderDb.Price = orderDb.ProductOrders.Sum(p => p.FinallyPrice * p.Count);
+            var price = orderDb.ProductOrders.Sum(p => p.FinallyPrice * p.Count);
+            orderDb.FinallPrice = price * (100 - order.Sale)/100;
             orderDb.OrderType = OrderType.Saled;
             orderDb.CustomerId = order.CustomerId;
             orderDb.Sale = order.Sale;

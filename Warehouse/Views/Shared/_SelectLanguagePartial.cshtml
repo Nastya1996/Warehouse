@@ -14,18 +14,18 @@
         .ToList();
 }
 
-<div title="@Localizer["RequestCultureProvider"] @requestCulture?.Provider?.GetType().Name" style="display:inline-block; float:right;">
+@*<div title="@Localizer["RequestCultureProvider"] @requestCulture?.Provider?.GetType().Name" style="display:inline-block; float:right;">
     <form class="form-inline form-horizontal" id="selectLanguage" asp-controller="SetLanguage" asp-action="SetLanguage" asp-route-returnUrl="@Context.Request.Path" method="post" role="form">
         <label class="form-label" style="padding-right:5px">@SharedLocalizer.GetLocalizedHtmlString("Language"): </label>
         <div class="input-group">
-            <select class="custom-select" name="culture" asp-for="@requestCulture.RequestCulture.UICulture.Name" asp-items="cultureItems" style="color:#000;"></select>
-                <button type="submit" class="btn btn-outline-secondary" style="color:#000;">@SharedLocalizer.GetLocalizedHtmlString("Save")</button>
+            <select class="selectpicker" name="culture" asp-for="@requestCulture.RequestCulture.UICulture.Name" asp-items="cultureItems" style="color:#000;"></select>
+            <button class="btn btn-link" type="submit" style="color:#fff;">@SharedLocalizer.GetLocalizedHtmlString("Save")</button>
         </div>
     </form>
-</div>
-@*<div class="container-fluid" title="@Localizer["RequestCultureProvider"] @requestCulture?.Provider?.GetType().Name">
-    <ul class="nav navbar-nav">
-        <li is-active-language asp-route-lang="en"><a asp-route-lang="en">English</a></li>
-        <li is-active-language asp-route-lang="ru"><a asp-route-lang="ru">Русский</a></li>
-    </ul>
 </div>*@
+<div class="container-fluid" title="@Localizer["RequestCultureProvider"] @requestCulture?.Provider?.GetType().Name">
+    <ul class="nav navbar-nav">
+        <li><a asp-controller="SetLanguage" asp-action="SetLanguage" asp-route-culture="en-US" asp-route-returnUrl="@Context.Request.Path">English</a></li>
+        <li><a asp-controller="SetLanguage" asp-action="SetLanguage" asp-route-culture="ru-RU" asp-route-returnUrl="@Context.Request.Path">Русский</a></li>
+    </ul>
+</div>
