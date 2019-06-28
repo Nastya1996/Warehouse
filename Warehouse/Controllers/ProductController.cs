@@ -34,13 +34,13 @@ namespace Warehouse.Controllers
 
 
         /// <summary>
-        /// Show products
-        /// </summary>
-        /// <param name="name">Product name</param>
-        /// <param name="type">Product type</param>
-        /// <param name="sortOrder">Sorting type</param>
-        /// <param name="page">Current page. Default 1</param>
-        /// <param name="pageSize">Page size. Default 10</param>
+        ///// Show products
+        ///// </summary>
+        ///// <param name="name">Product name</param>
+        ///// <param name="type">Product type</param>
+        ///// <param name="sortOrder">Sorting type</param>
+        ///// <param name="page">Current page. Default 1</param>
+        ///// <param name="pageSize">Page size. Default 10</param>
         /// <returns></returns>
         [Authorize(Roles = "Storekeeper, Admin")]
         public IActionResult Index(ProductViewModel viewModel, SortState sortOrder = SortState.ProductNameAsc)
@@ -50,7 +50,7 @@ namespace Warehouse.Controllers
             ViewBag.Names = new SelectList(_context.Products.Where(p => p.IsActive), "Id", "Name");
             ViewData["CurrentSize"] = viewModel.PageSize;
             ViewBag.ProductNameSort = sortOrder == SortState.ProductNameAsc ? SortState.ProductNameDesc : SortState.ProductNameAsc;
-            var query = _context.Products.Where(p => p.IsActive).AsQueryable();
+            var query = _context.Products.Include(p=>p.FileModelImg).Where(p => p.IsActive).AsQueryable();
             if (viewModel.TypeId != null)
                 if(_context.Types.Find(viewModel.TypeId)!=null)
                     query = query.Where(p => p.ProductTypeId == viewModel.TypeId);
@@ -87,9 +87,9 @@ namespace Warehouse.Controllers
 
         /// <summary>
         /// Add new product
-        /// </summary>
-        /// <param name="product">Product type object</param>
-        /// <param name="uploadedFile">Select filte to upload</param>
+        ///// </summary>
+        ///// <param name="product">Product type object</param>
+        ///// <param name="uploadedFile">Select filte to upload</param>
         /// <returns>Show products</returns>
         [Authorize(Roles = "Storekeeper")]
         [HttpPost]
@@ -102,6 +102,8 @@ namespace Warehouse.Controllers
                 ModelState.AddModelError("", "The unit not selected");
             if (_context.Products.FirstOrDefault(p => p.Name == product.Name) != null)
                 ModelState.AddModelError("", "This name of product is available in the database");
+            if (_context.Products.FirstOrDefault(p => p.Barcode == product.Barcode && p.Name != product.Name) != null)
+                ModelState.AddModelError("", "This barcode corresponds to another product");
             if (ModelState.IsValid)
             {
                 if (uploadedFile != null)
@@ -145,7 +147,7 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Open product edition window
         /// </summary>
-        /// <param name="id">Product Id</param>
+        ///// <param name="id">Product Id</param>
         /// <returns></returns>
         [Authorize(Roles = "Storekeeper")]
         [HttpGet]
@@ -160,7 +162,7 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Edit Product
         /// </summary>
-        /// <param name="product">Product type object</param>
+        ///// <param name="product">Product type object</param>
         /// <returns></returns>
         [Authorize(Roles = "Storekeeper")]
         [HttpPost]
@@ -183,7 +185,7 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Show product details
         /// </summary>
-        /// <param name="id">Product Id</param>
+        ///// <param name="id">Product Id</param>
         /// <returns></returns>
         [HttpGet]
         public IActionResult Details(string id)
@@ -198,7 +200,7 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Disable product
         /// </summary>
-        /// <param name="productId">Product Id</param>
+        ///// <param name="productId">Product Id</param>
         /// <returns>Disable product</returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
@@ -228,7 +230,7 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Enable product
         /// </summary>
-        /// <param name="productId">Product Id</param>
+        ///// <param name="productId">Product Id</param>
         /// <returns>Enable product</returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
@@ -255,7 +257,7 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Receive products depending on the type selected
         /// </summary>
-        /// <param name="selected">Product type</param>
+        ///// <param name="selected">Product type</param>
         /// <returns>Products</returns>
         [HttpPost]
         [Route("Products/Get")]

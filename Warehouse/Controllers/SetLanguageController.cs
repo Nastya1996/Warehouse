@@ -10,7 +10,7 @@ namespace Warehouse.Controllers
 {
     public class SetLanguageController : Controller
     {
-        [HttpPost]
+
         public IActionResult SetLanguage(string culture, string returnUrl)
         {
             Response.Cookies.Append(

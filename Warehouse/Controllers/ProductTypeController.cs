@@ -30,10 +30,10 @@ namespace Warehouse.Controllers
 
         /// <summary>
         /// Show product types
-        /// </summary>
-        /// <param name="type">Product type</param>
-        /// <param name="page">Current page. Default 1</param>
-        /// <param name="pageSize">Page size. Default 10</param>
+        ///// </summary>
+        ///// <param name="type">Product type</param>
+        ///// <param name="page">Current page. Default 1</param>
+        ///// <param name="pageSize">Page size. Default 10</param>
         /// <returns>Product types</returns>
      
         public IActionResult Index(ProductTypeViewModel viewModel)
@@ -75,7 +75,7 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Add new product type
         /// </summary>
-        /// <param name="productType">ProductType type object</param>
+        ///// <param name="productType">ProductType type object</param>
         /// <returns>Product types</returns>
         [HttpPost]
         public IActionResult Create(ProductType productType)
@@ -100,7 +100,7 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Open product edition window
         /// </summary>
-        /// <param name="id">Product type id</param>
+        ///// <param name="id">Product type id</param>
         /// <returns>Product edition window</returns>
         [HttpGet]
         public IActionResult Edit(string id)
@@ -112,7 +112,7 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Edit product type
         /// </summary>
-        /// <param name="productType">ProductType type object</param>
+        ///// <param name="productType">ProductType type object</param>
         /// <returns>Show product types</returns>
         [HttpPost]
         public IActionResult Edit(ProductType productType)

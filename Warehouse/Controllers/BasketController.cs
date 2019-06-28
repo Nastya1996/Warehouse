@@ -26,6 +26,16 @@ namespace Warehouse.Controllers
             _log = log;
             _context = context;
         }
+        public IActionResult ChangeCount(string id, string count)
+        {
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var basket = _context.Baskets.Find(id);
+            basket.Count = Convert.ToUInt32(count);
+            _context.Baskets.Update(basket);
+            _context.SaveChanges();
+            var baskets = _context.Baskets.Include(p => p.Product).Where(p => p.UserId == user.Id);
+            return View("_Index", baskets);
+        }
         public IActionResult Index()
         {
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);

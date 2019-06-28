@@ -34,13 +34,13 @@ namespace Warehouse.Controllers
         }
 
 
-        /// <summary>
-        /// Show product manager group by product
-        /// </summary>
-        /// <param name="type">Product type</param>
-        /// <param name="name">Product name</param>
-        /// <param name="page">Current page. Default page 1</param>
-        /// <param name="pageSize">Page size. Default size 10</param>
+        ///// <summary>
+        ///// Show product manager group by product
+        ///// </summary>
+        ///// <param name="type">Product type</param>
+        ///// <param name="name">Product name</param>
+        ///// <param name="page">Current page. Default page 1</param>
+        ///// <param name="pageSize">Page size. Default size 10</param>
         /// <returns></returns>
         public IActionResult Index(ProductManagerViewModel viewModel)
         {
@@ -87,7 +87,7 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Create new productManager
         /// </summary>
-        /// <param name="productManager">ProductManager object</param>
+        ///// <param name="productManager">ProductManager object</param>
         /// <returns></returns>
         [HttpPost]
         public IActionResult Create(ProductManager productManager)
@@ -131,11 +131,11 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Show all product managers
         /// </summary>
-        /// <param name="id">Product id</param>
-        /// <param name="from">Date from</param>
-        /// <param name="before">Date before</param>
-        /// <param name="page">Current page. Default 1</param>
-        /// <param name="pageSize">Page size. Default 10</param>
+        ///// <param name="id">Product id</param>
+        ///// <param name="from">Date from</param>
+        ///// <param name="before">Date before</param>
+        ///// <param name="page">Current page. Default 1</param>
+        ///// <param name="pageSize">Page size. Default 10</param>
         /// <returns></returns>
         public IActionResult Show(string id, decimal from, decimal before, int page=1, int pageSize=1)
         {
@@ -171,7 +171,7 @@ namespace Warehouse.Controllers
         /// <summary>
         /// Open the edit ProductManager window
         /// </summary>
-        /// <param name="id">ProductManager Id</param>
+        ///// <param name="id">ProductManager Id</param>
         /// <returns></returns>
         [HttpGet]
         public IActionResult Edit(string id)
@@ -182,12 +182,12 @@ namespace Warehouse.Controllers
             return RedirectToAction("Index");
         }
 
-        /// <summary>
-        /// Edit the ProductManager receipt and sale price
-        /// </summary>
-        /// <param name="productManager">ProductManager object</param>
-        /// <returns></returns>
-        /// 
+        ///// <summary>
+        ///// Edit the ProductManager receipt and sale price
+        ///// </summary>
+        ///// <param name="productManager">ProductManager object</param>
+        ///// <returns></returns>
+        ///// 
 
 
 
@@ -209,12 +209,12 @@ namespace Warehouse.Controllers
 
 
 
-        /// <summary>
-        /// Add products to the basket
-        /// </summary>
-        /// <param name="id">ProductManager Id</param>
-        /// <param name="quantity">Number of products</param>
-        /// <returns></returns>
+        ///// <summary>
+        ///// Add products to the basket
+        ///// </summary>
+        ///// <param name="id">ProductManager Id</param>
+        ///// <param name="quantity">Number of products</param>
+        ///// <returns></returns>
         [HttpPost]
         public IActionResult Add(string id, string quantity)
         {
@@ -288,13 +288,13 @@ namespace Warehouse.Controllers
 
 
 
-        /// <summary>
-        /// Write out ProductManager
-        /// </summary>
-        /// <param name="id">ProductManager Id</param>
-        /// <param name="quantity">Number of products</param>
-        /// <param name="price">Product price</param>
-        /// <returns></returns>
+        ///// <summary>
+        ///// Write out ProductManager
+        ///// </summary>
+        ///// <param name="id">ProductManager Id</param>
+        ///// <param name="quantity">Number of products</param>
+        ///// <param name="price">Product price</param>
+        ///// <returns></returns>
         [HttpPost]
         public IActionResult WriteOut(string id, string quantity, string price)
         {

@@ -21,7 +21,7 @@
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
 </head>
-<body>
+<body style="margin:15vh;">
     <div class="modal fade" id="myModal" role="dialog">
         <div class="modal-dialog">
 
@@ -72,7 +72,7 @@
 
 
     </script>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-inverse navbar-fixed-top" style="position:fixed;">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -181,12 +181,16 @@
 
     @RenderBody()
 
-    <footer class="navbar-inverse navbar-fixed-bottom">
-
+    <footer class="navbar-inverse navbar-fixed-bottom" style="font-size:16px; color:#CCC;">
+        <p style="display:inline-block; float:left;">&copy Warehouse 2019</p>
         @await Html.PartialAsync("_SelectLanguagePartial")
-
-        <p>&copy; 2019 - Warehouse</p>
     </footer>
+
+
+
+
+                @await Html.PartialAsync("_SelectLanguagePartial")
+
     @*</div>*@
     @*environment include = "Development" >
                 <script src="~/lib/jquery/dist/jquery.js"></script>

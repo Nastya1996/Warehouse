@@ -6,8 +6,6 @@
 @model ProductTypeViewModel
 <h2>Index</h2>
 <br />
-<br />
-<br />
 <form method="get" asp-action="Index">
     <div class="form-inline form-group">
         <select asp-for="TypeId" asp-items="@ViewBag.Types">
@@ -15,7 +13,7 @@
         </select>
 
         <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
-        <input type="number" min="0" max="100" name="pageSize" value="@ViewData["CurrentSize"]" />
+        <input type="number" min="1" name="pageSize" value="@ViewData["CurrentSize"]" />
 
         <input type="submit" value="Filter" class="btn btn-default" />
     </div>
@@ -31,6 +29,7 @@
             @if (User.IsInRole("Admin"))
             {
                 <th>Disable / Enable</th>
+            }
             }
         </tr>
     </thead>

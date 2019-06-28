@@ -28,7 +28,7 @@ namespace Warehouse.Controllers
         {
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             _log.LogInformation("Order index."+user);
-            return View(_context.Orders.Where(o => o.UserId == user.Id).ToList());
+            return View(_context.Orders.Where(o => o.UserId == user.Id).OrderByDescending(o=>o.Date).ToList());
         }
         [HttpGet]
         public IActionResult Back(string id)
@@ -194,12 +194,15 @@ namespace Warehouse.Controllers
                 {
                     return NotFound();
                 }
-                var sale = order.ProductOrders.FirstOrDefault(p => p.Id == item.Id).Sale;
-                item.FinallyPrice = item.Price * (100-sale)/100;
+                item.Price = productManager.SalePrice;
+                var productOrder = order.ProductOrders.FirstOrDefault(po => po.Id == item.Id);
+
+                item.FinallyPrice = productManager.SalePrice * (100 - (productOrder == null ? 0 : productOrder.Sale)) / 100;
             }
 
-            orderDb.Price = orderDb.ProductOrders.Sum(p => p.FinallyPrice * p.Count);
-            orderDb.FinallPrice = orderDb.Price * (100 - order.Sale)/100;
+            //orderDb.Price = orderDb.ProductOrders.Sum(p => p.FinallyPrice * p.Count);
+            var price = orderDb.ProductOrders.Sum(p => p.FinallyPrice * p.Count);
+            orderDb.FinallPrice = price * (100 - order.Sale)/100;
             orderDb.OrderType = OrderType.Saled;
             orderDb.CustomerId = order.CustomerId;
             orderDb.Sale = order.Sale;
@@ -209,7 +212,7 @@ namespace Warehouse.Controllers
             _context.SaveChanges();
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             _log.LogInformation("Check out."+user);
-            return RedirectToAction("Index","ProductManager");
+            return RedirectToAction("Index","Basket");
         }
         private void Con(string id)
         {
@@ -239,7 +242,7 @@ namespace Warehouse.Controllers
             Con(id);
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             _log.LogInformation("Continue order."+user);
-            return RedirectToAction("Index", "ProductManager");
+            return RedirectToAction("Index", "Basket");
         }
 
 
