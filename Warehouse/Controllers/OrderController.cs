@@ -194,8 +194,10 @@ namespace Warehouse.Controllers
                 {
                     return NotFound();
                 }
-                var sale = order.ProductOrders.FirstOrDefault(p => p.Id == item.Id).Sale;
-                item.FinallyPrice = item.Price * (100-sale)/100;
+                item.Price = productManager.SalePrice;
+                var productOrder = order.ProductOrders.FirstOrDefault(po => po.Id == item.Id);
+
+                item.FinallyPrice = productManager.SalePrice * (100 - (productOrder == null ? 0 : productOrder.Sale)) / 100;
             }
 
             //orderDb.Price = orderDb.ProductOrders.Sum(p => p.FinallyPrice * p.Count);
