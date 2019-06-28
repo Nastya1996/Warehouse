@@ -53,7 +53,7 @@ namespace Warehouse.Controllers
             ViewBag.Names = new SelectList(_context.Products.Where(p => p.IsActive), "Id", "Name");
             ViewData["CurrentSize"] = viewModel.PageSize;
             ViewBag.ProductNameSort = sortOrder == SortState.ProductNameAsc ? SortState.ProductNameDesc : SortState.ProductNameAsc;
-            var query = _context.Products.Where(p => p.IsActive).AsQueryable();
+            var query = _context.Products.Include(p=>p.FileModelImg).Where(p => p.IsActive).AsQueryable();
             if (viewModel.TypeId != null)
                 query = query.Where(p => p.ProductTypeId == viewModel.TypeId);
             if (viewModel.ProductId != null)

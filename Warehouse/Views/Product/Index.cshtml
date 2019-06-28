@@ -19,7 +19,7 @@
     <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
     <input type="number" min="1" asp-for="PageSize" />
 
-    <input type="submit" value="Filter" class="btn btn-default"/>
+    <input type="submit" value="Filter" class="btn btn-default" />
 </form>
 <table class="table table-bordered table-hover">
     <thead>
@@ -32,11 +32,11 @@
             <th>@SharedLocalizer.GetLocalizedHtmlString("Unit")</th>
             @if (User.IsInRole("Admin"))
             {
-            <th>@SharedLocalizer.GetLocalizedHtmlString("DisableEnable")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("DisableEnable")</th>
             }
             else
             {
-            <th>@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
             }
             <th>@SharedLocalizer.GetLocalizedHtmlString("Image")</th>
         </tr>
@@ -71,7 +71,15 @@
                     {
                         <td><a asp-action="Edit" asp-route-id="@pt.Id">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
                     }
-                    <td><img src="@Url.Content(pt.FileModelImg?.Path)"></td>
+                    @if (pt.FileModelImg != null)
+                    {
+                        <td><img src="@Url.Content(pt.FileModelImg.Path)"></td>
+                    }
+                    else
+                    {
+                        <td><img src="/Files/warehouse-cartoon-vector-7197735.jpg"></td>
+                    }
+
                 </tr>
             }
         }
@@ -113,7 +121,7 @@
             $("#TypeId").on("change", function () {
                 var selected = $(this).children("option:selected").val();
                 GetProducts(selected);
-                
+
             });
         });
         function GetProducts(select) {
@@ -123,7 +131,7 @@
                 data: JSON.stringify(select),
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                async:false,
+                async: false,
                 success: function (data) {
                     $("#ProductId").empty();
                     $("#ProductId").append("<option selected value=''>All products</select>");
