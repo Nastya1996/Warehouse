@@ -2,6 +2,11 @@
 @{
     Layout = null;
 }
+    <script src="https://kit.fontawesome.com/b7938c82ea.js"></script>
+    <link href="~/css/jquery-confirm.min.css" rel="stylesheet" />
+    <script src="~/js/jquery-confirm.min.js"></script>
+    <script src="~/lib/jquery/dist/chosen.jquery.min.js"></script>
+    <link href="~/css/chosen.min.css" rel="stylesheet" />
 
 
 @{if (Model.Count() > 0)
@@ -15,6 +20,7 @@
                 <tr>
                     <th>Name</th>
                     <th>Count</th>
+                    <th>Change count</th>
                     <th>Delete</th>
                 </tr>
             </thead>
@@ -23,7 +29,8 @@
                 {
                     <tr>
                         <td>@pb.Product.Name</td>
-                        <td>@pb.Count</td>
+                        <td class="countOfBasketProduct">@pb.Count</td>
+                        <td><a class="changeCountOrder" href="#">Change<input type="hidden" value="@pb.Id" class="changeInputValue" /></a></td>
                         <td><a asp-action="Delete" asp-route-id="@pb.Id">Delete</a></td>
                     </tr>
                 }
@@ -39,5 +46,57 @@
         <p>No products to show!</p>
     }
 }
+<script>
+    $(() => {
+        $(".changeCountOrder").click(function () {
+            var $Id = $(this).children(".changeInputValue").val();
+            var $c = $(this).parent().parent().children(".countOfBasketProduct");
+            $.confirm({
+                title: 'Write out!',
+                content: '' +
+                    '<div class="form-group">' +
+                    '<label>Change count!</label>' +
+                    '<input type="number" placeholder="0" min="0" value="0" id="countChangeInput" class="form-control" required />' +
+                    '</div>',
+                buttons: {
+                    formSubmit: {
+                        text: 'Add',
+                        action: function () {
+                            var $Count = $("#countChangeInput").val();
 
-
+                            $.ajax({
+                                type: "POST",
+                                data: {
+                                    id: $Id,
+                                    count: $Count
+                                },
+                                async: false,
+                                url: "../../Basket/ChangeCount",
+                                success: function (result) {
+                                    $c.text($Count);
+                                    if (result) {
+                                        error = false;
+                                        $.confirm({
+                                            icon: 'fas fa-check-circle',
+                                            title: 'Basket',
+                                            content: 'Count changed!',
+                                            type: 'blue',
+                                            typeAnimated: true,
+                                            buttons: {
+                                                close: {
+                                                    btnClass: "btn-blue",
+                                                    action: function () {
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }
+                }
+            });
+        });
+    });
+</script>

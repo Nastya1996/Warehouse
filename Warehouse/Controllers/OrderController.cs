@@ -209,7 +209,7 @@ namespace Warehouse.Controllers
             _context.SaveChanges();
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             _log.LogInformation("Check out."+user);
-            return RedirectToAction("Index","ProductManager");
+            return RedirectToAction("Index","Basket");
         }
         private void Con(string id)
         {
@@ -239,7 +239,7 @@ namespace Warehouse.Controllers
             Con(id);
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             _log.LogInformation("Continue order."+user);
-            return RedirectToAction("Index", "ProductManager");
+            return RedirectToAction("Index", "Basket");
         }
 
 
