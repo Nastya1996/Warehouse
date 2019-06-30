@@ -38,23 +38,30 @@
     <tbody>
         @foreach (var product in Model)
         {
-            <tr>
-                <td hidden="hidden"><input type="hidden" value="@product.Id" /></td>
-                <td>@product.Product.Name</td>
-                <td>@product.Count</td>
-                <td class="currentCount">@product.CurrentCount</td>
-                <td>@product.Product.Unit.Name</td>
-                <td>@product.ReceiptPrice</td>
-                <td>@product.SalePrice</td>
-                <td>@product.ReceiptDate.ToString("d")</td>
-                <td>@product.Date</td>
-                <td>@product.WareHouse.Number</td>
-                <td>
-                    <a class="moveProduct" id="@product.Id" href="#">@SharedLocalizer.GetLocalizedHtmlString("Move")</a>
-                </td>
-                <td><a asp-action="Edit" asp-route-id="@(product.Id)">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
-                <td><a>Write out</a></td>
-            </tr>
+        <tr>
+            <td hidden="hidden"><input type="hidden" value="@product.Id" /></td>
+            <td>@product.Product.Name</td>
+            <td>@product.Count</td>
+            <td class="currentCount">@product.CurrentCount</td>
+            <td>@product.Product.Unit.Name</td>
+            <td>@product.ReceiptPrice</td>
+            <td>@product.SalePrice</td>
+            <td>@product.ReceiptDate.ToString("d")</td>
+            <td>@product.Date</td>
+            <td>@product.WareHouse.Number</td>
+            <td>
+                <a class="moveProduct" id="@product.Id" href="#">@SharedLocalizer.GetLocalizedHtmlString("Move")</a>
+            </td>
+            <td><a asp-action="Edit" asp-route-id="@(product.Id)">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
+            @if (product.CurrentCount != 0)
+            {
+                <td><a href="#">Write out</a></td>
+            }
+            else
+            {
+                <td></td>
+            }
+        </tr>
         }
     </tbody>
 </table>
@@ -115,7 +122,7 @@
         $(() => {
             $("a:contains('Write out')").on("click", function () {
                 var $productManagerId = $(this).parents("tr").children("td:first").children(":input").val();
-                var thisTag = $(this).parents("tr").children("td.currentCount")
+                var thisTag = $(this).parents("tr").children("td.currentCount");
                 var $count = thisTag.html();
                 var error = false;
                 //confirm
@@ -157,7 +164,7 @@
                                     data: {
                                         id: $productManagerId,
                                         quantity: $currentCount,
-                                        price : $price
+                                        price: $price
                                     },
                                     async: false,
                                     url: "../../ProductManager/WriteOut",
@@ -165,7 +172,7 @@
                                         if (result) {
                                             error = false;
                                             let $count = thisTag.html();
-                                            thisTag.html($count - $currentCount);
+                                            thisTag.text($count - $currentCount);
                                             $.confirm({
                                                 icon: 'fas fa-check-circle',
                                                 title: 'Warehouse!',

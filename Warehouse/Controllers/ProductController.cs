@@ -46,11 +46,22 @@ namespace Warehouse.Controllers
         public IActionResult Index(ProductViewModel viewModel, SortState sortOrder = SortState.ProductNameAsc)
         {
             if (!FilterValid()) return BadRequest();
-            ViewBag.Types = new SelectList(_context.Types.Where(t => t.IsActive), "Id", "Name");
-            ViewBag.Names = new SelectList(_context.Products.Where(p => p.IsActive), "Id", "Name");
+            IQueryable<Product> query = null;
+            if (User.IsInRole("Admin"))
+            {
+                ViewBag.Types = new SelectList(_context.Types, "Id", "Name");
+                ViewBag.Names = new SelectList(_context.Products, "Id", "Name");
+                query = _context.Products.Include(p => p.FileModelImg).Include(p=>p.Unit).AsQueryable();
+
+            }
+            else
+            {
+                ViewBag.Types = new SelectList(_context.Types.Where(t => t.IsActive), "Id", "Name");
+                ViewBag.Names = new SelectList(_context.Products.Where(p => p.IsActive), "Id", "Name");
+                query = _context.Products.Include(p => p.FileModelImg).Include(p=>p.Unit).Where(p => p.IsActive).AsQueryable();
+            }
             ViewData["CurrentSize"] = viewModel.PageSize;
             ViewBag.ProductNameSort = sortOrder == SortState.ProductNameAsc ? SortState.ProductNameDesc : SortState.ProductNameAsc;
-            var query = _context.Products.Include(p=>p.FileModelImg).Where(p => p.IsActive).AsQueryable();
             if (viewModel.TypeId != null)
                 if(_context.Types.Find(viewModel.TypeId)!=null)
                     query = query.Where(p => p.ProductTypeId == viewModel.TypeId);
@@ -153,6 +164,7 @@ namespace Warehouse.Controllers
         [HttpGet]
         public IActionResult Edit(string id)
         {
+            if (_context.Products.Find(id) == null) return BadRequest();
             SelectInitial();
             return View(_context.Products.Include(x => x.ProductType).Include(x => x.Unit).FirstOrDefault(x => x.Id == id));
         }
@@ -168,11 +180,14 @@ namespace Warehouse.Controllers
         [HttpPost]
         public IActionResult Edit(Product product)
         {
+            if (_context.Types.Find(product.ProductTypeId) == null) return BadRequest();
+            if (_context.Products.AsNoTracking().FirstOrDefault(p=>p.Id==product.Id) == null) return BadRequest();
             SelectInitial();
             if((_context.Products.FirstOrDefault(p=>p.Name==product.Name && p.Id != product.Id))!=null)
                 ModelState.AddModelError("", "This name of product is available in the database");
             if (ModelState.IsValid)
             {
+                product.IsActive = true;
                 _context.Update(product);
                 _context.SaveChanges();
                 var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -272,13 +287,16 @@ namespace Warehouse.Controllers
         {
             if (Request.Query.Count != 0)
             {
-                if (Request.Query.Count != 0)
-                {
-                    if (!(byte.TryParse(Request.Query["PageSize"], out byte size) && size > 0 && size < 101)) return false;
-                    if (Request.Query.Keys.Contains("Page"))
-                        if (!(uint.TryParse(Request.Query["Page"], out uint page) && page > 0)) return false;
-                }
+                var keys = Request.Query.Keys;
+                var request = Request.Query;
+                if (keys.Contains("PageSize"))
+                    if (!(byte.TryParse(request["PageSize"], out byte size) && size > 0 && size < 101)) return false;
+                if (keys.Contains("Page"))
+                    if (!(uint.TryParse(request["Page"], out uint page) && page > 0)) return false;
+                if (keys.Contains("sortOrder"))
+                    if (!(request["sortOrder"] == SortState.ProductNameAsc.ToString() || request["sortOrder"] == SortState.ProductNameDesc.ToString())) return false;
             }
+            
             return true;
         }
     }

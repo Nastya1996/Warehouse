@@ -7,7 +7,7 @@
 @inject LocService SharedLocalizer
 @model ProductViewModel
 
-<form asp-action="Index" method="get">
+<form asp-action="Index" >
     <select asp-for="TypeId" asp-items="ViewBag.Types">
         <option selected value="">All types</option>
     </select>
@@ -17,7 +17,7 @@
     </select>
 
     <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
-    <input type="number" min="1" asp-for="PageSize" />
+    <input type="number" min="1" max="100" asp-for="PageSize" />
 
     <input type="submit" value="Filter" class="btn btn-default" />
 </form>
@@ -25,7 +25,7 @@
     <thead>
         <tr>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.ProductNameSort">@SharedLocalizer.GetLocalizedHtmlString("Name")</a>
+                <a asp-route-PageSize="@Model.PageSize" asp-route-TypeId="@Model.TypeId" asp-route-ProductId="@Model.ProductId" asp-action="Index" asp-route-sortOrder="@ViewBag.ProductNameSort">@SharedLocalizer.GetLocalizedHtmlString("Name")</a>
             </th>
             <th>@SharedLocalizer.GetLocalizedHtmlString("Barcode")</th>
             <th>@SharedLocalizer.GetLocalizedHtmlString("ProductType")</th>
@@ -55,7 +55,7 @@
                     <td>@pt.Name</td>
                     <td>@pt.Barcode</td>
                     <td>@pt.ProductType?.Name</td>
-                    <td>@pt.Unit?.Name</td>
+                    <td>@pt.Unit.Name</td>
                     @if (User.IsInRole("Admin"))
                     {
                         @if (pt.IsActive == true)
@@ -90,7 +90,6 @@
 
 
 @section scripts{
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial.cshtml");}
     <link href="~/css/jquery.contextMenu.css" rel="stylesheet" />
     <script src="~/js/jquery.contextMenu.js"></script>
     <script src="~/js/jquery.ui.position.js"></script>

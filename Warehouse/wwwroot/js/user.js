@@ -34,8 +34,7 @@
                                             content: 'User has been activated!',
                                             type: 'blue',
                                             typeAnimated: true,
-                                            animation: 'news',
-                                            closeAnimation: 'news',
+                                            closeAnimation: 'rotateXR',
                                             buttons: {
                                                 close: {
                                                     btnClass: "btn-blue",
@@ -83,8 +82,7 @@
                                             content: 'User has been deactivated!',
                                             type: 'blue',
                                             typeAnimated: true,
-                                            animation: 'news',
-                                            closeAnimation: 'news',
+                                            closeAnimation: 'rotateXR',
                                             buttons: {
                                                 close: {
                                                     btnClass: "btn-blue",

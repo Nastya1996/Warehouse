@@ -5,34 +5,34 @@
 @{
     ViewData["Title"] = "ShowUsers";
 }
-@model IPagedList<AppUser>
+@model UsersViewModel
 <h2>ShowUsers</h2>
 <form method="get" asp-action="ShowUsers">
     <div class="form-inline form-group">
         <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Name")</label>
-        <input type="text" name="name" value="@ViewData["CurrentName"]" />
+        <input asp-for="Name" type="text" name="name"/>
 
         <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Role")</label>
-        <select name="role" class="form-control">
-            <option value=""></option>
-            <option value="Worker">@SharedLocalizer.GetLocalizedHtmlString("Worker")</option>
-            <option value="Storekeeper">@SharedLocalizer.GetLocalizedHtmlString("Storekeeper")</option>
-            <option value="Report">@SharedLocalizer.GetLocalizedHtmlString("Report")</option>
+        <select asp-for="RoleId" class="form-control" asp-items="@ViewBag.Roles">
+            <option selected value="">All roles</option>
         </select>
         <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("WarehouseNumber")</label>
-                <input type="text" name="number" value="@ViewData["CurrentNumber"]" />
+        <select class="form-control" asp-items="@ViewBag.Numbers" asp-for="Number">
+            <option selected value="">All warehouses</option>
+        </select>
 
-                <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize")</label>
-                <input type="number" min="1" name="pageSize" value="@ViewData["CurrentSize"]" />
-                <input type="submit" value="Filter" class="btn btn-default" />
-</div>
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize")</label>
+        <input asp-for="PageSize" type="number" min="1" max="100" name="pageSize"  />
+        <input type="submit" value="Filter" class="btn btn-default" />
+    </div>
 </form>
-<pager list="@Model" asp-route-pageSize="@ViewData["CurrentSize"]" asp-route-number="@ViewData["CurrentNumber"]" asp-route-role="@ViewData["CurrentRole"]" asp-route-name="@ViewData["CurrentName"]" asp-controller="Admin" asp-action="ShowUsers" />
-<table class="table table-hover">
+<pager list="@ViewBag.paged" asp-route-pageSize="@ViewData["CurrentSize"]" asp-route-number="@ViewData["CurrentNumber"]" asp-route-role="@ViewData["CurrentRole"]" asp-route-name="@ViewData["CurrentName"]" asp-controller="Admin" asp-action="ShowUsers" />
+<table class="table table-bordered table-hover">
     <thead>
         <tr>
             <th>@SharedLocalizer.GetLocalizedHtmlString("Name")</th>
             <th>@SharedLocalizer.GetLocalizedHtmlString("Surname")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Email")</th>
             <th>@SharedLocalizer.GetLocalizedHtmlString("Phone")</th>
             <th>@SharedLocalizer.GetLocalizedHtmlString("Warehouse")</th>
             <th>@SharedLocalizer.GetLocalizedHtmlString("DisableEnable")</th>
@@ -40,7 +40,11 @@
     </thead>
     <tbody>
         @{
-            foreach (var user in Model)
+            if (ViewBag.paged.Count == 0)
+            {
+                 <tr><td colspan="6" class="text-center">@SharedLocalizer.GetLocalizedHtmlString("ThereAreNoProducts")</td></tr>
+            }
+            foreach (var user in ViewBag.paged)
             {
                 @if (user.Warehouse != null)
                 {
@@ -48,6 +52,7 @@
                         <td hidden="hidden"><input type="hidden" value="@user.Id" /></td>
                         <td>@user.Name</td>
                         <td>@user.SurName</td>
+                        <td>@user.Email</td>
                         <td>@user.PhoneNumber</td>
                         <td>
                             <a class="moveUser">@user.Warehouse.Number<input type="hidden" value="@user.Id" /></a>
@@ -64,7 +69,7 @@
                 }
             }
         }
-        </tbody>
+    </tbody>
 </table>
 <div class="modal fade" id="modalMoveUser" role="dialog">
     <div class="modal-dialog">
@@ -102,7 +107,6 @@
 </script>
 
 @section scripts{
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <link href="~/css/jquery.contextMenu.css" rel="stylesheet" />
     <script src="~/js/jquery.contextMenu.js"></script>
     <script src="~/js/jquery.ui.position.js"></script>

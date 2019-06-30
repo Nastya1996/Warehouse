@@ -54,7 +54,14 @@
                 <td>@productManager.Product.Unit.Name</td>
                 @if (User.IsInRole("Worker"))
                 {
-                    <td><a href="#">Add</a></td>
+                    if (productManager.CurrentCount != 0)
+                    {
+                        <td><a href="#">Add</a></td>
+                    }
+                    else
+                    {
+                        <td><a href="#" class="disabled">Add</a></td>
+                    }
                 }
                 <td><a asp-action="Show" asp-route-id="@productManager.Product.Id">Show</a></td>
             </tr>

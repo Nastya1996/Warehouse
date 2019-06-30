@@ -197,3 +197,7 @@ td>img{
     transform: translate(-50%,-50%);
 }
 
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+}
