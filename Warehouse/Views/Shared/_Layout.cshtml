@@ -163,33 +163,13 @@
 
     <partial name="_CookieConsentPartial" />
 
-    @*<div class="container body-content">*@
-    @*@{
-        string currentController = ViewContext.RouteData.Values["Controller"].ToString();
-        string currentAction = ViewContext.RouteData.Values["Action"].ToString();
-        }
-        <footer class="navbar-inverse navbar-fixed-bottom">
-        <div class="container-fluid">
-        <ul class="nav navbar-nav">
-        <li is-active-language asp-route-lang="en"><a asp-controller=@currentController asp-action=@currentAction asp-route-lang="en">English</a></li>
-        <li is-active-language asp-route-lang="et"><a asp-controller=@currentController asp-action=@currentAction asp-route-lang="et">Eesti</a></li>
-        <li is-active-language asp-route-lang="ru"><a asp-controller=@currentController asp-action=@currentAction asp-route-lang="ru">Русский</a></li>
-        </ul>
-        </div>
-        <p>&copy; 2019 - Warehouse</p>
-        </footer>*@
-
     @RenderBody()
 
     <footer class="navbar-inverse navbar-fixed-bottom" style="font-size:16px; color:#CCC;">
-        <p style="display:inline-block; float:left;">&copy Warehouse 2019</p>
+        <p style="display:inline-block; float:right;margin-right:5vw;margin-top:4vh;">&copy Warehouse 2019</p>
         @await Html.PartialAsync("_SelectLanguagePartial")
     </footer>
 
-
-
-
-                @await Html.PartialAsync("_SelectLanguagePartial")
 
     @*</div>*@
     @*environment include = "Development" >
