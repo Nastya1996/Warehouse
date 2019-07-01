@@ -166,7 +166,7 @@
     <value>Modal Header</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Name:</value>
+    <value>Name</value>
   </data>
   <data name="Order" xml:space="preserve">
     <value>Order</value>
@@ -464,5 +464,20 @@
   </data>
   <data name="WarehouseAddress" xml:space="preserve">
     <value>Warehouse Address</value>
+  </data>
+  <data name="ProductTypes" xml:space="preserve">
+    <value>Product types</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="ThereAreNoUsers" xml:space="preserve">
+    <value>There are no users!</value>
+  </data>
+  <data name="ThereAreNoUnits" xml:space="preserve">
+    <value>No units to show!</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
   </data>
 </root>

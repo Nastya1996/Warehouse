@@ -439,8 +439,11 @@ namespace Warehouse.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(20);
 
+                    b.Property<bool>("IsActive");
+
                     b.Property<string>("Number")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(20);
 
                     b.HasKey("Id");
 

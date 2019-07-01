@@ -5,7 +5,7 @@ $("#type").chosen({
 $("#ProductId").chosen({
     search_contains: true
 });
-        $(() => {
+$(() => {
             $("#type").on("change", function () {
                 TypeSpanDelete();
                 NameSpanDelete();
@@ -20,7 +20,7 @@ $("#ProductId").chosen({
                     success: function (data) {
                         $("#ProductId").empty();
                         $("#ProductId").attr("disabled", false);
-                        $("#ProductId").append("<option selected disabled value='0'>Select name...</select>");
+                        $("#ProductId").append("<option selected disabled value=''>Select name...</select>");
                         data.forEach(function (element) {
                             $("#ProductId").append("<option value=" + element.id + ">" + element.name + "</option>");
                         });
@@ -37,6 +37,7 @@ $("#ProductId").chosen({
                 return false;
             }
         };
+    
 
         //delete span tag
         function TypeSpanDelete() {

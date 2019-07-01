@@ -10,11 +10,6 @@
 
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
-
-
-<h2>@Localizer["Product"]</h2>
-<h3>@Localizer["User"]</h3>
-<h1>WareHouse</h1>
 <form method="get" asp-action="Index">
     <div class="form-inline form-group">
         <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("WarehouseNumber"): </label>
@@ -23,13 +18,11 @@
         <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("WarehouseAddress"): </label>
         <input type="text" name="address" value="@ViewData["CurrentAddress"]" />
 
-        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize")</label>
-        <input type="number" min="1" name="pageSize" value="@ViewData["CurrentSize"]" />
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
+        <input type="number" min="1" max="100" name="pageSize" value="@ViewData["CurrentSize"]" />
         <input type="submit" value="Filter" class="btn btn-default" />
     </div>
 </form>
-<pager list="@Model" asp-route-pageSize="@ViewData["CurrentSize"]" asp-route-number="@ViewData["CurrentNumber"]" asp-route-address="@ViewData["CurrentAddress"]" asp-controller="WareHouse" asp-action="Index" />
-<a asp-action="Create" asp-controller="WareHouse">@SharedLocalizer.GetLocalizedHtmlString("CreateNew")</a>
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
@@ -48,15 +41,159 @@
             foreach (var wh in Model)
             {
                 <tr>
+                    <td hidden="hidden"><input type="hidden" value="@wh.Id" /></td>
                     <td>@wh.Number</td>
                     <td>@wh.Address</td>
                     <td><a asp-action="Edit" asp-route-id="@wh.Id">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
-                    <td><a asp-action="" asp-route-id="@wh.Id">@SharedLocalizer.GetLocalizedHtmlString("Disable")</a></td>
+                    @if (@wh.IsActive == true)
+                    {
+                        <td><a href="#" class="Disable">@SharedLocalizer.GetLocalizedHtmlString("Disable")</a></td>
+                    }
+                    else
+                    {
+                        <td><a href="#" class="Enable">@SharedLocalizer.GetLocalizedHtmlString("Enable")</a></td>
+                    }
                 </tr>
             }
         }
     </tbody>
-
 </table>
+<pager list="@Model" asp-route-pageSize="@ViewData["CurrentSize"]" asp-route-number="@ViewData["CurrentNumber"]" asp-route-address="@ViewData["CurrentAddress"]" asp-controller="WareHouse" asp-action="Index" />
 
 
+@section scripts{
+    <link href="~/css/jquery.contextMenu.css" rel="stylesheet" />
+    <script src="~/js/jquery.contextMenu.js"></script>
+    <script src="~/js/jquery.ui.position.js"></script>
+    <link href="~/css/jquery-confirm.min.css" rel="stylesheet" />
+    <script src="~/js/jquery-confirm.min.js"></script>
+    <script>
+        $("[href='#']").on("click", function () {
+            let $link = $(this);
+            $(this).parent().parent().addClass(".select");
+            $link.addClass('context-menu-one');
+            $.contextMenu({
+                selector: '.context-menu-one',
+                trigger: 'left',
+                callback: function (key, options) {
+                },
+                position: function (opt, x, y) {
+                    opt.$menu.css({ top: y + 10, left: x - 90 });
+                },
+                items: {
+                    "Yes": {
+                        name: "Yes", icon: "fas fa-check-circle",
+                        callback: function (key, options) {
+                            let $link = $(this);
+                            let $row = $(this).parent().parent().addClass(".select");
+                            let warehouseId = $row.children().children().val();
+                            if ($link.text() === 'Enable') {
+                                $.ajax({
+                                    url: '/WareHouse/Enable',
+                                    type: "POST",
+                                    data: JSON.stringify(warehouseId),
+                                    contentType: "application/json; charset=utf-8",
+                                    dataType: "json",
+                                    async: false,
+                                    success: function (data) {
+                                        if (data) {
+                                            $.confirm({
+                                                icon: 'fas fa-check-circle',
+                                                title: 'Warehouse!',
+                                                content: 'Warehouse has been activated!',
+                                                type: 'blue',
+                                                typeAnimated: true,
+                                                closeAnimation: 'rotateXR',
+                                                buttons: {
+                                                    close: {
+                                                        btnClass: "btn-blue",
+                                                        action: function () {
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                            $link.text("Disable").css("color", "red");
+                                            $row.removeClass();
+                                        }
+                                        else {
+                                            $link.text("Enable").css("color", "green");
+                                            $.confirm({
+                                                icon: 'fas fa-exclamation-triangle',
+                                                title: 'Warehouse!',
+                                                content: 'An error occurred. There may be products left in warehouse. Please, try again!',
+                                                type: 'red',
+                                                typeAnimated: true,
+                                                closeAnimation: 'rotateXR',
+                                                buttons: {
+                                                    close: {
+                                                        btnClass: "btn-red",
+                                                        action: function () {
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                })
+                            }
+                            else if ($link.text() === 'Disable') {
+                                $.ajax({
+                                    url: '/WareHouse/Disable',
+                                    type: "POST",
+                                    data: JSON.stringify(warehouseId),
+                                    contentType: "application/json; charset=utf-8",
+                                    dataType: "json",
+                                    async: false,
+                                    success: function (data) {
+                                        if (data) {
+                                            $.confirm({
+                                                icon: 'fas fa-check-circle',
+                                                title: 'Warehouse',
+                                                content: 'Warehouse has been deactivated!',
+                                                type: 'blue',
+                                                typeAnimated: true,
+                                                closeAnimation: 'rotateXR',
+                                                buttons: {
+                                                    close: {
+                                                        btnClass: "btn-blue",
+                                                        action: function () {
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                            $link.text("Enable").css("color", "green");
+                                            $row.removeClass();
+                                        }
+                                        else {
+                                            $link.text("Disable").css("color", "red");
+                                            $.confirm({
+                                                icon: 'fas fa-exclamation-triangle',
+                                                title: 'Warehouse',
+                                                content: 'An error occurred. There may be products left in warehouse. Please, try again!',
+                                                type: 'red',
+                                                typeAnimated: true,
+                                                closeAnimation: 'rotateXR',
+                                                buttons: {
+                                                    close: {
+                                                        btnClass: "btn-red",
+                                                        action: function () {
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                })
+                            }
+                            $row.removeClass();
+                            $link.removeClass();
+                        }
+                    },
+                    "sep1": "---------",
+                    "Cansel": { name: "Cansel", icon: 'far fa-times-circle' }
+                }
+            });
+
+        });
+    </script>
+}

@@ -35,30 +35,25 @@ namespace Warehouse.Controllers
         ///// <param name="page">Current page. Default 1</param>
         ///// <param name="pageSize">Page size. Default 10</param>
         /// <returns>Product types</returns>
-        //public IActionResult Index(string type, int page=1, int pageSize=10)
-        //{
-        //    var query = _context.Types.AsQueryable();
-        //    if (type != null)
-        //    {
-        //        type = type.Trim();
-        //        query = query.Where(pt => pt.Name.Contains(type, StringComparison.InvariantCultureIgnoreCase));
-        //    }
-        //    ViewData["CurrentSize"] = pageSize;
-        //    ViewData["CurrentType"] = type;
-        //    PagedList<ProductType> model = new PagedList<ProductType>(query, page,pageSize);
-        //    var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-        //    _log.LogInformation("Product type index.User: "+user);
-        //    return View(model);
-        //}
+     
         public IActionResult Index(ProductTypeViewModel viewModel)
         {
-            if (viewModel.PageSize < 1) return NotFound();
-            var query = _context.Types.AsQueryable();
-            if (viewModel.TypeId != null)
-                query = query.Where(pt => pt.Id == viewModel.TypeId);
+            if (!FilterValid()) return BadRequest();
+            IQueryable<ProductType> query = null;
+            if (User.IsInRole("Admin"))
+            {
+                query = _context.Types.AsQueryable();
+                ViewBag.Types = new SelectList(_context.Types, "Id", "Name");
+            }
+            else
+            {
+                query = _context.Types.Where(pt => pt.IsActive).AsQueryable();
+                ViewBag.Types = new SelectList(_context.Types.Where(pt => pt.IsActive), "Id", "Name");
+            }
+            if (viewModel.TypeName != null)
+                query = query.Where(pt => pt.Name.Contains(viewModel.TypeName, StringComparison.InvariantCultureIgnoreCase));
             ViewData["CurrentSize"] = viewModel.PageSize;
             ViewBag.paged = new PagedList<ProductType>(query, viewModel.Page, viewModel.PageSize);
-            ViewBag.Types = new SelectList(_context.Types.Where(pt => pt.IsActive),"Id","Name");
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             _log.LogInformation("Product type index.User: "+user);
             return View(viewModel);
@@ -109,7 +104,9 @@ namespace Warehouse.Controllers
         [HttpGet]
         public IActionResult Edit(string id)
         {
-            return View(_context.Types.FirstOrDefault(x => x.Id == id));
+            var type = _context.Types.Find(id);
+            if (type == null) return BadRequest();
+            return View(type);
         }
 
 
@@ -128,21 +125,13 @@ namespace Warehouse.Controllers
             }
             if (ModelState.IsValid)
             {
+                productType.IsActive = true;
                 _context.Update(productType);
                 _context.SaveChanges();
                 _log.LogInformation("Product type edited.User: "+user);
                 return RedirectToAction("Index");
             }
             return View(productType);
-        }
-        
-        //Details
-        [HttpGet]
-        public IActionResult Details(string id)
-        {
-            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            _log.LogInformation("Product type details.User: "+user);
-            return View(_context.Types.FirstOrDefault(x=>x.Id==id));
         }
 
         [HttpPost]
@@ -165,8 +154,7 @@ namespace Warehouse.Controllers
             }
             return Json(false);
         }
-
-
+        
         [HttpPost]
         public JsonResult Disable([FromBody]string productTypeId)
         {
@@ -203,6 +191,20 @@ namespace Warehouse.Controllers
                 }
             }
             return Json(false);
+        }
+        [NonAction]
+        bool FilterValid()
+        {
+            if (Request.Query.Count != 0)
+            {
+                var keys = Request.Query.Keys;
+                var request = Request.Query;
+                if(keys.Contains("PageSize"))
+                    if (!(byte.TryParse(request["PageSize"], out byte size) && size > 0 && size < 101)) return false;
+                if(keys.Contains("Page"))
+                    if (!(uint.TryParse(request["Page"], out uint page) && page > 0)) return false;
+            }
+            return true;
         }
     }
 }

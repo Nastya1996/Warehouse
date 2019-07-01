@@ -44,22 +44,25 @@ namespace Warehouse.Controllers
         /// <returns></returns>
         public IActionResult Index(ProductManagerViewModel viewModel)
         {
+            if (!FilterValid()) return BadRequest();
             var user= _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var query = _context.ProductManagers
-                .Where(pm => pm.WareHouseId == user.WarehouseId && pm.Product.IsActive &&
-                 pm.Product.ProductType.IsActive)
+                .Where(pm => pm.WareHouseId == user.WarehouseId && pm.Product.IsActive)
                 .Include(p => p.Product.ProductType)
                 .Include(p => p.Product.Unit).AsQueryable();
             if (viewModel.TypeId != null)
-                query = query.Where(pm => pm.Product.ProductTypeId == viewModel.TypeId);
+                if (_context.Types.Find(viewModel.TypeId) != null)
+                    query = query.Where(pm => pm.Product.ProductTypeId == viewModel.TypeId);
+                else return BadRequest();
             if (viewModel.ProductId != null)
-                query = query.Where(pm => pm.ProductId == viewModel.ProductId);
+                if (_context.Products.Find(viewModel.ProductId) != null)
+                    query = query.Where(pm => pm.ProductId == viewModel.ProductId);
+                else return BadRequest();
             var queryGroup=query.GroupBy(pm=>pm.Product).Select(item => new
                        {
                            Product = item.Key,
                            Count = item.Sum(p => p.Count),
                            CurrentCount = item.Sum(p => p.CurrentCount)
-
                        }).Select(c=>c.ToExpando());
             ViewBag.paged = new PagedList<ExpandoObject>(queryGroup, viewModel.Page, viewModel.PageSize);
             ViewBag.Types = new SelectList(_context.Types.Where(pt => pt.IsActive), "Id", "Name");
@@ -135,8 +138,9 @@ namespace Warehouse.Controllers
         ///// <param name="page">Current page. Default 1</param>
         ///// <param name="pageSize">Page size. Default 10</param>
         /// <returns></returns>
-        public IActionResult Show(string id, decimal from, decimal before, int page=1, int pageSize=1)
+        public IActionResult Show(string id, decimal from, decimal before, int page=1, int pageSize=10)
         {
+            if (!FilterValid()) return BadRequest();
             decimal data;
             if (before == 0)
             {
@@ -217,7 +221,8 @@ namespace Warehouse.Controllers
         {
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             _log.LogInformation("Product manager add.User: " + user);
-            uint count = Convert.ToUInt32(quantity);
+            bool correct = UInt32.TryParse(quantity, out uint count);
+            if (!correct || count == 0) return Json(false);
             var product = _context.ProductManagers.FirstOrDefault(pm => pm.ProductId == id);
             if (product != null)
             {
@@ -314,6 +319,20 @@ namespace Warehouse.Controllers
             _context.Update(productManager);
             _context.SaveChanges();
             return Json(true);
+        }
+        [NonAction]
+        bool FilterValid()
+        {
+            if (Request.Query.Count != 0)
+            {
+                var keys = Request.Query.Keys;
+                var request = Request.Query;
+                if(keys.Contains("PageSize"))
+                    if (!(byte.TryParse(request["PageSize"], out byte size) && size > 0 && size < 101)) return false;
+                if (keys.Contains("Page"))
+                    if (!(uint.TryParse(Request.Query["Page"], out uint page) && page > 0)) return false;
+            }
+            return true;
         }
 
     }

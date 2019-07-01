@@ -21,8 +21,8 @@ namespace Warehouse.Data
 			{
 				AppUser user = new AppUser
 				{
-					Name = "Program",
-					SurName = "Administrator",
+					Name = "Hamazasp",
+					SurName = "Chobanyan",
 					Email = "warehouseadmin@gmail.com",
 					UserName = "warehouseadmin@gmail.com",
 					LockoutEnabled = false

@@ -166,7 +166,7 @@
     <value>Modal Header</value>
   </data>
   <data name="Name" xml:space="preserve">
-    <value>Имя:</value>
+    <value>Имя</value>
   </data>
   <data name="Order" xml:space="preserve">
     <value>Заказ</value>
@@ -464,5 +464,20 @@
   </data>
   <data name="WarehouseAddress" xml:space="preserve">
     <value>Адрес склада</value>
+  </data>
+  <data name="ProductTypes" xml:space="preserve">
+    <value>Типы продукта</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>Почта</value>
+  </data>
+  <data name="ThereAreNoUsers" xml:space="preserve">
+    <value>Пользователей нету!</value>
+  </data>
+  <data name="ThereAreNoUnits" xml:space="preserve">
+    <value>Единиц измерения нету!</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Добавить</value>
   </data>
 </root>

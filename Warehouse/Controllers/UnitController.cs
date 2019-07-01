@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using PagedList.Core;
 using Warehouse.Data;
 using Warehouse.Models;
 
@@ -27,12 +28,25 @@ namespace Warehouse.Controllers
         }
 
 
-        public IActionResult Index()
+        //public IActionResult Index()
+        //{
+        //    var unitDatas = _context.Units;
+        //    var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+        //    _log.LogInformation("Unit index."+user);
+        //    return View(unitDatas.ToList());
+        //}
+        public IActionResult Index(string name, int page=1, int pageSize = 10)
         {
-            var unitDatas = _context.Units;
+            if (!FilterValid()) return BadRequest();
+            ViewData["CurrentName"] = name;
+            ViewData["CurrentSize"] = pageSize;
+            var query = _context.Units.AsQueryable();
+            if (!string.IsNullOrEmpty(name))
+                query = query.Where(u => u.Name.Contains(name, StringComparison.InvariantCultureIgnoreCase));
+            PagedList<Unit> model = new PagedList<Unit>(query, page, pageSize);
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             _log.LogInformation("Unit index."+user);
-            return View(unitDatas.ToList());
+            return View(model);
         }
         public IActionResult Create()
         {
@@ -42,7 +56,10 @@ namespace Warehouse.Controllers
         [HttpPost]
         public IActionResult Create(Unit unit)
         {
-            if (ModelState.IsValid) {
+            if (_context.Units.FirstOrDefault(u => u.Name == unit.Name) != null)
+                ModelState.AddModelError("", "This name of unit is available in the database");
+            if (ModelState.IsValid)
+            {
                 _context.Add(unit);
                 _context.SaveChanges();
                 var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -54,11 +71,14 @@ namespace Warehouse.Controllers
         public IActionResult Edit(string id)
         {
             var obj = _context.Units.Find(id);
+            if (obj == null) return BadRequest();
             return View(obj);
         }
         [HttpPost]
         public IActionResult Edit(Unit unit)
         {
+            if (_context.Units.FirstOrDefault(u => u.Name == unit.Name && u.Id != unit.Id) != null)
+                ModelState.AddModelError("", "This name of unit is available in the database");
             if (ModelState.IsValid)
             {
                 _context.Units.Update(unit);
@@ -69,25 +89,19 @@ namespace Warehouse.Controllers
             }
             return View();
         }
-        public IActionResult Delete(string id)
+        [NonAction]
+        bool FilterValid()
         {
-            return View(_context.Units.Find(id));
-        }
-        public IActionResult DeleteYes(string id)
-        {
-            _context.Units.Remove(_context.Units.Find(id));
-            _context.SaveChanges();
-            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            _log.LogInformation("Unit delete."+user);
-            return RedirectToAction("Index");
-        }
-        public IActionResult Details(string id)
-        {
-            var obj = _context.Units.Find(id);
-            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            _log.LogInformation("Unit details."+user);
-            return View(obj);
-            //return View(_context.Files.ToList());
+            if (Request.Query.Count != 0)
+            {
+                var keys = Request.Query.Keys;
+                var request = Request.Query;
+                if (keys.Contains("PageSize"))
+                    if (!(byte.TryParse(request["PageSize"], out byte size) && size > 0 && size < 101)) return false;
+                if (keys.Contains("Page"))
+                    if (!(uint.TryParse(request["Page"], out uint page) && page > 0)) return false;
+            }
+            return true;
         }
     }
 }

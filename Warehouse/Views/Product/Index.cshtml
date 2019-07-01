@@ -12,12 +12,11 @@
         <option selected value="">All types</option>
     </select>
 
-    <select asp-for="ProductId" asp-items="ViewBag.Names">
-        <option selected value="">All products</option>
-    </select>
+    <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("ProductName"):</label>
+    <input asp-for="ProductName" />
 
     <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
-    <input type="number" min="1" asp-for="PageSize" />
+    <input type="number" min="1" max="100" asp-for="PageSize" />
 
     <input type="submit" value="Filter" class="btn btn-default" />
 </form>
@@ -25,7 +24,7 @@
     <thead>
         <tr>
             <th>
-                <a asp-action="Index" asp-route-sortOrder="@ViewBag.ProductNameSort">@SharedLocalizer.GetLocalizedHtmlString("Name")</a>
+                <a asp-route-PageSize="@Model.PageSize" asp-route-TypeId="@Model.TypeId" asp-route-ProductId="@Model.ProductName" asp-action="Index" asp-route-sortOrder="@ViewBag.ProductNameSort">@SharedLocalizer.GetLocalizedHtmlString("Name")</a>
             </th>
             <th>@SharedLocalizer.GetLocalizedHtmlString("Barcode")</th>
             <th>@SharedLocalizer.GetLocalizedHtmlString("ProductType")</th>
@@ -55,7 +54,7 @@
                     <td>@pt.Name</td>
                     <td>@pt.Barcode</td>
                     <td>@pt.ProductType?.Name</td>
-                    <td>@pt.Unit?.Name</td>
+                    <td>@pt.Unit.Name</td>
                     @if (User.IsInRole("Admin"))
                     {
                         @if (pt.IsActive == true)
@@ -79,18 +78,19 @@
                     {
                         <td><img src="/Files/warehouse-cartoon-vector-7197735.jpg"></td>
                     }
-
+                    
                 </tr>
             }
         }
     </tbody>
 </table>
-<pager list="@ViewBag.paged" asp-route-pageSize="@Model.PageSize" asp-route-ProductId="@Model.ProductId" asp-route-TypeId="@Model.TypeId" asp-controller="Product" asp-action="Index" />
+<pager list="@ViewBag.paged" asp-route-pageSize="@Model.PageSize" asp-route-ProductName="@Model.ProductName" asp-route-TypeId="@Model.TypeId" asp-controller="Product" asp-action="Index" />
 
 
 
 @section scripts{
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial.cshtml");}
+    <script src="~/lib/jquery/dist/chosen.jquery.min.js"></script>
+    <link href="~/css/chosen.min.css" rel="stylesheet" />
     <link href="~/css/jquery.contextMenu.css" rel="stylesheet" />
     <script src="~/js/jquery.contextMenu.js"></script>
     <script src="~/js/jquery.ui.position.js"></script>
@@ -98,49 +98,10 @@
     <script src="~/js/jquery-confirm.min.js"></script>
     <script src="~/js/product.js"></script>
     <script>
-        $("#ProductId").on("chosen:ready", function (evt, params) {
-            let select = $("#TypeId").children("option:selected").val();
-            let name = $("#ProductId").children("option:selected").val();
-            if (select !== "") {
-                GetProducts(select);
-                if (name !== "") {
-                    $("#ProductId").val(name);
-                    $('#ProductId').trigger("chosen:updated");
-                }
-            }
-        });
+
         $("#TypeId").chosen({
             search_contains: true,
             width: "15%"
         });
-        $("#ProductId").chosen({
-            search_contains: true,
-            width: "15%"
-        });
-        $(() => {
-            $("#TypeId").on("change", function () {
-                var selected = $(this).children("option:selected").val();
-                GetProducts(selected);
-
-            });
-        });
-        function GetProducts(select) {
-            $.ajax({
-                url: '/Products/Get',
-                type: "POST",
-                data: JSON.stringify(select),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    $("#ProductId").empty();
-                    $("#ProductId").append("<option selected value=''>All products</select>");
-                    data.forEach(function (element) {
-                        $("#ProductId").append("<option value=" + element.id + ">" + element.name + "</option>");
-                    });
-                    $("#ProductId").trigger("chosen:updated");
-                }
-            })
-        }
     </script>
 }

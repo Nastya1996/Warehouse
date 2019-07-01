@@ -45,19 +45,29 @@ namespace Warehouse.Controllers
         [Authorize(Roles = "Storekeeper, Admin")]
         public IActionResult Index(ProductViewModel viewModel, SortState sortOrder = SortState.ProductNameAsc)
         {
-            if (viewModel.PageSize < 1) {
-                viewModel.PageSize = 10;
-                return View(viewModel);
+            if (!FilterValid()) return BadRequest();
+            IQueryable<Product> query = null;
+            if (User.IsInRole("Admin"))
+            {
+                ViewBag.Types = new SelectList(_context.Types, "Id", "Name");
+                ViewBag.Names = new SelectList(_context.Products, "Id", "Name");
+                query = _context.Products.Include(p => p.FileModelImg).Include(p=>p.Unit).AsQueryable();
+
             }
-            ViewBag.Types = new SelectList(_context.Types.Where(t => t.IsActive), "Id", "Name");
-            ViewBag.Names = new SelectList(_context.Products.Where(p => p.IsActive), "Id", "Name");
+            else
+            {
+                ViewBag.Types = new SelectList(_context.Types.Where(t => t.IsActive), "Id", "Name");
+                ViewBag.Names = new SelectList(_context.Products.Where(p => p.IsActive), "Id", "Name");
+                query = _context.Products.Include(p => p.FileModelImg).Include(p=>p.Unit).Where(p => p.IsActive).AsQueryable();
+            }
             ViewData["CurrentSize"] = viewModel.PageSize;
             ViewBag.ProductNameSort = sortOrder == SortState.ProductNameAsc ? SortState.ProductNameDesc : SortState.ProductNameAsc;
-            var query = _context.Products.Include(p=>p.FileModelImg).Where(p => p.IsActive).AsQueryable();
             if (viewModel.TypeId != null)
-                query = query.Where(p => p.ProductTypeId == viewModel.TypeId);
-            if (viewModel.ProductId != null)
-                query = query.Where(p => p.Id == viewModel.ProductId);
+                if (_context.Types.Find(viewModel.TypeId) != null)
+                    query = query.Where(p => p.ProductTypeId == viewModel.TypeId);
+                else return BadRequest();
+            if (!string.IsNullOrEmpty(viewModel.ProductName))
+                query = query.Where(p => p.Name.Contains(viewModel.ProductName, StringComparison.InvariantCultureIgnoreCase));
             switch (sortOrder)
             {
                 case SortState.ProductNameDesc:
@@ -154,8 +164,9 @@ namespace Warehouse.Controllers
         [HttpGet]
         public IActionResult Edit(string id)
         {
+            if (_context.Products.Find(id) == null) return BadRequest();
             SelectInitial();
-            return View(_context.Products.Include(x => x.ProductType).Include(x => x.Unit).FirstOrDefault(x => x.Id == id));
+            return View(_context.Products.Include(x => x.ProductType).Include(p=>p.FileModelImg).Include(x => x.Unit).FirstOrDefault(x => x.Id == id));
         }
 
 
@@ -169,6 +180,8 @@ namespace Warehouse.Controllers
         [HttpPost]
         public IActionResult Edit(Product product)
         {
+            if (_context.Types.Find(product.ProductTypeId) == null) return BadRequest();
+            if (_context.Products.AsNoTracking().FirstOrDefault(p=>p.Id==product.Id) == null) return BadRequest();
             SelectInitial();
             if((_context.Products.FirstOrDefault(p=>p.Name==product.Name && p.Id != product.Id))!=null)
                 ModelState.AddModelError("", "This name of product is available in the database");
@@ -268,6 +281,22 @@ namespace Warehouse.Controllers
             if (selected != "")
                 products = products.Where(p => p.ProductTypeId == selected && p.IsActive);
             return Json(products.ToList());
+        }
+        bool FilterValid()
+        {
+            if (Request.Query.Count != 0)
+            {
+                var keys = Request.Query.Keys;
+                var request = Request.Query;
+                if (keys.Contains("PageSize"))
+                    if (!(byte.TryParse(request["PageSize"], out byte size) && size > 0 && size < 101)) return false;
+                if (keys.Contains("Page"))
+                    if (!(uint.TryParse(request["Page"], out uint page) && page > 0)) return false;
+                if (keys.Contains("sortOrder"))
+                    if (!(request["sortOrder"] == SortState.ProductNameAsc.ToString() || request["sortOrder"] == SortState.ProductNameDesc.ToString())) return false;
+            }
+            
+            return true;
         }
     }
 }
