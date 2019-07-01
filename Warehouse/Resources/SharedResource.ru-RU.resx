@@ -471,4 +471,10 @@
   <data name="Email" xml:space="preserve">
     <value>Почта</value>
   </data>
+  <data name="ThereAreNoUsers" xml:space="preserve">
+    <value>Пользователей нету!</value>
+  </data>
+  <data name="ThereAreNoUnits" xml:space="preserve">
+    <value>Единиц измерения нету!</value>
+  </data>
 </root>

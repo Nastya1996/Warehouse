@@ -10,11 +10,6 @@
 
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer Localizer
-
-
-<h2>@Localizer["Product"]</h2>
-<h3>@Localizer["User"]</h3>
-<h1>WareHouse</h1>
 <form method="get" asp-action="Index">
     <div class="form-inline form-group">
         <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("WarehouseNumber"): </label>
@@ -23,13 +18,11 @@
         <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("WarehouseAddress"): </label>
         <input type="text" name="address" value="@ViewData["CurrentAddress"]" />
 
-        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize")</label>
-        <input type="number" min="1" name="pageSize" value="@ViewData["CurrentSize"]" />
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
+        <input type="number" min="1" max="100" name="pageSize" value="@ViewData["CurrentSize"]" />
         <input type="submit" value="Filter" class="btn btn-default" />
     </div>
 </form>
-<pager list="@Model" asp-route-pageSize="@ViewData["CurrentSize"]" asp-route-number="@ViewData["CurrentNumber"]" asp-route-address="@ViewData["CurrentAddress"]" asp-controller="WareHouse" asp-action="Index" />
-<a asp-action="Create" asp-controller="WareHouse">@SharedLocalizer.GetLocalizedHtmlString("CreateNew")</a>
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
@@ -56,7 +49,7 @@
             }
         }
     </tbody>
-
 </table>
+<pager list="@Model" asp-route-pageSize="@ViewData["CurrentSize"]" asp-route-number="@ViewData["CurrentNumber"]" asp-route-address="@ViewData["CurrentAddress"]" asp-controller="WareHouse" asp-action="Index" />
 
 

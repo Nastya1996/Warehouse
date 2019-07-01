@@ -10,7 +10,7 @@
 <form method="get" asp-action="ShowUsers">
     <div class="form-inline form-group">
         <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Name")</label>
-        <input asp-for="Name" type="text" name="name"/>
+        <input asp-for="Name" type="text" name="name" />
 
         <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Role")</label>
         <select asp-for="RoleId" class="form-control" asp-items="@ViewBag.Roles">
@@ -22,11 +22,10 @@
         </select>
 
         <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize")</label>
-        <input asp-for="PageSize" type="number" min="1" max="100" name="pageSize"  />
+        <input asp-for="PageSize" type="number" min="1" max="100" name="pageSize" />
         <input type="submit" value="Filter" class="btn btn-default" />
     </div>
 </form>
-<pager list="@ViewBag.paged" asp-route-pageSize="@ViewData["CurrentSize"]" asp-route-number="@ViewData["CurrentNumber"]" asp-route-role="@ViewData["CurrentRole"]" asp-route-name="@ViewData["CurrentName"]" asp-controller="Admin" asp-action="ShowUsers" />
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
@@ -34,7 +33,7 @@
             <th>@SharedLocalizer.GetLocalizedHtmlString("Surname")</th>
             <th>@SharedLocalizer.GetLocalizedHtmlString("Email")</th>
             <th>@SharedLocalizer.GetLocalizedHtmlString("Phone")</th>
-            <th>@SharedLocalizer.GetLocalizedHtmlString("Warehouse")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Warehouse") / Adress</th>
             <th>@SharedLocalizer.GetLocalizedHtmlString("DisableEnable")</th>
         </tr>
     </thead>
@@ -42,7 +41,7 @@
         @{
             if (ViewBag.paged.Count == 0)
             {
-                 <tr><td colspan="6" class="text-center">@SharedLocalizer.GetLocalizedHtmlString("ThereAreNoProducts")</td></tr>
+                <tr><td colspan="6" class="text-center">@SharedLocalizer.GetLocalizedHtmlString("ThereAreNoUsers")</td></tr>
             }
             foreach (var user in ViewBag.paged)
             {
@@ -55,7 +54,7 @@
                         <td>@user.Email</td>
                         <td>@user.PhoneNumber</td>
                         <td>
-                            <a class="moveUser">@user.Warehouse.Number<input type="hidden" value="@user.Id" /></a>
+                            <a class="moveUser">@user.Warehouse.Number / @user.Warehouse.Address<input type="hidden" value="@user.Id" /></a>
                         </td>
                         @if (user.LockoutEnd == null)
                         {
@@ -71,6 +70,8 @@
         }
     </tbody>
 </table>
+<pager list="@ViewBag.paged" asp-route-PageSize="@Model.PageSize" asp-route-Name="@Model.Name" asp-route-Number="@Model.Number" asp-route-role="@ViewData["CurrentRole"]" asp-route-name="@ViewData["CurrentName"]" asp-controller="Admin" asp-action="ShowUsers" />
+
 <div class="modal fade" id="modalMoveUser" role="dialog">
     <div class="modal-dialog">
 

@@ -63,11 +63,11 @@ namespace Warehouse.Controllers
             ViewData["CurrentSize"] = viewModel.PageSize;
             ViewBag.ProductNameSort = sortOrder == SortState.ProductNameAsc ? SortState.ProductNameDesc : SortState.ProductNameAsc;
             if (viewModel.TypeId != null)
-                if(_context.Types.Find(viewModel.TypeId)!=null)
+                if (_context.Types.Find(viewModel.TypeId) != null)
                     query = query.Where(p => p.ProductTypeId == viewModel.TypeId);
-            if (viewModel.ProductId != null)
-                if(_context.Products.Find(viewModel.ProductId)!=null)
-                    query = query.Where(p => p.Id == viewModel.ProductId);
+                else return BadRequest();
+            if (!string.IsNullOrEmpty(viewModel.ProductName))
+                query = query.Where(p => p.Name.Contains(viewModel.ProductName, StringComparison.InvariantCultureIgnoreCase));
             switch (sortOrder)
             {
                 case SortState.ProductNameDesc:
@@ -166,7 +166,7 @@ namespace Warehouse.Controllers
         {
             if (_context.Products.Find(id) == null) return BadRequest();
             SelectInitial();
-            return View(_context.Products.Include(x => x.ProductType).Include(x => x.Unit).FirstOrDefault(x => x.Id == id));
+            return View(_context.Products.Include(x => x.ProductType).Include(p=>p.FileModelImg).Include(x => x.Unit).FirstOrDefault(x => x.Id == id));
         }
 
 

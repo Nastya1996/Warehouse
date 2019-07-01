@@ -50,10 +50,8 @@ namespace Warehouse.Controllers
                 query = _context.Types.Where(pt => pt.IsActive).AsQueryable();
                 ViewBag.Types = new SelectList(_context.Types.Where(pt => pt.IsActive), "Id", "Name");
             }
-            if (viewModel.TypeId != null)
-                if (_context.Types.Find(viewModel.TypeId) != null)
-                    query = query.Where(pt => pt.Id == viewModel.TypeId);
-                else return BadRequest();
+            if (viewModel.TypeName != null)
+                query = query.Where(pt => pt.Name.Contains(viewModel.TypeName, StringComparison.InvariantCultureIgnoreCase));
             ViewData["CurrentSize"] = viewModel.PageSize;
             ViewBag.paged = new PagedList<ProductType>(query, viewModel.Page, viewModel.PageSize);
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);

@@ -10,6 +10,7 @@ namespace Warehouse.Models
     {
         public string Id { get; set; }
 
+        [StringLength(20, MinimumLength = 3, ErrorMessage = "*The number of warehouse must be between 3 and 20 characters")]
         [Required(ErrorMessage = "*The field is not filled")]
         public string Number { get; set; }
         

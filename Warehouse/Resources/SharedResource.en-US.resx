@@ -471,4 +471,10 @@
   <data name="Email" xml:space="preserve">
     <value>Email</value>
   </data>
+  <data name="ThereAreNoUsers" xml:space="preserve">
+    <value>There are no users!</value>
+  </data>
+  <data name="ThereAreNoUnits" xml:space="preserve">
+    <value>No units to show!</value>
+  </data>
 </root>

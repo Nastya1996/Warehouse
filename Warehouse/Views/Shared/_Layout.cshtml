@@ -81,7 +81,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a asp-action="Index" class="navbar-brand">@SharedLocalizer.GetLocalizedHtmlString("Warehouse")</a>
+                <a asp-controller="Home" asp-action="Index" class="navbar-brand">@SharedLocalizer.GetLocalizedHtmlString("Warehouse")</a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
@@ -150,11 +150,6 @@
                     {
                         <li><a asp-controller="Report" asp-action="Index">Report</a></li>
                     }
-                    else
-                    {
-                        <p>Welcome to Warehouse!</p>
-                    }
-
                 </ul>
                 <partial name="_LoginPartial" />
             </div>

@@ -7,7 +7,7 @@ namespace Warehouse.Infrastructure
 {
     public class ProductTypeViewModel
     {
-        public string TypeId { get; set; }
+        public string TypeName { get; set; }
         public int Page { get; set; } = 1;
         public int PageSize { get; set; } = 10;
     }

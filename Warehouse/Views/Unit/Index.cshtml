@@ -1,29 +1,44 @@
-﻿@model IEnumerable<Warehouse.Models.Unit>
+﻿@model IPagedList<Warehouse.Models.Unit>
 @{
     ViewData["Title"] = "Index";
 }
 @using Warehouse.Resources
 
 @inject LocService SharedLocalizer
-<a asp-action="Create" asp-controller="Unit">Create new</a>
+<form asp-action="Index" method="get">
+    <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Name"):</label>
+    <input name="name" value="@ViewData["CurrentName"]" />
+
+    <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
+    <input type="number" min="1" max="100" name="pageSize" value="@ViewData["CurrentSize"]" />
+
+    <input type="submit" value="Filter" class="btn btn-default" />
+</form>
 <table class="table table-bordered table-hover">
     <thead>
         <tr>
-            <th>@Html.DisplayNameFor(m => m.Name)</th>
+            <th>Name</th>
             <th>@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
-            <th>@SharedLocalizer.GetLocalizedHtmlString("Delete")</th>
+            @if (User.IsInRole("Admin"))
+            {
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Disable")</th>
+            }
         </tr>
     </thead>
     <tbody>
         @{
+            if (Model.Count() == 0)
+            {
+                <tr><td colspan="2" class="text-center">@SharedLocalizer.GetLocalizedHtmlString("ThereAreNoUnits")</td></tr>
+            }
             foreach (var unit in Model)
             {
                 <tr>
                     <td>@Html.DisplayFor(item => unit.Name)</td>
                     <td><a asp-action="Edit" asp-route-id="@unit.Id">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
-                    <td><a asp-action="Delete" asp-route-id="@unit.Id">@SharedLocalizer.GetLocalizedHtmlString("Delete")</a></td>
                 </tr>
             }
         }
     </tbody>
 </table>
+<pager list="@Model" asp-route-name="@ViewData["CurrentName"]" asp-route-pageSize="@ViewData["CurrentSize"]" ></pager>

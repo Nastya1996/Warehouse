@@ -77,6 +77,7 @@ namespace Warehouse.Controllers
 
         public IActionResult ShowUsers(UsersViewModel viewModel)
         {
+            if (!FilterValid()) return BadRequest();
             var userSignIn = _context.AppUsers.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var query = _context.AppUsers.Include(user => user.Warehouse).Where(u=>u.Id!=userSignIn.Id).AsQueryable();
             if (viewModel.Name != null && viewModel.Name!="")
@@ -111,7 +112,7 @@ namespace Warehouse.Controllers
         public JsonResult Disable([FromBody]string userId)
         {
             var user = _context.Users.Find(userId);
-            if (user == null)
+            if (user == null || user.LockoutEnd!=null)
                 return Json(false);
             else
             {
@@ -129,9 +130,7 @@ namespace Warehouse.Controllers
         public JsonResult Enable([FromBody]string userId)
         {
             var user = _context.Users.Find(userId);
-            if (user == null)
-                return Json(false);
-            else if (user.LockoutEnd == null)
+            if (user == null || user.LockoutEnd == null)
                 return Json(false);
             user.LockoutEnd = null;
             _context.Update(user);
