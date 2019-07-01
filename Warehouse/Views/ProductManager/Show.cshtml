@@ -108,7 +108,7 @@
                 var id = $(this).attr('id');
                 $.ajax({
                     url: '@Url.Action("WHList", "ProductManager")',
-                    data: { 'testPMId': id},
+                    data: { 'productId': id},
                     beforeSend: function () { $(".modal-body").html("<p>Loading... </p>") },
                     success: function (response) {
                         $(".modal-body").html(response);

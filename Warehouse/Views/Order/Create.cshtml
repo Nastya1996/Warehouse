@@ -33,9 +33,9 @@
                 <tr>
                     <td hidden="hidden"><input hidden="hidden" asp-for="@Model.ProductOrders[i].Id" /></td>
                     <td>@Model.ProductOrders[i].Product.Name</td>
-                    <td>@Model.ProductOrders[i].Count</td>
-                    <td>@Model.ProductOrders[i].Price</td>
-                    <td><input type="number" max="100" min="0" asp-for="@Model.ProductOrders[i].Sale" /></td>
+                    <td class="countOfPO">@Model.ProductOrders[i].Count</td>
+                    <td class="price">@Model.ProductOrders[i].Price</td>
+                    <td><input class="saleOrderItem" type="number" max="100" min="0" asp-for="@Model.ProductOrders[i].Sale" /></td>
                     <td>@Model.ProductOrders[i].FinallyPrice</td>
                 </tr>
             }
@@ -52,7 +52,16 @@
 
 
     </table>
-    <input type="submit" value="Check Out" />
+    @if (Model.ProductOrders.Count > 0)
+    {
+        <input id="chekoutBtn" type="submit" value="Check Out" />
+        <script>$("#chekoutBtn").css('pointer-events', 'all');</script>
+    }
+    else
+    {
+        <script>$("#chekoutBtn").css('pointer-events', 'none');</script>
+        <input type="submit" value="Check Out" disabled />
+    }
 </form>
 @if (ViewBag.Baskets.Count > 0)
 {
@@ -111,6 +120,15 @@
     <script src="~/lib/jquery/dist/chosen.jquery.min.js"></script>
     <script>
         $(() => {
+            $(".saleOrderItem").keyup(function () {
+                var count = $(this).parent().parent().children(".countOfPO").text();
+                var price = $(this).parent().parent().children(".price").text();
+                var finPrice = count * price;
+                var discount = $(this).val();
+                var discountedPrice = finPrice - (finPrice * discount / 100);
+                $(this).parent().next().text(discountedPrice);
+            });
+            var phone;
             var ph=false;
             $("#SelectCustomer").chosen({
                 search_contains: true,

@@ -29,7 +29,7 @@
                     {
                         <td>
                             <a asp-action="Continue" asp-route-id="@o.Id">@SharedLocalizer.GetLocalizedHtmlString("Continue") /</a>
-                            <a asp-action="Delete" asp-route-id="@o.Id">@SharedLocalizer.GetLocalizedHtmlString("Delete")</a>
+                            <a href="#" class="deleted">@SharedLocalizer.GetLocalizedHtmlString("Delete")</a>
                         </td>
                     }
                     else if (o.OrderType == OrderType.Saled)
@@ -43,13 +43,8 @@
 </table>
 
 @section scripts{
-    <link href="~/css/jquery.contextMenu.css" rel="stylesheet" />
-    <script src="~/js/jquery.contextMenu.js"></script>
-    <script src="~/js/jquery.ui.position.js"></script>
-    <link href="~/css/jquery-confirm.min.css" rel="stylesheet" />
-    <script src="~/js/jquery-confirm.min.js"></script>
     <script>
-        $("a:contains('Delete')").on("click", function () {
+        $("a.deleted").on("click", function () {
             let $link = $(this);
             $(this).parent().parent().addClass(".select");
             $link.addClass('context-menu-one');
