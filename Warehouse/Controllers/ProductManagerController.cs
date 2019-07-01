@@ -265,10 +265,11 @@ namespace Warehouse.Controllers
         /// </summary>
         /// <param name="testPMId">ProductManager Id</param>
         /// <returns></returns>
-        public IActionResult WHList(string testPMId)
+        public IActionResult WHList(string productId)
         {
-            ViewBag.PMId = testPMId;
-            return View("WHList",_context.Warehouses.ToList());
+            ViewBag.PMId = productId;
+            var whId = _context.ProductManagers.FirstOrDefault(p => p.Id == productId).WareHouseId;
+            return View("WHList",_context.Warehouses.Where(w=>w.Id != whId).ToList());
         }
         public IActionResult Move(string id, string IdOfPM)
         {

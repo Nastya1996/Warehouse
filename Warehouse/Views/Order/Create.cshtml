@@ -52,7 +52,16 @@
 
 
     </table>
-    <input type="submit" value="Check Out" />
+    @if (Model.ProductOrders.Count > 0)
+    {
+        <input id="chekoutBtn" type="submit" value="Check Out" />
+        <script>$("#chekoutBtn").css('pointer-events', 'all');</script>
+    }
+    else
+    {
+        <script>$("#chekoutBtn").css('pointer-events', 'none');</script>
+        <input type="submit" value="Check Out" disabled />
+    }
 </form>
 @if (ViewBag.Baskets.Count > 0)
 {
@@ -78,7 +87,7 @@
                     <div id="message1">
                         <div class="alert alert-success">
                             <span class="glyphicon glyphicon-ok"></span><strong>@SharedLocalizer.GetLocalizedHtmlString("RegSuccessMessage")</strong>
-</div>
+                        </div>
                     </div>
                     <div id="message2">
                         <div class="alert alert-danger">
@@ -119,7 +128,7 @@
             var phone;
             $("#SelectCustomer").chosen({
                 search_contains: true,
-                width:"150px"
+                width: "150px"
             });
 
             $("#registerCustomer").on("click", () => {
@@ -167,7 +176,7 @@
                 $.ajax({
                     type: "Post",
                     data: data,
-                    beforeSend: function () { $("#register").prop("disabled", true);},
+                    beforeSend: function () { $("#register").prop("disabled", true); },
                     url: "/Customer/Register",
                     success: function (result) {
                         if (result) {
@@ -185,7 +194,7 @@
                                     $("#SelectCustomer").empty();
                                     $("#SelectCustomer").append("<option selected value=''>Without customer!</select>");
                                     data.forEach(function (element) {
-                                        $("#SelectCustomer").append("<option value=" + element.id + ">" +element.fullName + "</option>");
+                                        $("#SelectCustomer").append("<option value=" + element.id + ">" + element.fullName + "</option>");
                                     });
                                     $("#SelectCustomer").trigger("chosen:updated");
                                 }
