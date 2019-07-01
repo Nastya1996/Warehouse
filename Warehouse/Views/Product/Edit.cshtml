@@ -6,13 +6,13 @@
 @using Warehouse.Resources
 
 @inject LocService SharedLocalizer
-<form asp-action="Edit" asp-antiforgery="true">
+<form asp-action="Edit" asp-antiforgery="true" enctype="multipart/form-data">
     <div>
         <div asp-validation-summary="ModelOnly"></div>
         <div class="form-group">
             <label asp-for="Name">@SharedLocalizer.GetLocalizedHtmlString("Name")</label>
-            <input asp-for="IsActive" type="hidden"/>
-            <input type="hidden" asp-for="FileModelImgId"/>
+            <input asp-for="IsActive" type="hidden" />
+            <input type="hidden" asp-for="FileModelImgId" />
             <input asp-for="Name" type="text" class="form-control" />
             <span asp-validation-for="Name"></span>
         </div>
@@ -32,6 +32,9 @@
             <select asp-for="UnitId" asp-items="ViewBag.Units" class="form-control">
                 <option selected disabled value="">@SharedLocalizer.GetLocalizedHtmlString("SelectUnit")</option>
             </select>
+        </div>
+        <div class="form-group">
+            <input accept="image/*" type="file" name="uploadedFile" value="Model.FileModelImg" /><br>
         </div>
         <div><input type="submit" value="Edit" class="btn btn-primary" /></div>
     </div>

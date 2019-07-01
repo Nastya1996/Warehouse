@@ -178,7 +178,7 @@ namespace Warehouse.Controllers
         /// <returns></returns>
         [Authorize(Roles = "Storekeeper")]
         [HttpPost]
-        public IActionResult Edit(Product product)
+        public async Task<IActionResult> Edit(Product product, IFormFile uploadedFile)
         {
             if (_context.Types.Find(product.ProductTypeId) == null) return BadRequest();
             if (_context.Products.AsNoTracking().FirstOrDefault(p=>p.Id==product.Id) == null) return BadRequest();
@@ -187,6 +187,21 @@ namespace Warehouse.Controllers
                 ModelState.AddModelError("", "This name of product is available in the database");
             if (ModelState.IsValid)
             {
+                if (uploadedFile != null)
+                {
+                    // путь к папке Files
+                    string path = "/Files/" + uploadedFile.FileName;
+                    // сохраняем файл в папку Files в каталоге wwwroot
+                    using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                    {
+                        await uploadedFile.CopyToAsync(fileStream);
+                    }
+                    FileModelImg file = new FileModelImg { Name = uploadedFile.FileName, Path = path };
+                    _context.Files.Add(file);
+                    _context.SaveChanges();
+                    //imgID = _context.Files.Find(file).Id;
+                    product.FileModelImg = file;
+                }
                 _context.Update(product);
                 _context.SaveChanges();
                 var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);

@@ -212,7 +212,7 @@ namespace Warehouse.Controllers
             _context.SaveChanges();
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             _log.LogInformation("Check out."+user);
-            return RedirectToAction("Index","Basket");
+            return RedirectToAction("Index","Order");
         }
         private void Con(string id)
         {
