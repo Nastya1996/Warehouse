@@ -18,5 +18,7 @@ namespace Warehouse.Models
         [StringLength(20, MinimumLength =3, ErrorMessage = "*The adress must be between 3 and 20 characters")]
         public string Address { get; set; }
 
+        public bool IsActive { get; set; }
+
     }
 }

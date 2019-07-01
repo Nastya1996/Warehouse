@@ -45,26 +45,22 @@
         }
         @foreach (dynamic productManager in ViewBag.paged)
         {
-            <tr>
-                <td hidden="hidden"><input id="id" type="hidden" value="@productManager.Product.Id" /></td>
-                <td>@productManager.Product.ProductType.Name</td>
-                <td>@productManager.Product.Name</td>
-                <td>@productManager.Count</td>
-                <td class="currentCount">@productManager.CurrentCount</td>
-                <td>@productManager.Product.Unit.Name</td>
-                @if (User.IsInRole("Worker"))
-                {
-                    if (productManager.CurrentCount != 0)
+            if (productManager.CurrentCount != 0)
+            {
+                <tr>
+                    <td hidden="hidden"><input id="id" type="hidden" value="@productManager.Product.Id" /></td>
+                    <td>@productManager.Product.ProductType.Name</td>
+                    <td>@productManager.Product.Name</td>
+                    <td>@productManager.Count</td>
+                    <td class="currentCount">@productManager.CurrentCount</td>
+                    <td>@productManager.Product.Unit.Name</td>
+                    @if (User.IsInRole("Worker"))
                     {
-                        <td><a href="#">Add</a></td>
+                        <td><a href="#" class="Added">@SharedLocalizer.GetLocalizedHtmlString("Add")</a></td>
                     }
-                    else
-                    {
-                        <td><a href="#" class="disabled">Add</a></td>
-                    }
-                }
-                <td><a asp-action="Show" asp-route-id="@productManager.Product.Id">Show</a></td>
-            </tr>
+                    <td><a asp-action="Show" asp-route-id="@productManager.Product.Id">Show</a></td>
+                </tr>
+            }
         }
     </tbody>
 </table>
@@ -123,7 +119,7 @@
         }
         //Add product to the basket
         $(() => {
-            $("a:contains('Add')").on("click", function () {
+            $("a.Added").on("click", function () {
                 var $Id = $(this).parents("tr").children("td:first").children(":input").val();
                 var thisTag = $(this).parents("tr").children("td.currentCount");
                 var $currentCount = parseInt(thisTag.html());

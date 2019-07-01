@@ -221,7 +221,8 @@ namespace Warehouse.Controllers
         {
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             _log.LogInformation("Product manager add.User: " + user);
-            uint count = Convert.ToUInt32(quantity);
+            bool correct = UInt32.TryParse(quantity, out uint count);
+            if (!correct || count == 0) return Json(false);
             var product = _context.ProductManagers.FirstOrDefault(pm => pm.ProductId == id);
             if (product != null)
             {

@@ -80,10 +80,11 @@ namespace Warehouse.Controllers
             if (!FilterValid()) return BadRequest();
             var userSignIn = _context.AppUsers.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var query = _context.AppUsers.Include(user => user.Warehouse).Where(u=>u.Id!=userSignIn.Id).AsQueryable();
-            if (viewModel.Name != null && viewModel.Name!="")
+            if (!string.IsNullOrEmpty(viewModel.Name))
             {
                 viewModel.Name = viewModel.Name.Trim();
-                query = query.Where(u => u.Name.Contains(viewModel.Name,StringComparison.InvariantCultureIgnoreCase));
+                query = query.Where(u => u.Name.Contains(viewModel.Name,StringComparison.InvariantCultureIgnoreCase)
+                                      || u.SurName.Contains(viewModel.Name,StringComparison.InvariantCultureIgnoreCase));
             }
             if (viewModel.Number != null && viewModel.Number != "")
                 if (_context.Warehouses.Find(viewModel.Number) != null)

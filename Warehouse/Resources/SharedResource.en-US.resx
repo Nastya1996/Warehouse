@@ -477,4 +477,7 @@
   <data name="ThereAreNoUnits" xml:space="preserve">
     <value>No units to show!</value>
   </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
 </root>

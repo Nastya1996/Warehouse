@@ -187,7 +187,6 @@ namespace Warehouse.Controllers
                 ModelState.AddModelError("", "This name of product is available in the database");
             if (ModelState.IsValid)
             {
-                product.IsActive = true;
                 _context.Update(product);
                 _context.SaveChanges();
                 var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);

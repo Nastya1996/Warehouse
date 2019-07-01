@@ -477,4 +477,7 @@
   <data name="ThereAreNoUnits" xml:space="preserve">
     <value>Единиц измерения нету!</value>
   </data>
+  <data name="Add" xml:space="preserve">
+    <value>Добавить</value>
+  </data>
 </root>
