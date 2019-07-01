@@ -69,10 +69,10 @@
                             let $row = $(this).parent().parent().addClass(".select");
                             let orderId = $row.children().children().val();
                             $.ajax({
+                                async: false,
                                 url: '/Order/Delete',
                                 type: "POST",
                                 data: { id: orderId },
-                                    async: false,
                                     success: function (result) {
                                         if (result) {
                                             $.confirm({
