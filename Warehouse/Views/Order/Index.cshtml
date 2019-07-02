@@ -9,9 +9,9 @@
 <h2>Index</h2>
 <table class="table table-bordered table-hover">
     <tr>
-        <th>@SharedLocalizer.GetLocalizedHtmlString("Price")</th>
-        <th>@SharedLocalizer.GetLocalizedHtmlString("Sale")</th>
-        <th>@SharedLocalizer.GetLocalizedHtmlString("FinalPrice")</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("Number")</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("User")</th>
+        <th>@SharedLocalizer.GetLocalizedHtmlString("FinallyPrice")</th>
         <th>@SharedLocalizer.GetLocalizedHtmlString("Date")</th>
         <th>@SharedLocalizer.GetLocalizedHtmlString("Status")</th>
     </tr>
@@ -20,8 +20,8 @@
         {
             <tr>
                 <td hidden="hidden"><input type="hidden" value="@o.Id"/></td>
-                <td>@o.Price</td>
-                <td>@o.Sale</td>
+                <td>@o.Id</td>
+                <td>@o.User.Name</td>
                 <td>@o.FinallPrice</td>
                 <td>@o.Date</td>
                 @{
