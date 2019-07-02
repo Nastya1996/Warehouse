@@ -7,9 +7,9 @@
 <form method="post" asp-controller="Admin" asp-action="Move" asp-route-IdOfUser="@ViewBag.UserID">
     @foreach (var wh in Model)
     {
-        <input type="radio" name="id" value="@wh.Id" />
+        <input class="radioWH" type="radio" name="id" value="@wh.Id" checked />
         <label>@wh.Number</label><br />
     }
 
-    <input type="submit" />
+    <input class="submitWH" type="submit" />
 </form>

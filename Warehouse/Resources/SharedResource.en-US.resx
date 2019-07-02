@@ -346,7 +346,7 @@
     <value>Receipt Price</value>
   </data>
   <data name="RegErrorMessage" xml:space="preserve">
-    <value>ErrorMessage! Such A Buyer Has Already Been Registered.</value>
+    <value>Error Message! Your Registration Is Not Complete.</value>
   </data>
   <data name="Registration" xml:space="preserve">
     <value>Registration</value>
@@ -363,8 +363,8 @@
   <data name="SalePrice" xml:space="preserve">
     <value>Sale price</value>
   </data>
-  <data name="SelectCustomer" xml:space="preserve">
-    <value>Select Customer</value>
+  <data name="WithoutCustomer" xml:space="preserve">
+    <value>Without Customer</value>
   </data>
   <data name="SelectName" xml:space="preserve">
     <value>Select the name</value>
@@ -476,5 +476,8 @@
   </data>
   <data name="ThereAreNoUnits" xml:space="preserve">
     <value>No units to show!</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
   </data>
 </root>

@@ -7,6 +7,7 @@
 @inject LocService SharedLocalizer
 <form asp-action="Edit" asp-controller="WareHouse" method="post" asp-antiforgery="true">
     <div>
+        <input type="hidden" asp-for="IsActive"/>
         <div asp-validation-summary="ModelOnly"></div>
         <div class="form-group">
             <label asp-for="Number">@SharedLocalizer.GetLocalizedHtmlString("NumberOfWarehouse")</label>

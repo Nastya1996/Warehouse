@@ -125,7 +125,6 @@ namespace Warehouse.Controllers
             }
             if (ModelState.IsValid)
             {
-                productType.IsActive = true;
                 _context.Update(productType);
                 _context.SaveChanges();
                 _log.LogInformation("Product type edited.User: "+user);

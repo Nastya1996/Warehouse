@@ -36,32 +36,32 @@
     </thead>
 
     <tbody>
+        @if (Model.Count == 0)
+        {
+            <tr><td colspan="12" class="text-center">@SharedLocalizer.GetLocalizedHtmlString("ThereAreNoProducts")</td></tr>
+        }
         @foreach (var product in Model)
         {
-        <tr>
-            <td hidden="hidden"><input type="hidden" value="@product.Id" /></td>
-            <td>@product.Product.Name</td>
-            <td>@product.Count</td>
-            <td class="currentCount">@product.CurrentCount</td>
-            <td>@product.Product.Unit.Name</td>
-            <td>@product.ReceiptPrice</td>
-            <td>@product.SalePrice</td>
-            <td>@product.ReceiptDate.ToString("d")</td>
-            <td>@product.Date</td>
-            <td>@product.WareHouse.Number</td>
-            <td>
-                <a class="moveProduct" id="@product.Id" href="#">@SharedLocalizer.GetLocalizedHtmlString("Move")</a>
-            </td>
-            <td><a asp-action="Edit" asp-route-id="@(product.Id)">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
-            @if (product.CurrentCount != 0)
+            if (product.CurrentCount != 0)
             {
-                <td><a href="#">Write out</a></td>
+                <tr>
+                    <td hidden="hidden"><input type="hidden" value="@product.Id" /></td>
+                    <td>@product.Product.Name</td>
+                    <td>@product.Count</td>
+                    <td class="currentCount">@product.CurrentCount</td>
+                    <td>@product.Product.Unit.Name</td>
+                    <td>@product.ReceiptPrice</td>
+                    <td>@product.SalePrice</td>
+                    <td>@product.ReceiptDate.ToString("d")</td>
+                    <td>@product.Date</td>
+                    <td>@product.WareHouse.Number</td>
+                    <td>
+                        <a class="moveProduct" id="@product.Id" href="#">@SharedLocalizer.GetLocalizedHtmlString("Move")</a>
+                    </td>
+                    <td><a asp-action="Edit" asp-route-id="@(product.Id)">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
+                    <td><a href="#">Write out</a></td>
+                </tr>
             }
-            else
-            {
-                <td></td>
-            }
-        </tr>
         }
     </tbody>
 </table>
@@ -108,7 +108,7 @@
                 var id = $(this).attr('id');
                 $.ajax({
                     url: '@Url.Action("WHList", "ProductManager")',
-                    data: { 'testPMId': id},
+                    data: { 'productId': id},
                     beforeSend: function () { $(".modal-body").html("<p>Loading... </p>") },
                     success: function (response) {
                         $(".modal-body").html(response);

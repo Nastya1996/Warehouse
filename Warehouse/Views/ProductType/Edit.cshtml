@@ -13,6 +13,7 @@
         <div class="form-group">
             <label asp-for="Name">@SharedLocalizer.GetLocalizedHtmlString("Name")</label><br />
             <input type="text" class="form-control" asp-for="Name" />
+            <input type="hidden" asp-for="IsActive" />
             <span asp-validation-for="Name"></span>
         </div>
         <div>

@@ -19,10 +19,6 @@
         <tr>
             <th>Name</th>
             <th>@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
-            @if (User.IsInRole("Admin"))
-            {
-                <th>@SharedLocalizer.GetLocalizedHtmlString("Disable")</th>
-            }
         </tr>
     </thead>
     <tbody>

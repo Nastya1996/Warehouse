@@ -55,7 +55,7 @@ namespace Warehouse.Controllers
                 if (reportFilter.UserId != null)
                     if(_context.Users.Find(reportFilter.UserId)!=null)
                         queryImport = queryImport.Where(x => x.UserId == reportFilter.UserId);
-                queryImport = queryImport.Where(pm => pm.Date >= reportFilter.DateFrom && pm.Date <= reportFilter.DateTo);
+                queryImport = queryImport.Where(pm => pm.Date.Date >= reportFilter.DateFrom.Date && pm.Date.Date <= reportFilter.DateTo.Date);
                 reportFilter.ProductManagers = queryImport;
                 ViewBag.paged = new PagedList<ProductManager>(queryImport, reportFilter.Page, reportFilter.PageSize);
             }

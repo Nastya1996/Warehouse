@@ -80,10 +80,11 @@ namespace Warehouse.Controllers
             if (!FilterValid()) return BadRequest();
             var userSignIn = _context.AppUsers.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var query = _context.AppUsers.Include(user => user.Warehouse).Where(u=>u.Id!=userSignIn.Id).AsQueryable();
-            if (viewModel.Name != null && viewModel.Name!="")
+            if (!string.IsNullOrEmpty(viewModel.Name))
             {
                 viewModel.Name = viewModel.Name.Trim();
-                query = query.Where(u => u.Name.Contains(viewModel.Name,StringComparison.InvariantCultureIgnoreCase));
+                query = query.Where(u => u.Name.Contains(viewModel.Name,StringComparison.InvariantCultureIgnoreCase)
+                                      || u.SurName.Contains(viewModel.Name,StringComparison.InvariantCultureIgnoreCase));
             }
             if (viewModel.Number != null && viewModel.Number != "")
                 if (_context.Warehouses.Find(viewModel.Number) != null)
@@ -142,17 +143,22 @@ namespace Warehouse.Controllers
         public IActionResult WHListForAdmin(string userId)
         {
             ViewBag.UserID = userId;
-            return View("WHListForAdmin", _context.Warehouses.ToList());
+            var whIdOfUser = _context.Users.FirstOrDefault(u=>u.Id == userId).WarehouseId;
+            var wh = _context.Warehouses.Where(w=>w.Id != whIdOfUser).ToList();
+            return View("WHListForAdmin", wh);
         }
         public IActionResult Move(string id, string IdOfUser)
         {
-            var users = _context.AppUsers.FirstOrDefault(u => u.Id == IdOfUser);
-            var wh = _context.Warehouses.FirstOrDefault(w => w.Id == id);
-            users.WarehouseId = wh.Id;
-            _context.AppUsers.Update(users);
-            _context.SaveChanges();
-            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            _log.LogInformation("Changed user's warehouse.User: "+user);
+            if (id != null)
+            {
+                var users = _context.AppUsers.FirstOrDefault(u => u.Id == IdOfUser);
+                var wh = _context.Warehouses.FirstOrDefault(w => w.Id == id);
+                users.WarehouseId = wh.Id;
+                _context.AppUsers.Update(users);
+                _context.SaveChanges();
+                var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                _log.LogInformation("Changed user's warehouse.User: " + user);
+            }
             return RedirectToAction("ShowUsers", "Admin");
         }
         [NonAction]

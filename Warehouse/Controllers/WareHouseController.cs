@@ -55,6 +55,7 @@ namespace Warehouse.Controllers
                 ModelState.AddModelError("", "The number of warehouse already exists");
             if (ModelState.IsValid)
             {
+                wh.IsActive = true;
                 _context.Add(wh);
                 _context.SaveChanges();
                 var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -69,6 +70,7 @@ namespace Warehouse.Controllers
             if (obj == null) return BadRequest();
             return View(obj);
         }
+
         [HttpPost]
         public IActionResult Edit(WareHouse wh)
         {
@@ -84,26 +86,36 @@ namespace Warehouse.Controllers
             }
             return View();
         }
-        public IActionResult Delete(string id)
-        {
-            return View(_context.Warehouses.Find(id));
-        }
-        public IActionResult DeleteYes(string id)
-        {
-            _context.Warehouses.Remove(_context.Warehouses.Find(id));
-            _context.SaveChanges();
-            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            _log.LogInformation("Deleted warehouse."+user);
-            return RedirectToAction("Index");
-        }
         
-        public IActionResult Details(string id)
+
+        
+        [HttpPost]
+        public JsonResult Disable([FromBody]string warehouseId)
         {
-            var obj = _context.Warehouses.Find(id);
-            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            _log.LogInformation("Details of warehouse."+user);
-            return View(obj);
+            var data = _context.Warehouses.Find(warehouseId);
+            if (data == null || !data.IsActive) return Json(false);
+            var productManagers = _context.ProductManagers.Where(pm => pm.WareHouseId == warehouseId);
+            foreach(var item in productManagers)
+            {
+                if (item.CurrentCount != 0) return Json(false);
+            }
+            data.IsActive = false;
+            _context.Warehouses.Update(data);
+            _context.SaveChanges();
+            return Json(true);
         }
+
+        [HttpPost]
+        public JsonResult Enable([FromBody]string warehouseId)
+        {
+            var data = _context.Warehouses.Find(warehouseId);
+            if (data == null || data.IsActive) return Json(false);
+            data.IsActive = true;
+            _context.Update(data);
+            _context.SaveChanges();
+            return Json(true);
+        }
+        [NonAction]
         bool FilterValid()
         {
             if (Request.Query.Count != 0)

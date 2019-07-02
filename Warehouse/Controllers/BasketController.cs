@@ -52,10 +52,7 @@ namespace Warehouse.Controllers
             _log.LogInformation("Basket index.User: "+user);
             return View("_IndexForHover", baskets);
         }
-        public IActionResult Delete(string id)
-        {
-            return View(_context.Baskets.Find(id));
-        }
+        [HttpPost]
         public IActionResult DeleteYes(string id)
         {
             _context.Baskets.Remove(_context.Baskets.Find(id));

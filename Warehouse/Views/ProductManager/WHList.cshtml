@@ -6,7 +6,7 @@
 
 <form method="post" asp-controller="ProductManager" asp-action="Move" asp-route-IdOfPM="@ViewBag.PMId">
     @foreach (var wh in Model){
-        <input type="radio" name="id" value="@wh.Id" />
+        <input type="radio" name="id" value="@wh.Id" checked />
         <label>@wh.Number</label><br />
     }
 
