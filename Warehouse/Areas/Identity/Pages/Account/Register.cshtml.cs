@@ -116,7 +116,7 @@ namespace Warehouse.Areas.Identity.Pages.Account
             if (role == null)
 				return Page();
 
-			returnUrl = returnUrl ?? Url.Content("~/");
+			returnUrl = returnUrl ?? Url.Content("/Admin/ShowUsers");
             if (ModelState.IsValid)
             {
                 var user = new AppUser {
