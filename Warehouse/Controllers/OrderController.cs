@@ -33,6 +33,8 @@ namespace Warehouse.Controllers
         [HttpGet]
         public IActionResult Back(string id)
         {
+            if (_context.Orders.Find(id) == null)
+                return BadRequest();
             var productOrders = _context.ProductOrders
                 .Include(p=>p.Product)
                 .Include(pm=>pm.ProductManager)

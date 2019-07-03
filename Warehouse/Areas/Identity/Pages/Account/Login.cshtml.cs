@@ -10,15 +10,17 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Warehouse.Models;
+using Warehouse.Infrastructure;
 
 namespace Warehouse.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
+    [NoAuthorize]
     public class LoginModel : PageModel
     {
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
-
+        
         public LoginModel(SignInManager<AppUser> signInManager, ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
@@ -34,7 +36,7 @@ namespace Warehouse.Areas.Identity.Pages.Account
 
         [TempData]
         public string ErrorMessage { get; set; }
-
+        
         public class InputModel
         {
             [Required]
@@ -48,17 +50,26 @@ namespace Warehouse.Areas.Identity.Pages.Account
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
         }
-
+        [NoAuthorize]
         public async Task OnGetAsync(string returnUrl = null)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                var rq = Request.Path;
+                if (rq == "/Identity/Account/Login")
+                    ReturnUrl = "~/Home/Index";
+                returnUrl = "~/Home/Index";
+            }
+
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
 
-            returnUrl = returnUrl ?? Url.Content("~/");
+            returnUrl = returnUrl ?? Url.Content("~/Home/Index");
 
             // Clear the existing external cookie to ensure a clean login process
+            
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -68,6 +79,7 @@ namespace Warehouse.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+           
             returnUrl = returnUrl ?? Url.Content("/Home/Index");
 
             if (ModelState.IsValid)

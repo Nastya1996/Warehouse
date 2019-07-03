@@ -24,6 +24,7 @@ using static Microsoft.AspNetCore.Razor.Language.TagHelperMetadata;
 using Microsoft.Extensions.Options;
 using Warehouse.Resources;
 using System.Reflection;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Warehouse
 {
@@ -78,7 +79,7 @@ namespace Warehouse
                     // - AcceptLanguageHeaderRequestCultureProvider, sets culture via the "Accept-Language" request header
                     options.RequestCultureProviders.Insert(0, new QueryStringRequestCultureProvider());
                 });
-
+        
             services.AddMvc()
                 .AddViewLocalization()
                 .AddDataAnnotationsLocalization(options =>
@@ -89,10 +90,13 @@ namespace Warehouse
                         return factory.Create("SharedResource", assemblyName.Name);
                     };
                 }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
-            services.AddMvc().AddRazorPagesOptions(options => {
-                options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "");
-            });
+            services.AddMvc().AddRazorPagesOptions(options =>
+                options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "")
+            );
+            //services.AddMvc().AddRazorPagesOptions(options =>
+            //{
+            //    options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "");
+            //});
             //services.AddMvc().AddViewLocalization();
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
@@ -119,9 +123,11 @@ namespace Warehouse
             app.UseAuthentication();
             app.UseMvc(routes =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}"
+            routes.MapRoute(
+                name: "default",
+        //template: "Identity",
+        //defaults: new { controller = "Account", action = "Login" }
+            template: "{controller=Home}/{action=Index}/{id?}"
                 );
             }
             );
