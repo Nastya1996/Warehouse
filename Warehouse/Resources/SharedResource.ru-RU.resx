@@ -480,4 +480,7 @@
   <data name="Add" xml:space="preserve">
     <value>Добавить</value>
   </data>
+  <data name="Number" xml:space="preserve">
+    <value>Номер</value>
+  </data>
 </root>

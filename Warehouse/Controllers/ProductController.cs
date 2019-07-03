@@ -121,16 +121,20 @@ namespace Warehouse.Controllers
                 {
                     // путь к папке Files
                     string path = "/Files/" + uploadedFile.FileName;
-                    // сохраняем файл в папку Files в каталоге wwwroot
-                    using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                    string ext = Path.GetExtension(path);
+                    if (ext == ".png" || ext == ".jpg" || ext == ".jpeg")
                     {
-                        await uploadedFile.CopyToAsync(fileStream);
+                        // сохраняем файл в папку Files в каталоге wwwroot
+                        using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                        {
+                            await uploadedFile.CopyToAsync(fileStream);
+                        }
+                        FileModelImg file = new FileModelImg { Name = uploadedFile.FileName, Path = path };
+                        _context.Files.Add(file);
+                        _context.SaveChanges();
+                        //imgID = _context.Files.Find(file).Id;
+                        product.FileModelImg = file;
                     }
-                    FileModelImg file = new FileModelImg { Name = uploadedFile.FileName, Path = path };
-                    _context.Files.Add(file);
-                    _context.SaveChanges();
-                    //imgID = _context.Files.Find(file).Id;
-                    product.FileModelImg = file;
                 }
                 
                 product.IsActive = true;

@@ -44,8 +44,8 @@
             <tr>
                 <td></td>
                 <td>Yndameny</td>
-                <td asp-for="@Model.Price">@Model.Price</td>
-                <td><input type="number" max="100" min="0" asp-for="@Model.Sale" /></td>
+                <td class="yndamenyPrice" asp-for="@Model.Price">@Model.Price</td>
+                <td><input class="yndamenyInp" type="number" max="100" min="0" asp-for="@Model.Sale" /></td>
                 <td>@Model.FinallPrice</td>
             </tr>
         </tfoot>
@@ -134,6 +134,15 @@
                 $("input[type='phone']").mask("099-99-99-99");
             });
             var ph = false;
+            $(".yndamenyInp").keyup(function () {
+                var discount = $(this).val();
+                var price = $(this).parent().parent().children(".yndamenyPrice").text();
+                var discountedPrice = price - (price * discount / 100);
+                $(this).parent().next().text(discountedPrice);
+            });
+
+            var phone;
+            var ph=false;
             $("#SelectCustomer").chosen({
                 search_contains: true,
                 width: "150px"

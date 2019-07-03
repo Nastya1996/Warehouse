@@ -9,42 +9,171 @@
 @{
     var date = DateTime.Now.ToString("yyyy-MM-dd");
 }
-<form method="get" asp-action="Index" asp-controller="Report">
-    <div class="form-inline form-group">
-        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Deal"):</label>
-        <select asp-for="Deal">
-            <option selected disabled value="">@SharedLocalizer.GetLocalizedHtmlString("SelectTheDeal")</option>
-            <option>@SharedLocalizer.GetLocalizedHtmlString("Import")</option>
-            <option>@SharedLocalizer.GetLocalizedHtmlString("Saled")</option>
-            <option>@SharedLocalizer.GetLocalizedHtmlString("Export")</option>
-        </select>
 
-        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Type"):</label>
-        <select asp-for="TypeId" asp-items="ViewBag.Types">
-            <option selected value="">@SharedLocalizer.GetLocalizedHtmlString("All")</option>
-        </select>
-        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Name")</label>
-        <select asp-for="ProductId" asp-items="ViewBag.Names">
-            <option selected value="">@SharedLocalizer.GetLocalizedHtmlString("All")</option>
-        </select>
+<style type="text/css">
 
-        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("User"):</label>
-        <select asp-for="UserId" asp-items="ViewBag.Users">
-            <option selected value="">@SharedLocalizer.GetLocalizedHtmlString("All")</option>
-        </select>
+    body {
+        font-family: 'Muli', sans-serif;
+    }
 
-        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("From"):</label>
-        <input class="form-control" asp-for="DateFrom" min="01.01.2000" max="@date" type="date" />
+    h2 {
+        font-family: 'Damion', cursive;
+        font-weight: 400;
+        color: #4caf50;
+        font-size: 35px;
+        text-align: center;
+        position: relative;
+    }
 
-        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("To"):</label>
-        <input class="form-control" asp-for="DateTo" type="date" min="01.01.2000" max="@date" />
+        h2:before {
+            position: absolute;
+            content: '';
+            width: 100%;
+            left: 0;
+            top: 22px;
+            background: #4caf50;
+            height: 1px;
+        }
 
-        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
-        <input class="form-control form-inline" asp-for="PageSize" type="number" min="1" />
-        <input type="submit" value="Filter" class="btn btn-default" />
+        h2 i {
+            font-style: normal;
+            background: #fff;
+            position: relative;
+            padding: 10px;
+        }
+
+    :focus {
+        outline: none;
+    }
+
+    /* necessary to give position: relative to parent. */
+    input[type="text"] {
+        font: 15px/24px 'Muli', sans-serif;
+        color: #333;
+        width: 100%;
+        box-sizing: border-box;
+        letter-spacing: 1px;
+    }
+
+    :focus {
+        outline: none;
+    }
+
+    .col-3 {
+        float: left;
+        width: 27.33%;
+        margin: 20px 3%;
+        position: relative;
+    }
+    /* necessary to give position: relative to parent. */
+    input[type="text"] {
+        font: 15px/24px "Lato", Arial, sans-serif;
+        color: #333;
+        width: 100%;
+        box-sizing: border-box;
+        letter-spacing: 1px;
+    }
+
+    .effect-1{
+        border: 0;
+        padding: 7px 0;
+        border-bottom: 1px solid #ccc;
+    }
+
+        .effect-1 ~ .focus-border {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #4caf50;
+            transition: 0.4s;
+        }
+
+        .effect-1:focus ~ .focus-border {
+            width: 100%;
+            transition: 0.4s;
+        }
+
+        .effect-24 ~ .focus-bg:before,
+        .effect-24 ~ .focus-bg:after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 0;
+            height: 0;
+            background-color: #ededed;
+            transition: 0.3s;
+            z-index: -1;
+        }
+
+        .effect-24:focus ~ .focus-bg:before,
+        .has-content.effect-24 ~ .focus-bg:before {
+            transition: 0.3s;
+            width: 50%;
+            left: 0;
+            top: 0;
+            height: 100%;
+        }
+
+        .effect-24 ~ .focus-bg:after {
+            left: auto;
+            right: 50%;
+            top: auto;
+            bottom: 50%;
+        }
+
+        .effect-24:focus ~ .focus-bg:after,
+        .has-content.effect-24 ~ .focus-bg:after {
+            transition: 0.3s;
+            width: 50%;
+            height: 100%;
+            bottom: 0;
+            right: 0;
+        }
+
+
+</style>
+<div class="mahi_holder">
+    <div class="container">
+        <form method="get" asp-action="Index" asp-controller="Report" class="row">
+            <div class="form-inline form-group">
+                <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Deal"):</label>
+                <select asp-for="Deal" class="effect-24">
+                    <option selected disabled value="">SelectTheDeal</option>
+                    <option class="effect-24">Import</option>
+                    <option class="effect-24">Saled</option>
+                    <option class="effect-24">Export</option>
+                </select>
+
+                <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Type"):</label>
+                <select asp-for="TypeId" class="effect-24" asp-items="ViewBag.Types">
+                    <option selected value="" class="effect-24">All</option>
+                </select>
+                <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Name")</label>
+                <select asp-for="ProductId" class="effect-24 effect-1" asp-items="ViewBag.Names">
+                    <option selected value="" class="effect-24">All</option>
+                </select>
+
+                <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("User"):</label>
+                <select asp-for="UserId" asp-items="ViewBag.Users" class="effect-24">
+                    <option selected value="" class="effect-24">All</option>
+                </select>
+
+                <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("From"):</label>
+                <input class="form-control effect-24 effect-1" asp-for="DateFrom" min="01.01.2000" max="@date" type="date" />
+
+                <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("To"):</label>
+                <input class="form-control effect-24 effect-1" asp-for="DateTo" type="date" min="01.01.2000" max="@date" />
+
+                <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
+                <input class="form-control form-inline effect-24 effect-1" asp-for="PageSize" type="number" min="1" />
+                <input type="submit" value="Filter" class="btn btn-default effect-24 effect-1" />
+            </div>
+        </form>
     </div>
-</form>
-
+</div>
 <table class="table table-bordered table-hover">
     <thead>
         @{
@@ -143,7 +272,7 @@
         $(() => {
             $("#Deal").chosen({
                 search_contains: true,
-                width:"10%"
+                width: "10%"
             });
             $("#UserId").chosen({
                 search_contains: true
@@ -192,7 +321,7 @@
                     }
                 })
             }
-            
+
         });
     </script>
 }
