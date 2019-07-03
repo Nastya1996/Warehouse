@@ -31,7 +31,7 @@
                 <td>@p.Product.Barcode</td>
                 <td>@p.Product.ProductType.Name</td>
                 <td class="maxCount">@count</td>
-                <td><input type="number" name="count" id="count" min="0" /></td>
+                <td><input type="number" name="count" id="count" min="0" class="changeCount"/></td>
                 <td>@p.Product.Unit.Name</td>
                 <td>@p.Price</td>
                 <td>@p.FinallyPrice</td>
@@ -50,8 +50,30 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial.cshtml");}
     <script>
         $(() => {
-
             $("a[name='back']").on("click", function () {
+                    var discount = $(".changeCount").val();
+                    var count = $(this).parent().parent().children(".maxCount").text();
+                var discountedCount = count - discount;
+                if (discountedCount >= 0) {
+                    $(".changeCount").parent().prev().text(discountedCount);
+                } else {
+                    $.confirm({
+                        icon: 'fas fa-exclamation-triangle',
+                        title: 'Warehouse!',
+                        content: 'An error has occurred. Please, select fewer products!',
+                        type: 'red',
+                        typeAnimated: true,
+                        closeAnimation: 'rotateXR',
+                        buttons: {
+                            close: {
+                                btnClass: "btn-red",
+                                action: function () {
+                                }
+                            }
+                        }
+                    });
+                    $inputCount.val(0);
+                }
                 $(this).parent().parent().addClass("select");
                 let $inputCount = $(".select").children().find("input[name='count']");
                 let $id = $(".select").children().children().val();
