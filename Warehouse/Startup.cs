@@ -89,10 +89,6 @@ namespace Warehouse
                         return factory.Create("SharedResource", assemblyName.Name);
                     };
                 }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-
-            services.AddMvc().AddRazorPagesOptions(options => {
-                options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "");
-            });
             //services.AddMvc().AddViewLocalization();
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
