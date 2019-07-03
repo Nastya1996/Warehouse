@@ -104,7 +104,7 @@
                     <div class="form-group">
                         <div class="input-group">
                             <span class="input-group-addon"><i class="glyphicon glyphicon-phone"></i></span>
-                            <input class="form-control" type="text" name="Phone" id="Phone" placeholder="Phone" />
+                            <input class="form-control" type="phone" name="Phone" id="Phone" placeholder="Phone" />
                         </div>
                     </div>
                     <div class="form-group">
@@ -118,6 +118,7 @@
 @section scripts{
     <link href="~/css/chosen.min.css" rel="stylesheet" />
     <script src="~/lib/jquery/dist/chosen.jquery.min.js"></script>
+    <script src="~/js/jquery.maskedinput.js"></script>
     <script>
         $(() => {
             $(".saleOrderItem").keyup(function () {
@@ -128,6 +129,11 @@
                 var discountedPrice = finPrice - (finPrice * discount / 100);
                 $(this).parent().next().text(discountedPrice);
             });
+
+            jQuery(function ($) {
+                $("input[type='phone']").mask("099-99-99-99");
+            });
+            var ph = false;
             $(".yndamenyInp").keyup(function () {
                 var discount = $(this).val();
                 var price = $(this).parent().parent().children(".yndamenyPrice").text();
@@ -156,6 +162,12 @@
                 e.preventDefault();
                 var name = $("#Name").val();
                 var surName = $("#SurName").val();
+                if (!exp.test(input.val())) {
+                    ph = false;
+                }
+                else {
+                    ph = true;
+                }
                 if (name.length < 3 || surName.length < 3 || ph === false) {
                     if (name.length < 3) {
                         $("#Name").css("background", "#F2DEDE");
@@ -187,6 +199,7 @@
                     url: "/Customer/Register",
                     success: function (result) {
                         if (result) {
+                            alert("asd");
                             $("#register").prop("disabled", false);
                             $("#message0").hide();
                             $("#message1").show();
@@ -216,53 +229,8 @@
                 });
             });
             var input = $("#Phone");
-            var exp = /^([0]{1}[\d]{2}[-]{1}[\d]{2}[-]{1}[\d]{2}[-]{1}[\d]{2})$/
-            var correct = false;
-            $(document).mouseup(function () {
-                var highlightedText = "";
-                if (window.getSelection) {
-                    highlightedText = window.getSelection().toString();
-                }
-                else if (document.selection && document.selection.type != "Control") {
-                    highlightedText = document.selection.createRange().text;
-                }
-                if (highlightedText != "")
-                    correct = true;
-                else correct = false;
-            });
-
-            $("#Phone").on("keyup", function (e) {
-                if (e.keyCode == 8) {
-                    if (correct) input.val("");
-                    let a = input.val();
-                    a = a.substring(0, a.length - 1);
-                    input.val(a);
-                }
-                if (!exp.test(input.val())) {
-                    ph = false;
-                }
-                else {
-                    ph = true;
-                }
-            });
-            $("#Phone").on("keydown", function (e) {
-                if (input.val().length > 11) {
-                    return false;
-                }
-                if (input.val().length === 3) {
-                    input.val(input.val() + '-');
-                }
-                if (input.val().length === 6) {
-                    input.val(input.val() + '-');
-                }
-                if (input.val().length == 9) {
-                    input.val(input.val() + '-');
-                }
-            });
-        });
-    </script>
-    <script type="text/javascript">
-        $(() => {
+            var exp = /^([0]{1}[\d]{2}[-]{1}[\d]{2}[-]{1}[\d]{2}[-]{1}[\d]{2})$/;
+            
             
         });
     </script>

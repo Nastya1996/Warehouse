@@ -56,7 +56,7 @@
                     <td>@productManager.Product.Unit.Name</td>
                     @if (User.IsInRole("Worker"))
                     {
-                        <td><a href="#" class="Added">@SharedLocalizer.GetLocalizedHtmlString("Add")</a></td>
+                        <td><a  class="Added">@SharedLocalizer.GetLocalizedHtmlString("Add")</a></td>
                     }
                     <td><a asp-action="Show" asp-route-id="@productManager.Product.Id">Show</a></td>
                 </tr>

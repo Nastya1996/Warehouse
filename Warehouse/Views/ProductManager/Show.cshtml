@@ -29,9 +29,13 @@
             <th>@SharedLocalizer.GetLocalizedHtmlString("ReceiptDate")</th>
             <th>@SharedLocalizer.GetLocalizedHtmlString("AddedDate")</th>
             <th>@SharedLocalizer.GetLocalizedHtmlString("Warehouse")</th>
-            <th>@SharedLocalizer.GetLocalizedHtmlString("Move")</th>
-            <th>@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
-            <td>@SharedLocalizer.GetLocalizedHtmlString("WriteOut")</td>
+            @if (User.IsInRole("Storekeeper"))
+            {
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Move")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
+                <td>@SharedLocalizer.GetLocalizedHtmlString("WriteOut")</td>
+            }
+
         </tr>
     </thead>
 
@@ -44,23 +48,26 @@
         {
             if (product.CurrentCount != 0)
             {
-                <tr>
-                    <td hidden="hidden"><input type="hidden" value="@product.Id" /></td>
-                    <td>@product.Product.Name</td>
-                    <td>@product.Count</td>
-                    <td class="currentCount">@product.CurrentCount</td>
-                    <td>@product.Product.Unit.Name</td>
-                    <td>@product.ReceiptPrice</td>
-                    <td>@product.SalePrice</td>
-                    <td>@product.ReceiptDate.ToString("d")</td>
-                    <td>@product.Date</td>
-                    <td>@product.WareHouse.Number</td>
+            <tr>
+                <td hidden="hidden"><input type="hidden" value="@product.Id" /></td>
+                <td>@product.Product.Name</td>
+                <td>@product.Count</td>
+                <td class="currentCount">@product.CurrentCount</td>
+                <td>@product.Product.Unit.Name</td>
+                <td>@product.ReceiptPrice</td>
+                <td>@product.SalePrice</td>
+                <td>@product.ReceiptDate.ToString("d")</td>
+                <td>@product.Date</td>
+                <td>@product.WareHouse.Number</td>
+                @if (User.IsInRole("Storekeeper"))
+                {
                     <td>
                         <a class="moveProduct" id="@product.Id" href="#">@SharedLocalizer.GetLocalizedHtmlString("Move")</a>
                     </td>
                     <td><a asp-action="Edit" asp-route-id="@(product.Id)">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
                     <td><a href="#">Write out</a></td>
-                </tr>
+                }
+            </tr>
             }
         }
     </tbody>
