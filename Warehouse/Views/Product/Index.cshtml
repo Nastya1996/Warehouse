@@ -78,19 +78,19 @@
                     {
                         <td><img src="/Files/warehouse-cartoon-vector-7197735.jpg"></td>
                     }
-                    
+
                 </tr>
             }
         }
     </tbody>
 </table>
 <pager list="@ViewBag.paged" asp-route-pageSize="@Model.PageSize" asp-route-ProductName="@Model.ProductName" asp-route-TypeId="@Model.TypeId" asp-controller="Product" asp-action="Index" />
-
+<input type="phone" placeholder="Phone" id="phone" />
 
 
 @section scripts{
     <script src="~/lib/jquery/dist/chosen.jquery.min.js"></script>
-    <link href="~/css/chosen.min.css" rel="stylesheet" />
+    <link href="~/css/chosen.css" rel="stylesheet" />
     <link href="~/css/jquery.contextMenu.css" rel="stylesheet" />
     <script src="~/js/jquery.contextMenu.js"></script>
     <script src="~/js/jquery.ui.position.js"></script>
@@ -98,7 +98,9 @@
     <script src="~/js/jquery-confirm.min.js"></script>
     <script src="~/js/product.js"></script>
     <script>
-
+        jQuery(function ($) {
+            $("input[type='phone']").mask("+7 (999) 999-9999");
+        });
         $("#TypeId").chosen({
             search_contains: true,
             width: "15%"

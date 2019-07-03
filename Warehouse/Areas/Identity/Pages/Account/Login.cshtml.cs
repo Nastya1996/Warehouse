@@ -10,10 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Warehouse.Models;
-
+using Warehouse.Infrastructure;
 namespace Warehouse.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
+    [NoAuthorize]
     public class LoginModel : PageModel
     {
         private readonly SignInManager<AppUser> _signInManager;

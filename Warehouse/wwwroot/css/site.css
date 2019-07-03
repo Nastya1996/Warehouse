@@ -201,3 +201,7 @@ a.disabled {
     pointer-events: none;
     cursor: default;
 }
+
+a{
+    cursor:pointer;
+}
