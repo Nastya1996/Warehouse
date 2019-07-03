@@ -51,9 +51,9 @@ namespace Warehouse
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<AppUser, IdentityRole>()
-				   .AddDefaultTokenProviders()
-					   .AddDefaultUI()
-						   .AddEntityFrameworkStores<ApplicationDbContext>();
+                   .AddDefaultTokenProviders()
+                       .AddDefaultUI()
+                           .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddSingleton<LocService>();
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
@@ -79,7 +79,7 @@ namespace Warehouse
                     // - AcceptLanguageHeaderRequestCultureProvider, sets culture via the "Accept-Language" request header
                     options.RequestCultureProviders.Insert(0, new QueryStringRequestCultureProvider());
                 });
-        
+
             services.AddMvc()
                 .AddViewLocalization()
                 .AddDataAnnotationsLocalization(options =>
@@ -89,16 +89,11 @@ namespace Warehouse
                         var assemblyName = new AssemblyName(typeof(SharedResource).GetTypeInfo().Assembly.FullName);
                         return factory.Create("SharedResource", assemblyName.Name);
                     };
-                }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            services.AddMvc().AddRazorPagesOptions(options =>
-                options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "")
-            );
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             //services.AddMvc().AddRazorPagesOptions(options =>
-            //{
-            //    options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "");
-            //});
-            //services.AddMvc().AddViewLocalization();
-            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            //    options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "")
+            //);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -125,9 +120,7 @@ namespace Warehouse
             {
             routes.MapRoute(
                 name: "default",
-        //template: "Identity",
-        //defaults: new { controller = "Account", action = "Login" }
-            template: "{controller=Home}/{action=Index}/{id?}"
+                template: "{controller=Home}/{action=Index}/{id?}"
                 );
             }
             );
