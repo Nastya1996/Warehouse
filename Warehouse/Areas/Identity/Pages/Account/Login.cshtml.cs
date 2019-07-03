@@ -15,7 +15,7 @@ using Warehouse.Infrastructure;
 namespace Warehouse.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
-    [NoAuthorize]
+    [RedirectHomePage]
     public class LoginModel : PageModel
     {
         private readonly SignInManager<AppUser> _signInManager;

@@ -12,6 +12,7 @@ namespace Warehouse.Controllers
     [NoAuthorize]
     public class HomeController : BaseController
     {
+        [RedirectLoginPage]
         public IActionResult Index()
         {
             return View();

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Warehouse.Infrastructure
 {
-    public class NoAuthorize : AuthorizeAttribute, IAuthorizationFilter
+    public class RedirectHomePage : AuthorizeAttribute, IAuthorizationFilter
     {
         public void OnAuthorization(AuthorizationFilterContext context)
         {

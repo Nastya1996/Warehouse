@@ -24,7 +24,6 @@ using static Microsoft.AspNetCore.Razor.Language.TagHelperMetadata;
 using Microsoft.Extensions.Options;
 using Warehouse.Resources;
 using System.Reflection;
-using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Warehouse
 {
@@ -94,6 +93,9 @@ namespace Warehouse
             //services.AddMvc().AddRazorPagesOptions(options =>
             //    options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "")
             //);
+                }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            //services.AddMvc().AddViewLocalization();
+            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -118,9 +120,9 @@ namespace Warehouse
             app.UseAuthentication();
             app.UseMvc(routes =>
             {
-            routes.MapRoute(
-                name: "default",
-                template: "{controller=Home}/{action=Index}/{id?}"
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}"
                 );
             }
             );
