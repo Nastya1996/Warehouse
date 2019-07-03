@@ -1,0 +1,15 @@
+.wh-background{
+    background-image:url(../images/warehouse.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 400px;
+    width: 400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-around;
+}
+body{
+    margin:0 auto;
+    position:relative;
+}

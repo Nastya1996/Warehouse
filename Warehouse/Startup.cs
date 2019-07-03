@@ -93,7 +93,6 @@ namespace Warehouse
             //services.AddMvc().AddRazorPagesOptions(options =>
             //    options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "")
             //);
-                }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             //services.AddMvc().AddViewLocalization();
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }

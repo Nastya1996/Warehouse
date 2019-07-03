@@ -22,13 +22,6 @@ namespace Warehouse.Infrastructure
                 { "controller", "Home" }, { "action", "Index" }
                 });
             }
-            else
-            {
-                context.Result = new RedirectToRouteResult(
-                   new RouteValueDictionary {
-                { "area", "~/Identity/Account/Login" }
-               });
-            }
         }
     }
 }
