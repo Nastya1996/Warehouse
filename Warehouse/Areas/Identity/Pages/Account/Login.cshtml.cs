@@ -50,23 +50,16 @@ namespace Warehouse.Areas.Identity.Pages.Account
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
         }
-        [NoAuthorize]
+
         public async Task OnGetAsync(string returnUrl = null)
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                var rq = Request.Path;
-                if (rq == "/Identity/Account/Login")
-                    ReturnUrl = "~/Home/Index";
-                returnUrl = "~/Home/Index";
-            }
 
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);
             }
 
-            returnUrl = returnUrl ?? Url.Content("~/Home/Index");
+            returnUrl = returnUrl ?? Url.Content("~/");
 
             // Clear the existing external cookie to ensure a clean login process
             
