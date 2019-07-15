@@ -17,9 +17,7 @@
             <span asp-validation-for="Name"></span>
         </div>
         <div class="form-group">
-            <label asp-for="Barcode">@SharedLocalizer.GetLocalizedHtmlString("Barcode")</label>
-            <input asp-for="Barcode" type="text" class="form-control" />
-            <span asp-validation-for="Barcode"></span>
+            <input asp-for="Barcode" type="hidden" class="form-control" />
         </div>
         <div class="form-group">
             <label asp-for="ProductTypeId" class="control-label">@SharedLocalizer.GetLocalizedHtmlString("ProductType")</label>

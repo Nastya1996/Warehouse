@@ -29,7 +29,7 @@
                     {
                         <td>
                             <a asp-action="Continue" asp-route-id="@o.Id">@SharedLocalizer.GetLocalizedHtmlString("Continue") /</a>
-                            <a href="#" class="deleted">@SharedLocalizer.GetLocalizedHtmlString("Delete")</a>
+                            <a  class="deleted">@SharedLocalizer.GetLocalizedHtmlString("Delete")</a>
                         </td>
                     }
                     else if (o.OrderType == OrderType.Saled)
@@ -80,12 +80,13 @@
                                                     close: {
                                                         btnClass: "btn-blue",
                                                         action: function () {
+                                                            $link.parents("tr").remove();
+                                                            $row.removeClass();
                                                         }
                                                     }
                                                 }
                                             });
-                                            $link.parents("tr").remove();
-                                            $row.removeClass();
+                                            
                                         }
                                         else {
                                             $.confirm({

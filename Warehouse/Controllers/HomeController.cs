@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Warehouse.Infrastructure;
 using Warehouse.Models;
 
 namespace Warehouse.Controllers
 {
     public class HomeController : BaseController
     {
+        [RedirectLoginPage]
         public IActionResult Index()
         {
             return View();

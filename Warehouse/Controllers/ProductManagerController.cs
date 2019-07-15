@@ -166,9 +166,6 @@ namespace Warehouse.Controllers
             return View(model);
         }
 
-
-
-
         /// <summary>
         /// Open the edit ProductManager window
         /// </summary>
@@ -189,8 +186,6 @@ namespace Warehouse.Controllers
         ///// <param name="productManager">ProductManager object</param>
         ///// <returns></returns>
         ///// 
-
-
 
         [HttpPost]
         public IActionResult Edit(ProductManager productManager)
