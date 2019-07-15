@@ -9,6 +9,7 @@
     <link href="~/lib/font-awesome/css/all.min.css" rel="stylesheet" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="~/Login_v15/css/main.css">
     <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -20,21 +21,9 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
     </environment>
-    <style>
-       body{ display: flex;
-        flex-direction: column;
-        flex: 1 1 100%;
-        background-color: hsla(0,0%,100%,.999);
-        background-color: var(--body-background);
-        color: hsla(0,0%,0%,1);
-        color: var(--text);
-        line-height: 160%;
-        min-height: 100vh;
-        position:absolute;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css?family=Acme&display=swap" rel="stylesheet">
 </head>
-<body style="margin:15vh;">
+<body>
     <div class="modal fade container" id="myModal" role="dialog">
         <div class="modal-dialog">
 
@@ -85,7 +74,10 @@
 
 
     </script>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navShadow">
+        <div class="navImg login100-form-title">
+
+        </div>
         <div class="container">
             <div class="navbar-header c-uhfh context-uhf c-sgl-stck c-category-header f-transparent js">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -172,12 +164,12 @@
     <div class="container body-content">
         @RenderBody()
 
-        <footer class="navbar-inverse navbar-fixed-bottom" style="font-size:16px; color:#CCC; height:8%;">
-            <p style="display:inline-block; float:right;margin-right:5vw;margin-top:2vh;">&copy Warehouse 2019</p>
-            @await Html.PartialAsync("_SelectLanguagePartial")
-        </footer>
+        
     </div>
-
+    <footer class="container-fluid footerik">
+        <a>&copy Warehouse 2019</a>
+        @await Html.PartialAsync("_SelectLanguagePartial")
+    </footer>
     @*</div>*@
     @*environment include = "Development" >
                 <script src="~/lib/jquery/dist/jquery.js"></script>
