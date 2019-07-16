@@ -6,100 +6,104 @@
 
 @inject LocService SharedLocalizer
 <form method="get" asp-action="Show">
-    <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Price"):</label>
-    <input type="number" min="0" name="from" value="@ViewData["CurrentFrom"]" placeholder="0" />
+    <div class="form-inline form-group">
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Price"):</label>
+        <input class="form-control" type="number" min="0" name="from" value="@ViewData["CurrentFrom"]" placeholder="0" />
 
-    <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("From") -</label>
-    <label class="control-label"> Before</label>
-    <input type="number" min="0" name="before" value="@ViewData["CurrentBefore"]" placeholder="0" />
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("From") -</label>
+        <label class="control-label"> Before</label>
+        <input class="form-control" type="number" min="0" name="before" value="@ViewData["CurrentBefore"]" placeholder="0" />
 
-    <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize")</label>
-    <input type="number" name="pageSize" min="1" value="@ViewData["CurrentSize"]" />
-    <input type="submit" id="send" value="Filter" class="btn btn-default" />
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize")</label>
+        <input class="form-control" type="number" name="pageSize" min="1" value="@ViewData["CurrentSize"]" />
+        <input type="submit" id="send" value="Filter" class="btn btn-default" />
+    </div>
 </form>
-<table class="table table-bordered table-hover">
-    <thead>
-        <tr>
-            <th>@SharedLocalizer.GetLocalizedHtmlString("Name")</th>
-            <th>@SharedLocalizer.GetLocalizedHtmlString("Count")</th>
-            <th>@SharedLocalizer.GetLocalizedHtmlString("CurrentCount")</th>
-            <th>@SharedLocalizer.GetLocalizedHtmlString("Unit")</th>
-            <th>@SharedLocalizer.GetLocalizedHtmlString("ReceiptPrice")</th>
-            <th>@SharedLocalizer.GetLocalizedHtmlString("SalePrice")</th>
-            <th>@SharedLocalizer.GetLocalizedHtmlString("ReceiptDate")</th>
-            <th>@SharedLocalizer.GetLocalizedHtmlString("AddedDate")</th>
-            <th>@SharedLocalizer.GetLocalizedHtmlString("Warehouse")</th>
-            @if (User.IsInRole("Storekeeper"))
-            {
-                <th>@SharedLocalizer.GetLocalizedHtmlString("Move")</th>
-                <th>@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
-                <td>@SharedLocalizer.GetLocalizedHtmlString("WriteOut")</td>
-            }
-
-        </tr>
-    </thead>
-
-    <tbody>
-        @if (Model.Count == 0)
-        {
-            <tr><td colspan="12" class="text-center">@SharedLocalizer.GetLocalizedHtmlString("ThereAreNoProducts")</td></tr>
-        }
-        @foreach (var product in Model)
-        {
-            if (product.CurrentCount != 0)
-            {
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <thead>
             <tr>
-                <td hidden="hidden"><input type="hidden" value="@product.Id" /></td>
-                <td>@product.Product.Name</td>
-                <td>@product.Count</td>
-                <td class="currentCount">@product.CurrentCount</td>
-                <td>@product.Product.Unit.Name</td>
-                <td>@product.ReceiptPrice</td>
-                <td>@product.SalePrice</td>
-                <td>@product.ReceiptDate.ToString("d")</td>
-                <td>@product.Date</td>
-                <td>@product.WareHouse.Number</td>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Name")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Count")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("CurrentCount")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Unit")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("ReceiptPrice")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("SalePrice")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("ReceiptDate")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("AddedDate")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Warehouse")</th>
                 @if (User.IsInRole("Storekeeper"))
                 {
-                    <td>
-                        <a class="moveProduct" id="@product.Id" href="#">@SharedLocalizer.GetLocalizedHtmlString("Move")</a>
-                    </td>
-                    <td><a asp-action="Edit" asp-route-id="@(product.Id)">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
-                    <td><a href="#">Write out</a></td>
+                    <th>@SharedLocalizer.GetLocalizedHtmlString("Move")</th>
+                    <th>@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
+                    <td>@SharedLocalizer.GetLocalizedHtmlString("WriteOut")</td>
                 }
+
             </tr>
+        </thead>
+
+        <tbody>
+            @if (Model.Count == 0)
+            {
+                <tr><td colspan="12" class="text-center">@SharedLocalizer.GetLocalizedHtmlString("ThereAreNoProducts")</td></tr>
             }
-        }
-    </tbody>
-</table>
-<div>
-    <pager list="@Model" asp-action="Show" asp-controller="ProductManager"
-           asp-route-from="@ViewData["CurrentFrom"]" asp-route-before="@ViewData["CurrentBefore"]"
-           asp-route-pageSize="@ViewData["CurrentSize"]" />
-</div>
-<div class="modal fade" id="modalMoveProduct" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">@SharedLocalizer.GetLocalizedHtmlString("Warehouses")</h4>
-            </div>
-            <div class="modal-body">
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">@SharedLocalizer.GetLocalizedHtmlString("Close")</button>
-            </div>
-        </div>
-
+            @foreach (var product in Model)
+            {
+                if (product.CurrentCount != 0)
+                {
+                    <tr>
+                        <td hidden="hidden"><input type="hidden" value="@product.Id" /></td>
+                        <td>@product.Product.Name</td>
+                        <td>@product.Count</td>
+                        <td class="currentCount">@product.CurrentCount</td>
+                        <td>@product.Product.Unit.Name</td>
+                        <td>@product.ReceiptPrice</td>
+                        <td>@product.SalePrice</td>
+                        <td>@product.ReceiptDate.ToString("d")</td>
+                        <td>@product.Date</td>
+                        <td>@product.WareHouse.Number</td>
+                        @if (User.IsInRole("Storekeeper"))
+                        {
+                            <td>
+                                <a class="moveProduct" id="@product.Id" href="#">@SharedLocalizer.GetLocalizedHtmlString("Move")</a>
+                            </td>
+                            <td><a asp-action="Edit" asp-route-id="@(product.Id)">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
+                            <td><a href="#">Write out</a></td>
+                        }
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
     </div>
-</div>
-@section scripts{
-    <script src="https://kit.fontawesome.com/b7938c82ea.js"></script>
-    <script src="~/js/jquery-confirm.min.js"></script>
-    <link href="~/css/jquery-confirm.min.css" rel="stylesheet" />
-    <script>
+    <div>
+        <pager list="@Model" asp-action="Show" asp-controller="ProductManager"
+               asp-route-from="@ViewData["CurrentFrom"]" asp-route-before="@ViewData["CurrentBefore"]"
+               asp-route-pageSize="@ViewData["CurrentSize"]" />
+    </div>
+    <div class="modal fade" id="modalMoveProduct" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">@SharedLocalizer.GetLocalizedHtmlString("Warehouses")</h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">@SharedLocalizer.GetLocalizedHtmlString("Close")</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    @section scripts{
+        <script src="https://kit.fontawesome.com/b7938c82ea.js"></script>
+        <script src="~/js/jquery-confirm.min.js"></script>
+        <link href="~/css/jquery-confirm.min.css" rel="stylesheet" />
+        <script>
         let a = $(":input[name='before']");
         if (a.val() == "0") {
             $.ajax({
@@ -224,5 +228,5 @@
                 });
             });
         });
-    </script>
-}
+        </script>
+    }

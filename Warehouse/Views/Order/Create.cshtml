@@ -54,13 +54,13 @@
     </table>
     @if (Model.ProductOrders.Count > 0)
     {
-        <input id="chekoutBtn" type="submit" value="Check Out" />
+        <input class="btn" id="chekoutBtn" type="submit" value="Check Out" />
         <script>$("#chekoutBtn").css('pointer-events', 'all');</script>
     }
     else
     {
         <script>$("#chekoutBtn").css('pointer-events', 'none');</script>
-        <input type="submit" value="Check Out" disabled />
+        <input class="btn" type="submit" value="Check Out" disabled />
     }
 </form>
 @if (ViewBag.Baskets.Count > 0)
