@@ -398,9 +398,13 @@ input[type=submit]{
     background-color:black;
 }
 .jconfirm .jconfirm-box .jconfirm-buttons button.btn-blue {
-    background-color: #566d7a;
+    background-color: red;
     color: #FFF;
     text-shadow: none;
     -webkit-transition: background .2s;
     transition: background .2s;
+}
+.chosen-container .chosen-results li.highlighted {
+    background-color: red;
+    
 }
