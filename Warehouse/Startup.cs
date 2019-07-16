@@ -50,9 +50,9 @@ namespace Warehouse
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddIdentity<AppUser, IdentityRole>()
-				   .AddDefaultTokenProviders()
-					   .AddDefaultUI()
-						   .AddEntityFrameworkStores<ApplicationDbContext>();
+                   .AddDefaultTokenProviders()
+                       .AddDefaultUI()
+                           .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddSingleton<LocService>();
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
@@ -88,7 +88,11 @@ namespace Warehouse
                         var assemblyName = new AssemblyName(typeof(SharedResource).GetTypeInfo().Assembly.FullName);
                         return factory.Create("SharedResource", assemblyName.Name);
                     };
-                }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            //services.AddMvc().AddRazorPagesOptions(options =>
+            //    options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "")
+            //);
             //services.AddMvc().AddViewLocalization();
             //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
