@@ -10,7 +10,7 @@ using Warehouse.Models;
 
 namespace Warehouse.Controllers
 {
-    public class HomeController : BaseController
+    public class HomeController
     {
         [RedirectLoginPage]
         public IActionResult Index()
