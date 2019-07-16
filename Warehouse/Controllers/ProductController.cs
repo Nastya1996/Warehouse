@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PagedList.Core;
 using Warehouse.Data;
+using Warehouse.Filter;
 using Warehouse.Infrastructure;
 using Warehouse.Models;
 namespace Warehouse.Controllers
@@ -104,6 +105,7 @@ namespace Warehouse.Controllers
         /// <returns>Show products</returns>
         [Authorize(Roles = "Storekeeper")]
         [HttpPost]
+        [RepeatRequest("Product","Index")]
         public async Task<IActionResult> Create(Product product, IFormFile uploadedFile)
         {
             SelectInitial();

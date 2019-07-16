@@ -53,6 +53,14 @@ namespace Warehouse.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                var rq = Request.Path;
+                if (rq == "/Identity/Account/Login")
+                    ReturnUrl = "~/Home/Index";
+                returnUrl = "~/Home/Index";
+            }
+
             if (!string.IsNullOrEmpty(ErrorMessage))
             {
                 ModelState.AddModelError(string.Empty, ErrorMessage);
