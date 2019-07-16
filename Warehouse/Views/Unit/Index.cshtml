@@ -6,13 +6,15 @@
 
 @inject LocService SharedLocalizer
 <form asp-action="Index" method="get">
-    <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Name"):</label>
-    <input name="name" value="@ViewData["CurrentName"]" />
+    <div class="form-inline form-group">
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Name"):</label>
+        <input class="form-control" name="name" value="@ViewData["CurrentName"]" />
 
-    <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
-    <input type="number" min="1" max="100" name="pageSize" value="@ViewData["CurrentSize"]" />
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
+        <input class="form-control" type="number" min="1" max="100" name="pageSize" value="@ViewData["CurrentSize"]" />
 
-    <input type="submit" value="Filter" class="btn btn-default" />
+        <input type="submit" value="Filter" class="btn btn-default" />
+    </div>
 </form>
 <table class="table table-bordered table-hover">
     <thead>

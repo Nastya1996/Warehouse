@@ -5,7 +5,9 @@
 @using Warehouse.Resources
 
 @inject LocService SharedLocalizer
-<h1>@SharedLocalizer.GetLocalizedHtmlString("CreateProduct")</h1>
+<h2>@SharedLocalizer.GetLocalizedHtmlString("CreateProduct")</h2>
+<hr />
+<br />
 <form onsubmit="return PrCreateStop()" asp-action="Create" asp-antiforgery="true" method="post" enctype="multipart/form-data">
     <div>
         <div asp-validation-summary="ModelOnly"></div>
@@ -13,27 +15,29 @@
             <label asp-for="Name">@SharedLocalizer.GetLocalizedHtmlString("Name")</label>
             <input asp-for="Name" type="text" class="form-control" />
             <span asp-validation-for="Name"></span>
-</div>
-        <div class="form-group">
-            <label asp-for="Barcode">@SharedLocalizer.GetLocalizedHtmlString("Barcode")</label>
-            <input asp-for="Barcode" type="text" class="form-control" />
-            <span asp-validation-for="Barcode"></span>
-        </div>
-        <div id="PrMngTypeDiv" class="form-group">
-            <label asp-for="ProductTypeId" class="control-label">@SharedLocalizer.GetLocalizedHtmlString("ProductType")</label>
-            <select asp-for="ProductTypeId" asp-items="ViewBag.ProductTypes" class="form-control">
-                <option selected disabled value="">@SharedLocalizer.GetLocalizedHtmlString("SelectType")</option>
-            </select>
-        </div>
-        <div id="PrMngUnitDiv" class="form-group">
-            <label asp-for="UnitId" class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Unit")</label>
-            <select asp-for="UnitId" asp-items="ViewBag.Units" class="form-control">
-                <option selected disabled value="">@SharedLocalizer.GetLocalizedHtmlString("SelectUnit")</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <input accept="image/*" type="file" name="uploadedFile" /><br>
-        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Barcode">@SharedLocalizer.GetLocalizedHtmlString("Barcode")</label>
+        <input asp-for="Barcode" type="text" class="form-control" />
+        <span asp-validation-for="Barcode"></span>
+    </div>
+    <div id="PrMngTypeDiv" class="form-group">
+        <label asp-for="ProductTypeId" class="control-label">@SharedLocalizer.GetLocalizedHtmlString("ProductType")</label>
+        <select asp-for="ProductTypeId" asp-items="ViewBag.ProductTypes" class="form-control">
+            <option selected disabled value="">@SharedLocalizer.GetLocalizedHtmlString("SelectType")</option>
+        </select>
+    </div>
+    <div id="PrMngUnitDiv" class="form-group">
+        <label asp-for="UnitId" class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Unit")</label>
+        <select asp-for="UnitId" asp-items="ViewBag.Units" class="form-control">
+            <option selected disabled value="">@SharedLocalizer.GetLocalizedHtmlString("SelectUnit")</option>
+        </select>
+    </div>
+    <div class="custom-file">
+        <input type="file" class="hidden" id="inputGroupFile01">
+        <label>Image</label>
+        <label id="lableSelect" for="inputGroupFile01">Select file</label>
+    </div> 
         <div><input type="submit" value="Create" class="btn btn-primary" /></div>
     </div>
 </form>

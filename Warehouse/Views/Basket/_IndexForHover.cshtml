@@ -16,179 +16,181 @@
             $("#chekOutBtn").removeAttr("disabled");
             $("#chekOutBtn").css('pointer-events', 'all');
         </script>
-        <table class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Count</th>
-                    <th>Change count</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var pb in Model)
-                {
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
                     <tr>
-                        <td>@pb.Product.Name</td>
-                        <td class="countOfBasketProduct">@pb.Count</td>
-                        <td><a class="changeCountOrder" href="#">Change<input type="hidden" value="@pb.Id" class="changeInputValue" /></a></td>
-                        <td><a href="#" class="deleted">Delete<input type="hidden" value="@pb.Id" class="changeInputValue" /></a></td>
+                        <th>Name</th>
+                        <th>Count</th>
+                        <th>Change count</th>
+                        <th>Delete</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    }
-    else
-    {
-        <p>No products to show!</p>
-        <script>
-            $("#chekOutBtn").attr('disabled', 'true');
-            $("#chekOutBtn").css('pointer-events', 'none');
-        </script>
-    }
-}
-<script>
-    $(() => {
-        $("a.deleted").on("click", function () {
-            var basketItemId = $(this).children(".changeInputValue").val();
-            let $link = $(this);
-            $(this).parent().parent().addClass(".select");
-            $link.addClass('context-menu-one');
-            $.contextMenu({
-                selector: '.context-menu-one',
-                trigger: 'left',
-                callback: function (key, options) {
-                },
-                position: function (opt, x, y) {
-                    opt.$menu.css({ top: y + 10, left: x - 90 });
-                },
-                items: {
-                    "Yes": {
-                        name: 'Yes', icon: 'fas fa-check-circle',
-                        callback: function () {
-                            let $link = $(this);
-                            let $row = $(this).parent().parent().addClass(".select");
-                            $.ajax({
-                                url: '/Basket/DeleteYes',
-                                type: "POST",
-                                data: { id: basketItemId },
-                                async: false,
-                                success: function (result) {
-                                    $("#chekOutBtn").attr('disabled', 'true');
-                                    $("#chekOutBtn").css('pointer-events', 'none');
-                                    if (result) {
-                                        $.confirm({
-                                            icon: 'fas fa-check-circle',
-                                            title: 'Warehouse!',
-                                            content: 'Product successfully removed!',
-                                            type: 'blue',
-                                            typeAnimated: true,
-                                            buttons: {
-                                                close: {
-                                                    btnClass: "btn-blue",
-                                                    action: function () {
-                                                    }
+                </thead>
+                <tbody>
+                    @foreach (var pb in Model)
+                    {
+                        <tr>
+                            <td>@pb.Product.Name</td>
+                            <td class="countOfBasketProduct">@pb.Count</td>
+                            <td><a class="changeCountOrder" href="#">Change<input type="hidden" value="@pb.Id" class="changeInputValue" /></a></td>
+                            <td><a href="#" class="deleted">Delete<input type="hidden" value="@pb.Id" class="changeInputValue" /></a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            </div>
+            }
+            else
+            {
+            <p>No products to show!</p>
+            <script>
+                $("#chekOutBtn").attr('disabled', 'true');
+                $("#chekOutBtn").css('pointer-events', 'none');
+            </script>
+            }
+            }
+            <script>
+                $(() => {
+                    $("a.deleted").on("click", function () {
+                        var basketItemId = $(this).children(".changeInputValue").val();
+                        let $link = $(this);
+                        $(this).parent().parent().addClass(".select");
+                        $link.addClass('context-menu-one');
+                        $.contextMenu({
+                            selector: '.context-menu-one',
+                            trigger: 'left',
+                            callback: function (key, options) {
+                            },
+                            position: function (opt, x, y) {
+                                opt.$menu.css({ top: y + 10, left: x - 90 });
+                            },
+                            items: {
+                                "Yes": {
+                                    name: 'Yes', icon: 'fas fa-check-circle',
+                                    callback: function () {
+                                        let $link = $(this);
+                                        let $row = $(this).parent().parent().addClass(".select");
+                                        $.ajax({
+                                            url: '/Basket/DeleteYes',
+                                            type: "POST",
+                                            data: { id: basketItemId },
+                                            async: false,
+                                            success: function (result) {
+                                                $("#chekOutBtn").attr('disabled', 'true');
+                                                $("#chekOutBtn").css('pointer-events', 'none');
+                                                if (result) {
+                                                    $.confirm({
+                                                        icon: 'fas fa-check-circle',
+                                                        title: 'Warehouse!',
+                                                        content: 'Product successfully removed!',
+                                                        type: 'blue',
+                                                        typeAnimated: true,
+                                                        buttons: {
+                                                            close: {
+                                                                btnClass: "btn-blue",
+                                                                action: function () {
+                                                                }
+                                                            }
+                                                        }
+                                                    });
+                                                    $link.parents("tr").remove();
+                                                    $row.removeClass();
+                                                }
+                                                else {
+                                                    $.confirm({
+                                                        icon: 'fas fa-exclamation-triangle',
+                                                        title: 'Warehouse!',
+                                                        content: 'An error occurred. Please, try again!',
+                                                        type: 'red',
+                                                        typeAnimated: true,
+                                                        buttons: {
+                                                            close: {
+                                                                btnClass: "btn-red",
+                                                                action: function () {
+                                                                }
+                                                            }
+                                                        }
+                                                    });
                                                 }
                                             }
                                         });
-                                        $link.parents("tr").remove();
                                         $row.removeClass();
+                                        $link.removeClass();
                                     }
-                                    else {
-                                        $.confirm({
-                                            icon: 'fas fa-exclamation-triangle',
-                                            title: 'Warehouse!',
-                                            content: 'An error occurred. Please, try again!',
-                                            type: 'red',
-                                            typeAnimated: true,
-                                            buttons: {
-                                                close: {
-                                                    btnClass: "btn-red",
-                                                    action: function () {
-                                                    }
-                                                }
-                                            }
-                                        });
-                                    }
-                                }
-                            });
-                            $row.removeClass();
-                            $link.removeClass();
-                        }
-                    },
-                    "sep1": "---------",
-                    "Cansel": { name: "Cansel", icon: 'far fa-times-circle' }
-                }
-            });
-
-        });
-        $(".changeCountOrder").click(function () {
-            var $Id = $(this).children(".changeInputValue").val();
-            var $c = $(this).parent().parent().children(".countOfBasketProduct");
-            $.confirm({
-                title: 'Write out!',
-                content: '' +
-                    '<div class="form-group">' +
-                    '<label>Change count!</label>' +
-                    '<input type="number" placeholder="0" min="1" id="countChangeInput" class="form-control" required />' +
-                    '</div>',
-                buttons: {
-                    formSubmit: {
-                        text: 'Ok',
-                        action: function () {
-                            var $Count = $("#countChangeInput").val();
-                            if ($Count == 0) {
-                                $.confirm({
-                                    icon: 'fas fa-exclamation-triangle',
-                                    content: 'An error has occurred. Write the actual amount!',
-                                    type: 'red',
-                                    typeAnimated: true,
-                                    buttons: {
-                                        close: {
-                                            btnClass: "btn-red",
-                                            action: function () {
-                                            }
-                                        }
-                                    }
-                                });
-                                return false;
-                            }
-                            $.ajax({
-                                type: "POST",
-                                data: {
-                                    id: $Id,
-                                    count: $Count
                                 },
-                                async: false,
-                                url: "../../Basket/ChangeCount",
-                                success: function (result) {
-                                    $c.text($Count);
-                                    if (result) {
-                                        error = false;
-                                        $.confirm({
-                                            icon: 'fas fa-check-circle',
-                                            title: 'Basket',
-                                            content: 'Count changed!',
-                                            type: 'blue',
-                                            typeAnimated: true,
-                                            buttons: {
-                                                close: {
-                                                    btnClass: "btn-blue",
-                                                    action: function () {
+                                "sep1": "---------",
+                                "Cansel": { name: "Cansel", icon: 'far fa-times-circle' }
+                            }
+                        });
+
+                    });
+                    $(".changeCountOrder").click(function () {
+                        var $Id = $(this).children(".changeInputValue").val();
+                        var $c = $(this).parent().parent().children(".countOfBasketProduct");
+                        $.confirm({
+                            title: 'Write out!',
+                            content: '' +
+                                '<div class="form-group">' +
+                                '<label>Change count!</label>' +
+                                '<input type="number" placeholder="0" min="1" id="countChangeInput" class="form-control" required />' +
+                                '</div>',
+                            buttons: {
+                                formSubmit: {
+                                    text: 'Ok',
+                                    action: function () {
+                                        var $Count = $("#countChangeInput").val();
+                                        if ($Count == 0) {
+                                            $.confirm({
+                                                icon: 'fas fa-exclamation-triangle',
+                                                content: 'An error has occurred. Write the actual amount!',
+                                                type: 'red',
+                                                typeAnimated: true,
+                                                buttons: {
+                                                    close: {
+                                                        btnClass: "btn-red",
+                                                        action: function () {
+                                                        }
                                                     }
+                                                }
+                                            });
+                                            return false;
+                                        }
+                                        $.ajax({
+                                            type: "POST",
+                                            data: {
+                                                id: $Id,
+                                                count: $Count
+                                            },
+                                            async: false,
+                                            url: "../../Basket/ChangeCount",
+                                            success: function (result) {
+                                                $c.text($Count);
+                                                if (result) {
+                                                    error = false;
+                                                    $.confirm({
+                                                        icon: 'fas fa-check-circle',
+                                                        title: 'Basket',
+                                                        content: 'Count changed!',
+                                                        type: 'blue',
+                                                        typeAnimated: true,
+                                                        buttons: {
+                                                            close: {
+                                                                btnClass: "btn-blue",
+                                                                action: function () {
+                                                                }
+                                                            }
+                                                        }
+                                                    });
                                                 }
                                             }
                                         });
                                     }
-                                }
-                            });
-                        }
-                    },
-                    cancel: function () {
-                        //close
-                    },
-                }
-            });
-        });
-    });
-</script>
+                                },
+                                cancel: function () {
+                                    //close
+                                },
+                            }
+                        });
+                    });
+                });
+            </script>

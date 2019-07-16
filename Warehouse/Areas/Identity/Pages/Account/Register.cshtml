@@ -7,13 +7,12 @@
     var date = DateTime.Now;
     var newDate = new DateTime(date.Year-14,date.Month,date.Day).ToString("yyyy-MM-dd");
 }
-<h2>@ViewData["Title"]</h2>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h4>Create a new account.</h4>
+            <h3>Create a new account.</h3>
             <hr />
-            <div asp-validation-summary="All" class="text-danger"></div>
+            @*<div asp-validation-summary="All" class="text-danger"></div>*@
             <div class="form-group">
                 <label asp-for="Input.Name"></label>
                 <input asp-for="Input.Name" class="form-control" />

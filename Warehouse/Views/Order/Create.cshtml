@@ -36,7 +36,7 @@
                     <td class="countOfPO">@Model.ProductOrders[i].Count</td>
                     <td class="price">@Model.ProductOrders[i].Price</td>
                     <td><input class="saleOrderItem" type="number" max="100" min="0" asp-for="@Model.ProductOrders[i].Sale" /></td>
-                    <td>@Model.ProductOrders[i].FinallyPrice</td>
+                    <td class="SalePriceInOneProduct">@Model.ProductOrders[i].FinallyPrice</td>
                 </tr>
             }
         </tbody>
@@ -46,7 +46,7 @@
                 <td>Yndameny</td>
                 <td class="yndamenyPrice" asp-for="@Model.Price">@Model.Price</td>
                 <td><input class="yndamenyInp" type="number" max="100" min="0" asp-for="@Model.Sale" /></td>
-                <td>@Model.FinallPrice</td>
+                <td class="Finally">@Model.FinallPrice</td>
             </tr>
         </tfoot>
 
@@ -54,13 +54,13 @@
     </table>
     @if (Model.ProductOrders.Count > 0)
     {
-        <input id="chekoutBtn" type="submit" value="Check Out" />
+        <input class="btn" id="chekoutBtn" type="submit" value="Check Out" />
         <script>$("#chekoutBtn").css('pointer-events', 'all');</script>
     }
     else
     {
         <script>$("#chekoutBtn").css('pointer-events', 'none');</script>
-        <input type="submit" value="Check Out" disabled />
+        <input class="btn" type="submit" value="Check Out" disabled />
     }
 </form>
 @if (ViewBag.Baskets.Count > 0)
@@ -121,13 +121,24 @@
     <script src="~/js/jquery.maskedinput.js"></script>
     <script>
         $(() => {
+            var All = 0;
             $(".saleOrderItem").keyup(function () {
+                All = 0;
+                var discount = $(this).val();
                 var count = $(this).parent().parent().children(".countOfPO").text();
                 var price = $(this).parent().parent().children(".price").text();
+                if (discount > 100 || discount < 0) {
+                    $(this).val(0);
+                    return false;
+                }
                 var finPrice = count * price;
-                var discount = $(this).val();
                 var discountedPrice = finPrice - (finPrice * discount / 100);
                 $(this).parent().next().text(discountedPrice);
+                $("td.SalePriceInOneProduct").each(function () {
+                    All += parseInt($(this).text());
+                });
+                $(".yndamenyPrice").text(All);
+                $(".Finally").text(All);
             });
 
             jQuery(function ($) {
@@ -136,6 +147,10 @@
             var ph = false;
             $(".yndamenyInp").keyup(function () {
                 var discount = $(this).val();
+                if (discount > 100 || discount < 0) {
+                    $(this).val(0);
+                    return false;
+                }
                 var price = $(this).parent().parent().children(".yndamenyPrice").text();
                 var discountedPrice = price - (price * discount / 100);
                 $(this).parent().next().text(discountedPrice);
