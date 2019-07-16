@@ -15,12 +15,10 @@ namespace Warehouse.Filter
     {
         string key { get; }
         string route { get; }
-        object routeValue { get; }
-        public RepeatRequest(string key="Home", string route="Index", object routeValue=null)
+        public RepeatRequest(string key="Home", string route="Index")
         {
             this.key = key;
             this.route = route;
-            this.routeValue = routeValue;
         }
         public override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -28,7 +26,7 @@ namespace Warehouse.Filter
             var _cache = httpContext.RequestServices.GetService<IMemoryCache>();
             var userId = httpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             _cache.TryGetValue(userId, out string value);
-            if (value != null)
+            if (userId == null || value != null)
             {
                 context.Result = new RedirectToRouteResult(
                      new RouteValueDictionary {
@@ -36,7 +34,7 @@ namespace Warehouse.Filter
                  });
             }
             var path = httpContext.Request.Path.ToString();
-            _cache.Set(userId, path.ToString(), new MemoryCacheEntryOptions
+            _cache.Set(userId, path, new MemoryCacheEntryOptions
             {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(4)
             });

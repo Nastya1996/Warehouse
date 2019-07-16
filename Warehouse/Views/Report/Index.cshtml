@@ -142,9 +142,9 @@
                 <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Deal"):</label>
                 <select asp-for="Deal" class="effect-24">
                     <option selected disabled value="">SelectTheDeal</option>
-                    <option class="effect-24">Import</option>
-                    <option class="effect-24">Saled</option>
-                    <option class="effect-24">Export</option>
+                    <option class="effect-24" value="0">Import</option>
+                    <option class="effect-24" value="1">Saled</option>
+                    <option class="effect-24" value="2">Export</option>
                 </select>
 
                 <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Type"):</label>
