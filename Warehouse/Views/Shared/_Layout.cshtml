@@ -29,8 +29,8 @@
     <link href="https://fonts.googleapis.com/css?family=Varela+Round&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="modal fade container" id="myModal" role="dialog">
-        <div class="modal-dialog">
+    <div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
 
             <!-- Modal content-->
             <div class="modal-content">
@@ -67,9 +67,7 @@
                     }
                 });
                 $('.modal-dialog').css({
-                    "position": "absolute",
-                    "top": ($("#modalForBasket").position().top + 20),
-                    "left": ($("#modalForBasket").position().left - 630)
+                    'margin-top': '10%'
                 });
                 $("#myModal").modal();
             });
