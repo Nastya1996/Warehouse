@@ -50,7 +50,7 @@ namespace Warehouse.Controllers
         public JsonResult FinallyBack(string id, string count)
         {
             UInt32 countCast;
-            if (!UInt32.TryParse(count, out countCast))
+            if (!UInt32.TryParse(count, out countCast) || countCast==0)
                 return new JsonResult(false);
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var po = _context.ProductOrders

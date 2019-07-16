@@ -78,7 +78,7 @@ namespace Warehouse
                     // - AcceptLanguageHeaderRequestCultureProvider, sets culture via the "Accept-Language" request header
                     options.RequestCultureProviders.Insert(0, new QueryStringRequestCultureProvider());
                 });
-
+            services.AddMemoryCache();
             services.AddMvc()
                 .AddViewLocalization()
                 .AddDataAnnotationsLocalization(options =>
