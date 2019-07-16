@@ -190,6 +190,7 @@ input[type="checkbox"].input-validation-error {
 .modal-footer-basket {
     display: flex;
     justify-content: space-between;
+    flex-wrap:wrap;
 }
 /*Tag Select class*/
 .SelectError {
