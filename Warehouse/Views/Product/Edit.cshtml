@@ -33,8 +33,8 @@
         </div>
         <div class="form-group">
             <label class="control-label">Image</label><br />
-            <input id="inputGroupFile02" type="hidden" value="@Model.FileModelImg.Name" />
-            <input asp-for="FileModelImgId" accept="image/*" type="file" name="uploadedFile" value="@Model.FileModelImg.Name" class="hidden" id="inputGroupFile01">
+            <input id="inputGroupFile02" type="hidden" value="@Model.FileModelImg?.Path" />
+            <input asp-for="FileModelImgId" accept="image/*" type="file" name="uploadedFile" class="hidden" id="inputGroupFile01">
             <div class="imageSelect">
                 <label asp-for="FileModelImgId" for="inputGroupFile01" id="chosenFileNameBtn">Upload file</label>
                 <label asp-for="FileModelImgId" for="inputGroupFile01" id="chosenFileName"></label>
@@ -56,12 +56,12 @@
         if ($('#inputGroupFile02').val() != '') {
             $("#chosenFileName").text($('#inputGroupFile02').val());
         }
-        $('#inputGroupFile02').change(function () {
-            if ($('#inputGroupFile02').val() == '') {
+        $('#inputGroupFile01').change(function () {
+            if ($('#inputGroupFile01').val() == '') {
                 $('#chosenFileName').text('No file chosen');
             }
-            if ($('#inputGroupFile02').val() != '') {
-                $("#chosenFileName").text($('#inputGroupFile02').val());
+            if ($('#inputGroupFile01').val() != '') {
+                $("#chosenFileName").text($('#inputGroupFile01').val());
             }
         })
     })
