@@ -33,10 +33,13 @@
             <option selected disabled value="">@SharedLocalizer.GetLocalizedHtmlString("SelectUnit")</option>
         </select>
     </div>
-    <div class="custom-file">
+    <div class="form-group">
+        <label class="control-label">Image</label><br />
         <input type="file" class="hidden" id="inputGroupFile01">
-        <label>Image</label>
-        <label id="lableSelect" for="inputGroupFile01">Select file</label>
+        <div class="imageSelect">
+            <label for="inputGroupFile01" id="chosenFileNameBtn">Upload file</label>
+            <label for="inputGroupFile01" id="chosenFileName"></label>
+        </div>
     </div> 
         <div><input type="submit" value="Create" class="btn btn-primary" /></div>
     </div>
@@ -46,3 +49,21 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="~/js/product.js"></script>
 }
+<script>
+    $(document).ready(function () {
+        if ($('#inputGroupFile01').val() == '') {
+            $('#chosenFileName').text('No file chosen');
+        }
+        if ($('#inputGroupFile01').val() != '') {
+            $("#chosenFileName").text($('#inputGroupFile01').val());
+        }
+        $('#inputGroupFile01').change(function () {
+            if ($('#inputGroupFile01').val() == '') {
+                $('#chosenFileName').text('No file chosen');
+            }
+            if ($('#inputGroupFile01').val() != '') {
+                $("#chosenFileName").text($('#inputGroupFile01').val());
+            }
+        })
+    })
+</script>

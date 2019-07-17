@@ -32,7 +32,13 @@
             </select>
         </div>
         <div class="form-group">
-            <input accept="image/*" type="file" name="uploadedFile" value="Model.FileModelImg" /><br>
+            <label class="control-label">Image</label><br />
+            <input id="inputGroupFile02" type="hidden" value="@Model.FileModelImg.Name" />
+            <input asp-for="FileModelImgId" accept="image/*" type="file" name="uploadedFile" value="@Model.FileModelImg.Name" class="hidden" id="inputGroupFile01">
+            <div class="imageSelect">
+                <label asp-for="FileModelImgId" for="inputGroupFile01" id="chosenFileNameBtn">Upload file</label>
+                <label asp-for="FileModelImgId" for="inputGroupFile01" id="chosenFileName"></label>
+            </div>
         </div>
         <div><input type="submit" value="Edit" class="btn btn-primary" /></div>
     </div>
@@ -41,3 +47,22 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     <script src="~/js/product.js"></script>
 }
+<script>
+    $(document).ready(function () {
+        //debugger;
+        if ($('#inputGroupFile02').val() == '') {
+            $('#chosenFileName').text('No file chosen');
+        }
+        if ($('#inputGroupFile02').val() != '') {
+            $("#chosenFileName").text($('#inputGroupFile02').val());
+        }
+        $('#inputGroupFile02').change(function () {
+            if ($('#inputGroupFile02').val() == '') {
+                $('#chosenFileName').text('No file chosen');
+            }
+            if ($('#inputGroupFile02').val() != '') {
+                $("#chosenFileName").text($('#inputGroupFile02').val());
+            }
+        })
+    })
+</script>

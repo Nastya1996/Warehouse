@@ -172,7 +172,8 @@ namespace Warehouse.Controllers
         {
             if (_context.Products.Find(id) == null) return BadRequest();
             SelectInitial();
-            return View(_context.Products.Include(x => x.ProductType).Include(p=>p.FileModelImg).Include(x => x.Unit).FirstOrDefault(x => x.Id == id));
+            var obj = _context.Products.Include(x => x.ProductType).Include(p => p.FileModelImg).Include(x => x.Unit).FirstOrDefault(x => x.Id == id);
+            return View(obj);
         }
 
 

@@ -24,10 +24,10 @@
 </form>
 <br /><br />
       <div class="table-responsive">
-          <table class="table product-table">
-              <thead style="background-color:#80808017" class="mdb-color lighten-5">
+          <table class="table table-striped">
+              <thead>
                   <tr>
-                      <th class="font-weight-bold">
+                      <th scope="col">
                           <span class="table-up">
                               <a asp-route-PageSize="@Model.PageSize" asp-route-TypeId="@Model.TypeId" asp-route-ProductId="@Model.ProductName" asp-action="Index" asp-route-sortOrder="@ViewBag.ProductNameSort" class="indigo-text">
                                   @SharedLocalizer.GetLocalizedHtmlString("Name")
@@ -42,18 +42,18 @@
                               </a>
                           </span>
                       </th>
-                      <th class="font-weight-bold">@SharedLocalizer.GetLocalizedHtmlString("Barcode")</th>
-                      <th class="font-weight-bold">@SharedLocalizer.GetLocalizedHtmlString("ProductType")</th>
-                      <th class="font-weight-bold">@SharedLocalizer.GetLocalizedHtmlString("Unit")</th>
+                      <th scope="col">@SharedLocalizer.GetLocalizedHtmlString("Barcode")</th>
+                      <th scope="col">@SharedLocalizer.GetLocalizedHtmlString("ProductType")</th>
+                      <th scope="col">@SharedLocalizer.GetLocalizedHtmlString("Unit")</th>
                       @if (User.IsInRole("Admin"))
                       {
-                          <th class="font-weight-bold">@SharedLocalizer.GetLocalizedHtmlString("DisableEnable")</th>
+                          <th scope="col">@SharedLocalizer.GetLocalizedHtmlString("DisableEnable")</th>
                       }
                       else
                       {
-                          <th class="font-weight-bold">@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
+                          <th scope="col">@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
                       }
-                      <th>@SharedLocalizer.GetLocalizedHtmlString("Image")</th>
+                      <th scope="col">@SharedLocalizer.GetLocalizedHtmlString("Image")</th>
                   </tr>
               </thead>
               <tbody>
