@@ -23,7 +23,7 @@
     </div>
 </form>
 <div class="table-responsive">
-    <table id="pmTable" class="table table-hover table-bordered">
+    <table id="pmTable" class="table table-bordered">
         <thead>
             <tr>
                 <th>@SharedLocalizer.GetLocalizedHtmlString("ProductType")</th>
@@ -56,9 +56,9 @@
                         <td>@productManager.Product.Unit.Name</td>
                         @if (User.IsInRole("Worker"))
                         {
-                            <td><a class="Added">@SharedLocalizer.GetLocalizedHtmlString("Add")</a></td>
+                            <td><a class="Added btn btn-info btn-rounded btn-waves-effect waves-light">@SharedLocalizer.GetLocalizedHtmlString("Add") <i class="fas fa-plus-square ml-1"></i></a></td>
                         }
-                        <td><a asp-action="Show" asp-route-id="@productManager.Product.Id">Show</a></td>
+                        <td style="padding-top: 20px;"><a class="showik btn btn-rounded btn-waves-effect waves-light" asp-action="Show" asp-route-id="@productManager.Product.Id">Show</a></td>
                     </tr>
                 }
             }
