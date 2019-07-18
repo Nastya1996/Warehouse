@@ -86,11 +86,13 @@
         });
         $("#TypeId").chosen({
             search_contains: true,
+            inherit_select_classes: true,
             width: "15%"
         });
         $("#ProductId").chosen({
             search_contains: true,
-            width: "15%"
+            inherit_select_classes:true,
+            width: "15%"    
         });
         $(() => {
             $("#TypeId").on("change", function () {
