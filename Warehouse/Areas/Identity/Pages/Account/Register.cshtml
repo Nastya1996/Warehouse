@@ -9,7 +9,7 @@
 }
 <div class="row">
     <div class="col-md-6">
-        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+        <form onsubmit="return StopUser()" asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <h3>Create a new account.</h3>
             <hr />
             @*<div asp-validation-summary="All" class="text-danger"></div>*@
@@ -28,18 +28,19 @@
                 <input asp-for="Input.Birthdate" value="@newDate" class="form-control" />
                 <span asp-validation-for="Input.Birthdate" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div id="RoleDiv" class="form-group">
+                <label asp-for="Input.Role"></label>
+                <select id="Role" asp-for="Input.Role" class="form-control">
+                    <option selected disabled value="">Select role</option>
+                    <option class="houseRole">Worker</option>
+                    <option class="houseRole">Storekeeper</option>
+                    <option>Report</option>
+                </select>
+            </div>
+            <div id="HouseDiv" class="form-group">
                 <label asp-for="Input.WarehouseId"></label><br />
                 <select id="House" asp-for="Input.WarehouseId" asp-items="@ViewBag.Warehouse">
                     <option selected disabled value="">Select warehouse</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.Role"></label>
-                <select asp-for="Input.Role" class="form-control">
-                    <option>Worker</option>
-                    <option>Storekeeper</option>
-                    <option>Report</option>
                 </select>
             </div>
             <div class="form-group">
@@ -73,11 +74,70 @@
     @*<link href="~/css/chosen.min.css" rel="stylesheet" />*@
     <script src="~/lib/jquery/dist/chosen.jquery.min.js"></script>
     <script>
+        var roleIsReport = false;
         $(() => {
             $("#House").chosen({
                 search_contains: true,
                 width: "100%"
             });
+            $("#Role").chosen({
+                search_contains: true,
+                width:"100%"
+            });
         });
+        $(() => {
+            roleIsReport = false;
+            $("#House").change(function () {
+                HouseSpanDelete();
+            })
+            $("#Role").change(function () {
+                let role = $("#Role").children("option:selected");
+                if (!role.hasClass("houseRole")) {
+                    roleIsReport = true;
+                    HouseSpanDelete();
+                }
+                else {
+                    roleIsReport = false;
+                }
+                RoleSpanDelete();
+            });
+        });
+        //If role or warehouse not selected, stop request
+        function StopUser() {
+            if (HouseNotValid() | RoleNotValid()) {
+                return false;
+            }
+        };
+        //Validation messages delete
+        function HouseSpanDelete() {
+            $("#HouseDiv span.SelectError").remove();
+        }
+        function RoleSpanDelete() {
+            $("#RoleDiv span.SelectError").remove();
+        }
+
+        //Role and Warehouse validation functions
+        function RoleNotValid() {
+            let role = $("#Role").children("option:selected");
+            RoleSpanDelete();
+            if (role.val() == "") {
+                $("#RoleDiv").append("<span class='SelectError'>The role not selected</span>");
+                return true;
+            }
+            return false;
+        }
+        function HouseNotValid() {
+            let house = $("#House").children("option:selected");
+            HouseSpanDelete();
+            if (roleIsReport === true) {
+                HouseSpanDelete();
+                return false;
+            }
+            if (house.val() == "") {
+                $("#HouseDiv").append("<span class='SelectError'>The warehouse not selected</span>")
+                return true;
+            }
+            return false;
+        }
     </script>
 }
