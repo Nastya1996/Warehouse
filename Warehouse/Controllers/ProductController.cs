@@ -46,6 +46,18 @@ namespace Warehouse.Controllers
         [Authorize(Roles = "Storekeeper, Admin")]
         public IActionResult Index(ProductViewModel viewModel, SortState sortOrder = SortState.ProductNameAsc)
         {
+            var c = _context.Files.ToList();
+            foreach (var i in c)
+            {
+                if (i.Path == null)
+                {
+                    i.Path = "/Files/warehouse-cartoon-vector-7197735.jpg";
+                    _context.Update(i);
+                    _context.SaveChanges();
+                }
+               
+            }
+
             if (!FilterValid()) return BadRequest();
             IQueryable<Product> query = null;
             if (User.IsInRole("Admin"))
@@ -53,7 +65,6 @@ namespace Warehouse.Controllers
                 ViewBag.Types = new SelectList(_context.Types, "Id", "Name");
                 ViewBag.Names = new SelectList(_context.Products, "Id", "Name");
                 query = _context.Products.Include(p => p.FileModelImg).Include(p=>p.Unit).AsQueryable();
-
             }
             else
             {
@@ -62,18 +73,24 @@ namespace Warehouse.Controllers
                 query = _context.Products.Include(p => p.FileModelImg).Include(p=>p.Unit).Where(p => p.IsActive).AsQueryable();
             }
             ViewData["CurrentSize"] = viewModel.PageSize;
-            ViewBag.ProductNameSort = sortOrder == SortState.ProductNameAsc ? SortState.ProductNameDesc : SortState.ProductNameAsc;
+            if (sortOrder == SortState.ProductNameAsc)
+                ViewBag.ProductNameSort = SortState.ProductNameDesc;
+            else
+                ViewBag.ProductNameSort = SortState.ProductNameAsc;
+            //ViewBag.ProductNameSort = sortOrder == SortState.ProductNameAsc ? SortState.ProductNameDesc : SortState.ProductNameAsc;
             if (viewModel.TypeId != null)
                 if (_context.Types.Find(viewModel.TypeId) != null)
                     query = query.Where(p => p.ProductTypeId == viewModel.TypeId);
                 else return BadRequest();
             if (!string.IsNullOrEmpty(viewModel.ProductName))
                 query = query.Where(p => p.Name.Contains(viewModel.ProductName, StringComparison.InvariantCultureIgnoreCase));
-            switch (sortOrder)
+            if (sortOrder == SortState.ProductNameDesc)
             {
-                case SortState.ProductNameDesc:
-                    query = query.OrderByDescending(s => s.Name);
-                    break;
+                query = query.OrderByDescending(s => s.Name);
+            }
+            if(sortOrder == SortState.ProductNameAsc)
+            {
+                query = query.OrderBy(s => s.Name);
             }
             ViewBag.paged = new PagedList<Product>(query, viewModel.Page, viewModel.PageSize);
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
@@ -172,7 +189,8 @@ namespace Warehouse.Controllers
         {
             if (_context.Products.Find(id) == null) return BadRequest();
             SelectInitial();
-            return View(_context.Products.Include(x => x.ProductType).Include(p=>p.FileModelImg).Include(x => x.Unit).FirstOrDefault(x => x.Id == id));
+            var obj = _context.Products.Include(x => x.ProductType).Include(p => p.FileModelImg).Include(x => x.Unit).FirstOrDefault(x => x.Id == id);
+            return View(obj);
         }
 
 

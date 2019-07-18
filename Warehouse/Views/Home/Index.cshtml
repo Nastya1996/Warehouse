@@ -1,8 +1,20 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-<h2 style="text-align: center;">Welcome to Warehouse!</h2>
-<h4 style="text-align: center;width: 60%;">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</h4>
+<link href="https://fonts.googleapis.com/css?family=Adamina&display=swap" rel="stylesheet">
+<h1 class="welcomeik" style="text-align: center;">Welcome to</h1>
+<ul class="fly-in-text">
+    <li class="hiddeen">W</li>
+    <li class="hiddeen">A</li>
+    <li class="hiddeen">R</li>
+    <li class="hiddeen">E</li>
+    <li class="hiddeen">H</li>
+    <li class="hiddeen">O</li>
+    <li class="hiddeen">U</li>
+    <li class="hiddeen">S</li>
+    <li class="hiddeen">E</li>
+</ul>
+<h4 class="welcomeik" style="text-align: center;width: 60%;">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout.</h4>
 <style>
     .body-content {
         height: 55%;
@@ -18,3 +30,74 @@
         align-items: center;
     }
 </style>
+<style type="text/css">
+    .welcomeik {
+        font-family: 'Adamina', serif;
+    }
+
+    .fly-in-text {
+        list-style: none;
+    }
+
+    .fly-in-text li {
+        display: inline-block;
+        margin-right: 30px;
+        font-weight: 300;
+        font-size: 3vw;
+        color: black;
+        opacity: 1;
+        transition: all 2.5s ease;
+        font-family: 'Adamina', serif;
+    }
+
+    .fly-in-text li:last-child {
+        margin-right: 0;
+    }
+
+    .fly-in-text li.hiddeen:nth-child(1) {
+        transform: translateX(-200px) translateY(-200px);
+    }
+
+    .fly-in-text li.hiddeen:nth-child(2) {
+        transform: translateX(20px) translateY(100px);
+    }
+
+    .fly-in-text li.hiddeen:nth-child(3) {
+        transform: translateX(-150px) translateY(-80px);
+    }
+
+    .fly-in-text li.hiddeen:nth-child(4) {
+        transform: translateX(10px) translateY(-200px);
+    }
+
+    .fly-in-text li.hiddeen:nth-child(5) {
+        transform: translateX(-300px) translateY(200px);
+    }
+
+    .fly-in-text li.hiddeen:nth-child(6) {
+        transform: translateX(70px) translateY(-70px);
+    }
+
+    .fly-in-text li.hiddeen:nth-child(7) {
+        transform: translateX(30px) translateY(200px);
+    }
+
+    .fly-in-text li.hiddeen:nth-child(8) {
+        transform: translateX(250px) translateY(-200px);
+    }
+
+    .fly-in-text li.hiddeen:nth-child(9) {
+        transform: translateX(180px) translateY(200px);
+    }
+</style>
+<script>
+
+    $(document).ready(function () {
+        'use strict';
+
+        var texxt = $('ul li');
+        texxt.removeClass('hiddeen');
+
+    });
+
+</script>

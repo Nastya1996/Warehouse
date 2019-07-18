@@ -17,199 +17,198 @@
         </select>
 
         <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize")</label>
-        <input type="number" min="1" asp-for="PageSize" />
+        <input class="form-control" type="number" min="1" asp-for="PageSize" />
 
         <input type="submit" value="Filter" class="btn btn-default" />
     </div>
 </form>
-
-<table id="pmTable" class="table table-hover table-bordered">
-    <thead>
-        <tr>
-            <th>@SharedLocalizer.GetLocalizedHtmlString("ProductType")</th>
-            <th>@SharedLocalizer.GetLocalizedHtmlString("ProductName")</th>
-            <th>@SharedLocalizer.GetLocalizedHtmlString("Count")</th>
-            <th>@SharedLocalizer.GetLocalizedHtmlString("CurrentCount")</th>
-            <th>@SharedLocalizer.GetLocalizedHtmlString("Unit")</th>
-            @if (User.IsInRole("Worker"))
+<div class="table-responsive">
+    <table id="pmTable" class="table table-hover table-bordered">
+        <thead>
+            <tr>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("ProductType")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("ProductName")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Count")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("CurrentCount")</th>
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Unit")</th>
+                @if (User.IsInRole("Worker"))
+                {
+                    <th>@SharedLocalizer.GetLocalizedHtmlString("AddToBasket")</th>
+                }
+                <th>@SharedLocalizer.GetLocalizedHtmlString("Show")</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (ViewBag.paged.Count == 0)
             {
-                <th>@SharedLocalizer.GetLocalizedHtmlString("AddToBasket")</th>
+                <tr><td colspan="8" class="text-center">@SharedLocalizer.GetLocalizedHtmlString("ThereAreNoProducts")</td></tr>
             }
-            <th>@SharedLocalizer.GetLocalizedHtmlString("Show")</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (ViewBag.paged.Count == 0)
-        {
-            <tr><td colspan="8" class="text-center">@SharedLocalizer.GetLocalizedHtmlString("ThereAreNoProducts")</td></tr>
-        }
-        @foreach (dynamic productManager in ViewBag.paged)
-        {
-            if (productManager.CurrentCount != 0)
+            @foreach (dynamic productManager in ViewBag.paged)
             {
-                <tr>
-                    <td hidden="hidden"><input id="id" type="hidden" value="@productManager.Product.Id" /></td>
-                    <td>@productManager.Product.ProductType.Name</td>
-                    <td>@productManager.Product.Name</td>
-                    <td>@productManager.Count</td>
-                    <td class="currentCount">@productManager.CurrentCount</td>
-                    <td>@productManager.Product.Unit.Name</td>
-                    @if (User.IsInRole("Worker"))
-                    {
-                        <td><a  class="Added">@SharedLocalizer.GetLocalizedHtmlString("Add")</a></td>
+                if (productManager.CurrentCount != 0)
+                {
+                    <tr>
+                        <td hidden="hidden"><input id="id" type="hidden" value="@productManager.Product.Id" /></td>
+                        <td>@productManager.Product.ProductType.Name</td>
+                        <td>@productManager.Product.Name</td>
+                        <td>@productManager.Count</td>
+                        <td class="currentCount">@productManager.CurrentCount</td>
+                        <td>@productManager.Product.Unit.Name</td>
+                        @if (User.IsInRole("Worker"))
+                        {
+                            <td><a class="Added">@SharedLocalizer.GetLocalizedHtmlString("Add")</a></td>
+                        }
+                        <td><a asp-action="Show" asp-route-id="@productManager.Product.Id">Show</a></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+ </div>
+    <pager list="@ViewBag.paged" asp-route-PageSize="@Model.PageSize" asp-route-TypeId="@Model.TypeId" asp-route-ProductId="@Model.ProductId" asp-controller="ProductManager" asp-action="Index" />
+
+    @section Scripts{
+        <link href="~/css/jquery-confirm.min.css" rel="stylesheet" />
+        <script src="~/js/jquery-confirm.min.js"></script>
+        <script src="~/lib/jquery/dist/chosen.jquery.min.js"></script>
+        <link href="~/css/chosen.min.css" rel="stylesheet" />
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial.cshtml");}
+        <script>
+            $("#ProductId").on("chosen:ready", function (evt, params) {
+                let select = $("#TypeId").children("option:selected").val();
+                let name = $("#ProductId").children("option:selected").val();
+                if (select !== "") {
+                    GetProducts(select);
+                    if (name !== "") {
+                        $("#ProductId").val(name);
+                        $('#ProductId').trigger("chosen:updated");
                     }
-                    <td><a asp-action="Show" asp-route-id="@productManager.Product.Id">Show</a></td>
-                </tr>
-            }
-        }
-    </tbody>
-</table>
-<pager list="@ViewBag.paged" asp-route-PageSize="@Model.PageSize" asp-route-TypeId="@Model.TypeId" asp-route-ProductId="@Model.ProductId" asp-controller="ProductManager" asp-action="Index" />
-
-@section Scripts{
-    <link href="~/css/jquery-confirm.min.css" rel="stylesheet" />
-    <script src="~/js/jquery-confirm.min.js"></script>
-    <script src="~/lib/jquery/dist/chosen.jquery.min.js"></script>
-    <link href="~/css/chosen.min.css" rel="stylesheet" />
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial.cshtml");}
-    <script>
-        $("#ProductId").on("chosen:ready", function (evt, params) {
-            let select = $("#TypeId").children("option:selected").val();
-            let name = $("#ProductId").children("option:selected").val();
-            if (select !== "") {
-                GetProducts(select);
-                if (name !== "") {
-                    $("#ProductId").val(name);
-                    $('#ProductId').trigger("chosen:updated");
                 }
-            }
-        });
-        $("#TypeId").chosen({
-            search_contains: true,
-            inherit_select_classes: true,
-            width: "15%"
-        });
-        $("#ProductId").chosen({
-            search_contains: true,
-            inherit_select_classes:true,
-            width: "15%"    
-        });
-        $(() => {
-            $("#TypeId").on("change", function () {
-                var selected = $(this).children("option:selected").val();
-                GetProducts(selected);
-
             });
-        });
-        function GetProducts(select) {
-            $.ajax({
-                url: '/Products/Get',
-                type: "POST",
-                data: JSON.stringify(select),
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    $("#ProductId").empty();
-                    $("#ProductId").append("<option selected value=''>All products</select>");
-                    data.forEach(function (element) {
-                        $("#ProductId").append("<option value=" + element.id + ">" + element.name + "</option>");
-                    });
-                    $("#ProductId").trigger("chosen:updated");
-                }
-            })
-        }
-        //Add product to the basket
-        $(() => {
-            $("a.Added").on("click", function () {
-                var $Id = $(this).parents("tr").children("td:first").children(":input").val();
-                var thisTag = $(this).parents("tr").children("td.currentCount");
-                var $currentCount = parseInt(thisTag.html());
-                $.confirm({
-                    title: 'Write out!',
-                    content: '' +
-                        '<div class="form-group">' +
-                        '<label>Select quantity to add to cart!</label>' +
-                        '<input type="number" placeholder="0" min="0" value="0"  class="quantity form-control" required />' +
-                        '</div>',
-                    buttons: {
-                        formSubmit: {
-                            text: 'Add',
-                            btnClass: 'btn-blue',
-                            action: function () {
-                                var $currentQuantity = parseInt(this.$content.find('.quantity').val());
-                                if ($currentQuantity > $currentCount || $currentQuantity == 0) {
-                                    $.confirm({
-                                        icon: 'fas fa-exclamation-triangle',
-                                        title: 'Warehouse!',
-                                        content: 'An error has occurred. Write the actual amount!',
-                                        type: 'red',
-                                        typeAnimated: true,
-                                        buttons: {
-                                            close: {
-                                                btnClass: "btn-red",
-                                                action: function () {
+            $("#TypeId").chosen({
+                search_contains: true,
+                width: "15%"
+            });
+            $("#ProductId").chosen({
+                search_contains: true,
+                width: "15%"
+            });
+            $(() => {
+                $("#TypeId").on("change", function () {
+                    var selected = $(this).children("option:selected").val();
+                    GetProducts(selected);
+
+                });
+            });
+            function GetProducts(select) {
+                $.ajax({
+                    url: '/Products/Get',
+                    type: "POST",
+                    data: JSON.stringify(select),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        $("#ProductId").empty();
+                        $("#ProductId").append("<option selected value=''>All products</select>");
+                        data.forEach(function (element) {
+                            $("#ProductId").append("<option value=" + element.id + ">" + element.name + "</option>");
+                        });
+                        $("#ProductId").trigger("chosen:updated");
+                    }
+                })
+            }
+            //Add product to the basket
+            $(() => {
+                $("a.Added").on("click", function () {
+                    var $Id = $(this).parents("tr").children("td:first").children(":input").val();
+                    var thisTag = $(this).parents("tr").children("td.currentCount");
+                    var $currentCount = parseInt(thisTag.html());
+                    $.confirm({
+                        title: 'Write out!',
+                        content: '' +
+                            '<div class="form-group">' +
+                            '<label>Select quantity to add to cart!</label>' +
+                            '<input type="number" placeholder="0" min="0" value="0"  class="quantity form-control" required />' +
+                            '</div>',
+                        buttons: {
+                            formSubmit: {
+                                text: 'Add',
+                                btnClass: 'btn-dark',
+                                action: function () {
+                                    var $currentQuantity = parseInt(this.$content.find('.quantity').val());
+                                    if ($currentQuantity > $currentCount || $currentQuantity == 0) {
+                                        $.confirm({
+                                            icon: 'fas fa-exclamation-triangle',
+                                            title: 'Warehouse!',
+                                            content: 'An error has occurred. Write the actual amount!',
+                                            type: 'red',
+                                            typeAnimated: true,
+                                            buttons: {
+                                                close: {
+                                                    btnClass: "btn-red",
+                                                    action: function () {
+                                                    }
                                                 }
+                                            }
+                                        });
+                                        return false;
+                                    }
+                                    $.ajax({
+                                        type: "POST",
+                                        data: {
+                                            id: $Id,
+                                            quantity: $currentQuantity
+                                        },
+                                        async: false,
+                                        url: "../../ProductManager/Add",
+                                        success: function (result) {
+                                            if (result) {
+                                                error = false;
+                                                $.confirm({
+                                                    icon: 'fas fa-check-circle',
+                                                    title: 'Warehouse!',
+                                                    content: 'Product added to cart!',
+                                                    type: 'blue',
+                                                    typeAnimated: true,
+                                                    buttons: {
+                                                        close: {
+                                                            btnClass: "btn-blue",
+                                                            action: function () {
+                                                            }
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                            else {
+                                                error = true;
+                                                $.confirm({
+                                                    icon: 'fas fa-exclamation-triangle',
+                                                    title: 'Warehouse!',
+                                                    content: 'An error has occurred. Please, try again!',
+                                                    type: 'red',
+                                                    typeAnimated: true,
+                                                    buttons: {
+                                                        close: {
+                                                            btnClass: "btn-red",
+                                                            action: function () {
+                                                            }
+                                                        }
+                                                    }
+                                                });
                                             }
                                         }
                                     });
-                                    return false;
+                                    if (error) return false;
                                 }
-                                $.ajax({
-                                    type: "POST",
-                                    data: {
-                                        id: $Id,
-                                        quantity: $currentQuantity
-                                    },
-                                    async: false,
-                                    url: "../../ProductManager/Add",
-                                    success: function (result) {
-                                        if (result) {
-                                            error = false;
-                                            $.confirm({
-                                                icon: 'fas fa-check-circle',
-                                                title: 'Warehouse!',
-                                                content: 'Product added to cart!',
-                                                type: 'blue',
-                                                typeAnimated: true,
-                                                buttons: {
-                                                    close: {
-                                                        btnClass: "btn-blue",
-                                                        action: function () {
-                                                        }
-                                                    }
-                                                }
-                                            });
-                                        }
-                                        else {
-                                            error = true;
-                                            $.confirm({
-                                                icon: 'fas fa-exclamation-triangle',
-                                                title: 'Warehouse!',
-                                                content: 'An error has occurred. Please, try again!',
-                                                type: 'red',
-                                                typeAnimated: true,
-                                                buttons: {
-                                                    close: {
-                                                        btnClass: "btn-red",
-                                                        action: function () {
-                                                        }
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    }
-                                });
-                                if (error) return false;
-                            }
+                            },
+                            cancel: function () {
+                                //close
+                            },
                         },
-                        cancel: function () {
-                            //close
-                        },
-                    },
+                    });
                 });
             });
-        });
-    </script>
+        </script>
 
-}
+    }

@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging;
 using PagedList.Core;
 using Warehouse.Data;
 using Warehouse.Models;
@@ -30,11 +29,11 @@ namespace Warehouse.Controllers
         public IActionResult Index(string number, string address, int page = 1, int pageSize = 10)
         {
             if (!FilterValid()) return BadRequest();
-            var query = _context.Warehouses.AsQueryable();
+            var query = _context.Warehouses.AsQueryable().OrderBy(d => d.CreationDate);
             if (!string.IsNullOrEmpty(number))
-                query = query.Where(w => w.Number.Contains(number, StringComparison.InvariantCultureIgnoreCase));
+                query = query.Where(w => w.Number.Contains(number, StringComparison.InvariantCultureIgnoreCase)).OrderBy(d => d.CreationDate);
             if (!string.IsNullOrEmpty(address))
-                query = query.Where(w => w.Address.Contains(address, StringComparison.InvariantCultureIgnoreCase));
+                query = query.Where(w => w.Address.Contains(address, StringComparison.InvariantCultureIgnoreCase)).OrderBy(d=>d.CreationDate);
             ViewData["CurrentNumber"] = number;
             ViewData["CurrentAddress"] = address;
             ViewData["CurrentSize"] = pageSize;
@@ -56,6 +55,7 @@ namespace Warehouse.Controllers
             if (ModelState.IsValid)
             {
                 wh.IsActive = true;
+                wh.CreationDate = DateTime.Now;
                 _context.Add(wh);
                 _context.SaveChanges();
                 var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);

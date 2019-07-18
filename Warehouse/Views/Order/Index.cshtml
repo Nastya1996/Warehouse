@@ -7,67 +7,68 @@
 
 @inject LocService SharedLocalizer
 <h2>Index</h2>
-<table class="table table-bordered table-hover">
-    <tr>
-        <th>@SharedLocalizer.GetLocalizedHtmlString("Number")</th>
-        <th>@SharedLocalizer.GetLocalizedHtmlString("User")</th>
-        <th>@SharedLocalizer.GetLocalizedHtmlString("FinallyPrice")</th>
-        <th>@SharedLocalizer.GetLocalizedHtmlString("Date")</th>
-        <th>@SharedLocalizer.GetLocalizedHtmlString("Status")</th>
-    </tr>
-    @{
-        foreach (var o in Model)
-        {
-            <tr>
-                <td hidden="hidden"><input type="hidden" value="@o.Id"/></td>
-                <td>@o.Id</td>
-                <td>@o.User.Name</td>
-                <td>@o.FinallPrice</td>
-                <td>@o.Date</td>
-                @{
-                    if (o.OrderType == OrderType.InProgress)
-                    {
-                        <td>
-                            <a asp-action="Continue" asp-route-id="@o.Id">@SharedLocalizer.GetLocalizedHtmlString("Continue") /</a>
-                            <a  class="deleted">@SharedLocalizer.GetLocalizedHtmlString("Delete")</a>
-                        </td>
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <tr>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Number")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("User")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("FinallyPrice")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Date")</th>
+            <th>@SharedLocalizer.GetLocalizedHtmlString("Status")</th>
+        </tr>
+        @{
+            foreach (var o in Model)
+            {
+                <tr>
+                    <td hidden="hidden"><input type="hidden" value="@o.Id" /></td>
+                    <td>@o.Id</td>
+                    <td>@o.User.Name</td>
+                    <td>@o.FinallPrice</td>
+                    <td>@o.Date</td>
+                    @{
+                        if (o.OrderType == OrderType.InProgress)
+                        {
+                            <td>
+                                <a asp-action="Continue" asp-route-id="@o.Id">@SharedLocalizer.GetLocalizedHtmlString("Continue") /</a>
+                                <a class="deleted">@SharedLocalizer.GetLocalizedHtmlString("Delete")</a>
+                            </td>
+                        }
+                        else if (o.OrderType == OrderType.Saled)
+                        {
+                            <td><a asp-action="Back" asp-route-id="@o.Id">@SharedLocalizer.GetLocalizedHtmlString("Back")</a></td>
+                        }
                     }
-                    else if (o.OrderType == OrderType.Saled)
-                    {
-                        <td><a asp-action="Back" asp-route-id="@o.Id">@SharedLocalizer.GetLocalizedHtmlString("Back")</a></td>
-                    }
-    }
-            </tr>
+                </tr>
+            }
         }
-    }
-</table>
-
-@section scripts{
-    <script>
-        $("a.deleted").on("click", function () {
-            let $link = $(this);
-            $(this).parent().parent().addClass(".select");
-            $link.addClass('context-menu-one');
-            $.contextMenu({
-                selector: '.context-menu-one',
-                trigger: 'left',
-                callback: function (key, options) {
-                },
-                position: function (opt, x, y) {
-                    opt.$menu.css({ top: y + 10, left: x - 90 });
-                },
-                items: {
-                    "Yes": {
-                        name: 'Yes', icon: 'fas fa-check-circle',
-                        callback: function () {
-                            let $link = $(this);
-                            let $row = $(this).parent().parent().addClass(".select");
-                            let orderId = $row.children().children().val();
-                            $.ajax({
-                                async: false,
-                                url: '/Order/Delete',
-                                type: "POST",
-                                data: { id: orderId },
+    </table>
+</div>
+    @section scripts{
+        <script>
+            $("a.deleted").on("click", function () {
+                let $link = $(this);
+                $(this).parent().parent().addClass(".select");
+                $link.addClass('context-menu-one');
+                $.contextMenu({
+                    selector: '.context-menu-one',
+                    trigger: 'left',
+                    callback: function (key, options) {
+                    },
+                    position: function (opt, x, y) {
+                        opt.$menu.css({ top: y + 10, left: x - 90 });
+                    },
+                    items: {
+                        "Yes": {
+                            name: 'Yes', icon: 'fas fa-check-circle',
+                            callback: function () {
+                                let $link = $(this);
+                                let $row = $(this).parent().parent().addClass(".select");
+                                let orderId = $row.children().children().val();
+                                $.ajax({
+                                    async: false,
+                                    url: '/Order/Delete',
+                                    type: "POST",
+                                    data: { id: orderId },
                                     success: function (result) {
                                         if (result) {
                                             $.confirm({
@@ -86,7 +87,7 @@
                                                     }
                                                 }
                                             });
-                                            
+
                                         }
                                         else {
                                             $.confirm({
@@ -106,15 +107,15 @@
                                         }
                                     }
                                 });
-                            $row.removeClass();
-                            $link.removeClass();
-                        }
-                    },
-                    "sep1": "---------",
-                    "Cansel": { name: "Cansel", icon: 'far fa-times-circle' }
-                }
-            });
+                                $row.removeClass();
+                                $link.removeClass();
+                            }
+                        },
+                        "sep1": "---------",
+                        "Cansel": { name: "Cansel", icon: 'far fa-times-circle' }
+                    }
+                });
 
-        });
-    </script>
-}
+            });
+        </script>
+    }

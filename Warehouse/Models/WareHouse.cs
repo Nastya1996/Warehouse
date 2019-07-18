@@ -19,6 +19,6 @@ namespace Warehouse.Models
         public string Address { get; set; }
 
         public bool IsActive { get; set; }
-
+        public DateTime CreationDate { get; set; }
     }
 }

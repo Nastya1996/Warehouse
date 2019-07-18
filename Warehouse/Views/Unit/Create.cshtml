@@ -5,6 +5,9 @@
 @using Warehouse.Resources
 
 @inject LocService SharedLocalizer
+<h2>Create new unit</h2>
+<hr>
+<br>
 <form asp-action="Create" asp-controller="Unit" method="post" asp-antiforgery="true">
     <div>
         <div asp-validation-summary="ModelOnly"></div>
