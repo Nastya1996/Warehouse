@@ -31,7 +31,7 @@
                 <td>@p.Product.Barcode</td>
                 <td>@p.Product.ProductType.Name</td>
                 <td class="maxCount">@count</td>
-                <td><input type="number" name="count" id="count" min="0" class="changeCount"/></td>
+                <td><input type="number" value="0" name="count" id="count" min="0" max="100" class="changeCount"/></td>
                 <td>@p.Product.Unit.Name</td>
                 <td>@p.Price</td>
                 <td>@p.FinallyPrice</td>
@@ -50,12 +50,31 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial.cshtml");}
     <script>
         $(() => {
+            $(".changeCount").keydown(function (e) {
+                var count = $(this).val();
+                var allCount = $(this).parent().parent().children(".maxCount").text();
+                if (e.key == "e" || e.key == "-") return false;
+                if (count == "0" && e.key == "0") return false;
+                if (parseInt(count + e.key) > parseInt(allCount)) return false;
+                if (count == "0") {
+                    $(this).val(e.key);
+                    return false;
+                }
+            });
+            $(".changeCount").mouseleave(function (e) {
+                var count = $(this).val();
+                if (count == "") $(this).val(0);
+            });
+            $(".changeCount").blur(function (e) {
+                var count = $(this).val();
+                if (count == "") $(this).val(0);
+            });
             $("a[name='back']").on("click", function () {
-                    var discount = $(".changeCount").val();
-                    var count = $(this).parent().parent().children(".maxCount").text();
-                var discountedCount = count - discount;
-                if (discountedCount >= 0) {
-                    $(".changeCount").parent().prev().text(discountedCount);
+                var backCount = $(this).parent().siblings().children(".changeCount");
+                var allCount = $(this).parent().parent().children(".maxCount");
+                var countIsOkey = allCount.text() - backCount.val();
+                if (countIsOkey >= 0) {
+                    allCount.text(countIsOkey);
                 } else {
                     $.confirm({
                         icon: 'fas fa-exclamation-triangle',

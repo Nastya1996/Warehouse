@@ -12,7 +12,7 @@
 <h1>@SharedLocalizer.GetLocalizedHtmlString("CreateProductManager")</h1>
 <form onsubmit="return Stop()" asp-action="Create" asp-antiforgery="true">
     <div>
-        <div asp-validation-summary="ModelOnly"></div>
+        <div asp-validation-summary="All"></div>
         <div id="TypeDiv" class="form-group">
             <label>@SharedLocalizer.GetLocalizedHtmlString("ProductType")</label>
             <select id="type" class="form-control" asp-items="ViewBag.ProductTypes">

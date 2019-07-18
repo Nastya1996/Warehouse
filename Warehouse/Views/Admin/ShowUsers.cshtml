@@ -47,53 +47,60 @@
                 }
                 foreach (var user in ViewBag.paged)
                 {
-                    @if (user.Warehouse != null)
-                    {
-                        <tr>
-                            <td hidden="hidden"><input type="hidden" value="@user.Id" /></td>
-                            <td>@user.Name</td>
-                            <td>@user.SurName</td>
-                            <td>@user.Email</td>
-                            <td>@user.PhoneNumber</td>
-                            <td>
-                                <a class="moveUser">@user.Warehouse.Number / @user.Warehouse.Address<input type="hidden" value="@user.Id" /></a>
-                            </td>
-                            @if (user.LockoutEnd == null)
+
+                    <tr>
+                        <td hidden="hidden"><input type="hidden" value="@user.Id" /></td>
+                        <td>@user.Name</td>
+                        <td>@user.SurName</td>
+                        <td>@user.Email</td>
+                        <td>@user.PhoneNumber</td>
+                        <td>
+                            @if (user.Warehouse != null)
                             {
-                                <td><a href="#" class="Disable">@SharedLocalizer.GetLocalizedHtmlString("Disable")</a></td>
+                                <a class="moveUser">@user.Warehouse.Number / @user.Warehouse.Address<input type="hidden" value="@user.Id" /></a>
                             }
                             else
                             {
-                                <td><a href="#" class="Enable">@SharedLocalizer.GetLocalizedHtmlString("Enable")</a></td>
+                                <a class="disabled">Unknown<input type="hidden" value="@user.Id" /></a>
+
                             }
-                        </tr>
-                    }
+                        </td>
+                        @if (user.LockoutEnd == null)
+                        {
+                            <td><a href="#" class="Disable">@SharedLocalizer.GetLocalizedHtmlString("Disable")</a></td>
+                        }
+                        else
+                        {
+                            <td><a href="#" class="Enable">@SharedLocalizer.GetLocalizedHtmlString("Enable")</a></td>
+                        }
+                    </tr>
+
                 }
             }
         </tbody>
     </table>
-    </div>
-    <pager list="@ViewBag.paged" asp-route-PageSize="@Model.PageSize" asp-route-Name="@Model.Name" asp-route-Number="@Model.Number" asp-route-role="@ViewData["CurrentRole"]" asp-route-name="@ViewData["CurrentName"]" asp-controller="Admin" asp-action="ShowUsers" />
+</div>
+<pager list="@ViewBag.paged" asp-route-PageSize="@Model.PageSize" asp-route-Name="@Model.Name" asp-route-Number="@Model.Number" asp-route-role="@ViewData["CurrentRole"]" asp-route-name="@ViewData["CurrentName"]" asp-controller="Admin" asp-action="ShowUsers" />
 
-    <div class="modal fade" id="modalMoveUser" role="dialog">
-        <div class="modal-dialog">
+<div class="modal fade" id="modalMoveUser" role="dialog">
+    <div class="modal-dialog">
 
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">@SharedLocalizer.GetLocalizedHtmlString("Warehouses")</h4>
-                </div>
-                <div class="modal-body">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">@SharedLocalizer.GetLocalizedHtmlString("Close")</button>
-                </div>
-                <div class="modal-footer">
-
-                </div>
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">@SharedLocalizer.GetLocalizedHtmlString("Warehouses")</h4>
             </div>
+            <div class="modal-body">
+                <button type="button" class="btn btn-default" data-dismiss="modal">@SharedLocalizer.GetLocalizedHtmlString("Close")</button>
+            </div>
+            <div class="modal-footer">
 
+            </div>
         </div>
+
     </div>
-    <script>
+</div>
+<script>
     $(document).ready(function () {
         $(".moveUser").click(function () {
             var id = $(this).children().val();
@@ -108,13 +115,25 @@
                 $("#modalMoveUser").modal();
             });
         });
-    </script>
+</script>
 
-    @section scripts{
-        <link href="~/css/jquery.contextMenu.css" rel="stylesheet" />
-        <script src="~/js/jquery.contextMenu.js"></script>
-        <script src="~/js/jquery.ui.position.js"></script>
-        <link href="~/css/jquery-confirm.min.css" rel="stylesheet" />
-        <script src="~/js/jquery-confirm.min.js"></script>
-        <script src="~/js/user.js"></script>
-    }
+@section scripts{
+    <link href="~/css/jquery.contextMenu.css" rel="stylesheet" />
+    <script src="~/js/jquery.contextMenu.js"></script>
+    <script src="~/js/jquery.ui.position.js"></script>
+    <link href="~/css/jquery-confirm.min.css" rel="stylesheet" />
+    <script src="~/js/jquery-confirm.min.js"></script>
+    <link href="~/css/chosen.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/chosen.jquery.min.js"></script>
+    <script>
+        $(() => {
+            $("#RoleId").chosen({
+                search_contains: true
+            });
+            $("#Number").chosen({
+                search_contains: true
+            });
+        });
+    </script>
+    <script src="~/js/user.js"></script>
+}

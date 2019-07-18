@@ -61,8 +61,7 @@ namespace Warehouse.Areas.Identity.Pages.Account
 			//[DisplayFormat(DataFormatString = "{yyyy-MM-dd}")]
             [DataType(DataType.Date)]
             public DateTime Birthdate { get; set; }
-
-			[Required]
+            
 			[Display(Name = "Warehouse")]
             public string WarehouseId { get; set; }
 			public WareHouse Warehouse { get; set; }
@@ -117,6 +116,12 @@ namespace Warehouse.Areas.Identity.Pages.Account
 				return Page();
 
 			returnUrl = returnUrl ?? Url.Content("/Admin/ShowUsers");
+            if (role == "Report")
+            {
+                Input.WarehouseId = null;
+            }
+            else if (Input.WarehouseId == null)
+                ModelState.AddModelError("", "Warehouse not selected");
             if (ModelState.IsValid)
             {
                 var user = new AppUser {
