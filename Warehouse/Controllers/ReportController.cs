@@ -42,7 +42,7 @@ namespace Warehouse.Controllers
             var wareHouseId = user.WarehouseId;
             ViewBag.Names = new SelectList(_context.Products, "Id", "Name");
             ViewBag.Types = new SelectList(_context.Types, "Id", "Name");
-            ViewBag.Users = new SelectList(_context.Users.Where(u => u.WarehouseId == wareHouseId),"Id","UserName");
+            ViewBag.Users = new SelectList(_context.Users.Where(u=>u.Id!=user.Id),"Id","UserName");
             if (reportFilter.Deal == null)
             {
                 return View(reportFilter);

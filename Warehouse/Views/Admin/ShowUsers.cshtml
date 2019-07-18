@@ -123,5 +123,17 @@
     <script src="~/js/jquery.ui.position.js"></script>
     <link href="~/css/jquery-confirm.min.css" rel="stylesheet" />
     <script src="~/js/jquery-confirm.min.js"></script>
+    <link href="~/css/chosen.css" rel="stylesheet" />
+    <script src="~/lib/jquery/dist/chosen.jquery.min.js"></script>
+    <script>
+        $(() => {
+            $("#RoleId").chosen({
+                search_contains: true
+            });
+            $("#Number").chosen({
+                search_contains: true
+            });
+        });
+    </script>
     <script src="~/js/user.js"></script>
 }

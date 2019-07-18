@@ -121,19 +121,50 @@
     <script src="~/js/jquery.maskedinput.js"></script>
     <script>
         $(() => {
-            var exp=/^[\d]{1}$|^[1-9]{1}[0-9]{2}$/;
             var All = 0;
+            $(".saleOrderItem").keydown(function (e) {
+                var discount = $(this).val();
+                
+                if (e.key == "e" || e.key=="-") return false;
+                if (discount == "0" && e.key == "0") return false;
+                if (discount == "0") {
+                    $(this).val(e.key);
+                    return false;
+                }
+                if (discount + e.key > 100 || discount+e.key<0) return false;
+            });
+            $(".yndamenyInp").keydown(function (e) {
+                var discount = $(this).val();
+
+                if (e.key == "e" || e.key == "-") return false;
+                if (discount == "0" && e.key == "0") return false;
+                if (discount == "0") {
+                    $(this).val(e.key);
+                    return false;
+                }
+                if (discount + e.key > 100 || discount + e.key < 0) return false;
+            });
+            $(".saleOrderItem").mouseleave(function (e) {
+                var discount = $(this).val();
+                if (discount == "") $(this).val(0);
+            });
+            $(".yndamenyInp").mouseleave(function (e) {
+                var discount = $(this).val();
+                if (discount == "") $(this).val(0);
+            });
+            $(".saleOrderItem").blur(function (e) {
+                var discount = $(this).val();
+                if (discount == "") $(this).val(0);
+            });
+            $(".yndamenyInp").blur(function (e) {
+                var discount = $(this).val();
+                if (discount == "") $(this).val(0);
+            });
             $(".saleOrderItem").keyup(function () {
                 All = 0;
                 var discount = $(this).val();
-                var okey = exp.test(discount);
-                if (!okey) alert(false);
                 var count = $(this).parent().parent().children(".countOfPO").text();
                 var price = $(this).parent().parent().children(".price").text();
-                if (discount > 100 || discount < 0) {
-                    $(this).val(0);
-                    return false;
-                }
                 var finPrice = count * price;
                 var discountedPrice = finPrice - (finPrice * discount / 100);
                 $(this).parent().next().text(discountedPrice);
@@ -150,10 +181,6 @@
             var ph = false;
             $(".yndamenyInp").keyup(function () {
                 var discount = $(this).val();
-                if (discount > 100 || discount < 0) {
-                    $(this).val(0);
-                    return false;
-                }
                 var price = $(this).parent().parent().children(".yndamenyPrice").text();
                 var discountedPrice = price - (price * discount / 100);
                 $(this).parent().next().text(discountedPrice);
