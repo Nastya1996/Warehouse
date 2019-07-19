@@ -110,15 +110,15 @@
                                                             close: {
                                                                 btnClass: "btn-dark",
                                                                 action: function () {
+                                                                    $link.text("Disable").attr("class", "Disable btn");
                                                                 }
                                                             }
                                                         }
                                                     });
-                                                    $link.text("Disable").css("color", "red");
                                                     $row.removeClass();
                                                 }
                                                 else {
-                                                    $link.text("Enable").css("color", "green");
+                                                    
                                                     $.confirm({
                                                         icon: 'fas fa-exclamation-triangle',
                                                         title: 'Warehouse!',
@@ -129,6 +129,7 @@
                                                             close: {
                                                                 btnClass: "btn-red",
                                                                 action: function () {
+                                                                    $link.text("Enable").attr("class", "Enable btn");
                                                                 }
                                                             }
                                                         }
@@ -138,6 +139,7 @@
                                         })
                                     }
                                     else if ($link.text() === 'Disable') {
+                                        $link.text("Disable").prop("class", "Disable btn");
                                         $.ajax({
                                             url: '/ProductType/Disable',
                                             type: "POST",
@@ -157,15 +159,14 @@
                                                             close: {
                                                                 btnClass: "btn-dark",
                                                                 action: function () {
+                                                                    $link.text("Enable").prop("class", "Enable btn");
                                                                 }
                                                             }
                                                         }
                                                     });
-                                                    $link.text("Enable").css("color", "green");
                                                     $row.removeClass();
                                                 }
                                                 else {
-                                                    $link.text("Disable").css("color", "red");
                                                     $.confirm({
                                                         icon: 'fas fa-exclamation-triangle',
                                                         title: 'Warehouse',
@@ -176,6 +177,7 @@
                                                             close: {
                                                                 btnClass: "btn-red",
                                                                 action: function () {
+                                                                    $link.text("Disable").prop("class", "Disable btn");
                                                                 }
                                                             }
                                                         }
@@ -185,7 +187,6 @@
                                         })
                                     }
                                     $row.removeClass();
-                                    $link.removeClass();
                                 }
                             },
                             "sep1": "---------",
