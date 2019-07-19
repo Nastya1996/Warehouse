@@ -104,11 +104,11 @@
                                                         icon: 'fas fa-check-circle',
                                                         title: 'Warehouse!',
                                                         content: 'Product type has been activated!',
-                                                        type: 'blue',
+                                                        type: 'dark',
                                                         typeAnimated: true,
                                                         buttons: {
                                                             close: {
-                                                                btnClass: "btn-blue",
+                                                                btnClass: "btn-dark",
                                                                 action: function () {
                                                                 }
                                                             }
@@ -151,21 +151,21 @@
                                                         icon: 'fas fa-check-circle',
                                                         title: 'Warehouse',
                                                         content: 'Product type has been deactivated!',
-                                                        type: 'blue',
+                                                        type: 'dark',
                                                         typeAnimated: true,
                                                         buttons: {
                                                             close: {
-                                                                btnClass: "btn-blue",
+                                                                btnClass: "btn-dark",
                                                                 action: function () {
                                                                 }
                                                             }
                                                         }
                                                     });
-                                                    $link.attr("class", "Enable");
+                                                    $link.text("Enable").css("color", "green");
                                                     $row.removeClass();
                                                 }
                                                 else {
-                                                    $link.text("Disable").attr("class", "Disable");
+                                                    $link.text("Disable").css("color", "red");
                                                     $.confirm({
                                                         icon: 'fas fa-exclamation-triangle',
                                                         title: 'Warehouse',
