@@ -6,15 +6,16 @@
 @model ProductTypeViewModel
 <form method="get" asp-action="Index">
     <div class="form-inline form-group">
-        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("ProductType"):</label>
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("ProductType")</label>
         <input class="form-control" asp-for="TypeName"/>
         
-        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize")</label>
         <input class="form-control" type="number" min="1" max="100" name="pageSize" value="@ViewData["CurrentSize"]" />
 
         <input type="submit" value="Filter" class="btn btn-default" />
     </div>
 </form>
+<br />
 <div class="table-responsive">
     <table class="table table-hover table-bordered ">
         <thead>

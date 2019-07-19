@@ -15,7 +15,7 @@
     <div class="container">
         <form method="get" asp-action="Index" asp-controller="Report" class="row">
             <div class="form-inline form-group">
-                <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Deal"):</label>
+                <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Deal")</label>
                 <select asp-for="Deal" class="effect-24">
                     <option selected disabled value="">SelectTheDeal</option>
                     <option class="effect-24" value="0">Import</option>
@@ -23,7 +23,7 @@
                     <option class="effect-24" value="2">Export</option>
                 </select>
 
-                <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Type"):</label>
+                <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Type")</label>
                 <select asp-for="TypeId" asp-items="ViewBag.Types">
                     <option selected value="" class="effect-24">All</option>
                 </select>
@@ -32,18 +32,18 @@
                     <option selected value="" class="effect-24">All</option>
                 </select>
 
-                <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("User"):</label>
+                <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("User")</label>
                 <select asp-for="UserId" asp-items="ViewBag.Users" class="effect-24">
                     <option selected value="" class="effect-24">All</option>
                 </select>
                 <br /><br />
-                <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("From"):</label>
+                <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("From")</label>
                 <input class="form-control" asp-for="DateFrom" min="01.01.2000" max="@date" type="date" />
 
-                <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("To"):</label>
+                <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("To")</label>
                 <input class="form-control" asp-for="DateTo" type="date" min="01.01.2000" max="@date" />
 
-                <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
+                <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize")</label>
                 <input class="form-control" asp-for="PageSize" type="number" min="1" />
                 <input type="submit" value="Filter" class="btn btn-default" />
             </div>
