@@ -39,22 +39,21 @@ $(() => {
                                             icon: 'fas fa-check-circle',
                                             title: 'Warehouse!',
                                             content: 'Product has been activated!',
-                                            type: 'blue',
+                                            type: 'dark',
                                             typeAnimated: true,
                                             closeAnimation: 'rotateXR',
                                             buttons: {
                                                 close: {
-                                                    btnClass: "btn-blue",
+                                                    btnClass: "btn-dark",
                                                     action: function () {
+                                                        $link.text("Disable").attr("class", "Disable btn");
                                                     }
                                                 }
                                             }
                                         });
-                                        $link.text("Disable").css("color", "red");
                                         $row.removeClass();
                                     }
                                     else {
-                                        $link.text("Enable").css("color", "green");
                                         $.confirm({
                                             icon: 'fas fa-exclamation-triangle',
                                             title: 'Warehouse!',
@@ -66,6 +65,7 @@ $(() => {
                                                 close: {
                                                     btnClass: "btn-red",
                                                     action: function () {
+                                                        $link.text("Enable").attr("class", "Enable btn");
                                                     }
                                                 }
                                             }
@@ -88,22 +88,21 @@ $(() => {
                                             icon:'fas fa-check-circle',
                                             title: 'Warehouse',
                                             content: 'Product has been deactivated!',
-                                            type: 'blue',
+                                            type: 'dark',
                                             typeAnimated: true,
                                             closeAnimation: 'rotateXR',
                                             buttons: {
                                                 close: {
-                                                    btnClass: "btn-blue",
+                                                    btnClass: "btn-dark",
                                                     action: function () {
+                                                        $link.text("Enable").attr("class", "Enable btn");
                                                     }
                                                 }
                                             }
                                         });
-                                        $link.text("Enable").css("color", "green");
                                         $row.removeClass();
                                     }
                                     else {
-                                        $link.text("Disable").css("color", "red");
                                         $.confirm({
                                             icon:'fas fa-exclamation-triangle',
                                             title: 'Warehouse',
@@ -115,6 +114,7 @@ $(() => {
                                                 close: {
                                                     btnClass: "btn-red",
                                                     action: function () {
+                                                        $link.text("Disable").attr("class", "Disable btn");
                                                     }
                                                 }
                                             }
@@ -124,7 +124,6 @@ $(() => {
                             })
                         }
                         $row.removeClass();
-                        $link.removeClass();
                     }
                 },
                 "sep1": "---------",
