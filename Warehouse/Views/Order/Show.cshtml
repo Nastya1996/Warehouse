@@ -61,10 +61,6 @@
                     return false;
                 }
             });
-            $(".changeCount").mouseleave(function (e) {
-                var count = $(this).val();
-                if (count == "") $(this).val(0);
-            });
             $(".changeCount").blur(function (e) {
                 var count = $(this).val();
                 if (count == "") $(this).val(0);

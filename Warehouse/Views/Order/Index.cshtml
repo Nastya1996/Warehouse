@@ -44,6 +44,7 @@
     </table>
 </div>
     @section scripts{
+
         <script>
             $("a.deleted").on("click", function () {
                 let $link = $(this);
@@ -75,11 +76,11 @@
                                                 icon: 'fas fa-check-circle',
                                                 title: 'Warehouse!',
                                                 content: 'Product successfully removed!',
-                                                type: 'blue',
+                                                type: 'dark',
                                                 typeAnimated: true,
                                                 buttons: {
                                                     close: {
-                                                        btnClass: "btn-blue",
+                                                        btnClass: "btn-dark",
                                                         action: function () {
                                                             $link.parents("tr").remove();
                                                             $row.removeClass();
