@@ -29,11 +29,12 @@
                 <tbody>
                     @foreach (var pb in Model)
                     {
+                        
                         <tr>
                             <td>@pb.Product.Name</td>
                             <td class="countOfBasketProduct">@pb.Count</td>
                             <td><a class="changeCountOrder edited btn" href="#">Change <i class="fas fa-pen-square ml-1"></i><input type="hidden" value="@pb.Id" class="changeInputValue" /></a></td>
-                            <td><a href="#" class="deleted btn">Delete <i class="fas fa-times ml-1"></i><input type="hidden" value="@pb.Id" class="changeInputValue" /></a></td>
+                            <td><a href="#" class="deleted btn">Delete <i class="fas fa-times ml-1"></i><input type="hidden" value="@pb.Id" class="deletedValue" /></a></td>
                         </tr>
                     }
                 </tbody>
@@ -51,10 +52,8 @@
             }
             <script>
                 $(() => {
-                    $("a.deleted").on("click", function () {
-                        var basketItemId = $(this).children(".changeInputValue").val();
+                    $(".deleted").click(function () {
                         let $link = $(this);
-                        $(this).parent().parent().addClass(".select");
                         $link.addClass('context-menu-one');
                         $.contextMenu({
                             selector: '.context-menu-one',
@@ -68,33 +67,34 @@
                                 "Yes": {
                                     name: 'Yes', icon: 'fas fa-check-circle',
                                     callback: function () {
+                                        var basketItemId = $(this).children(".deletedValue").val();
+                                        var basketItem = $(this).parent().parent();
                                         let $link = $(this);
-                                        let $row = $(this).parent().parent().addClass(".select");
                                         $.ajax({
-                                            url: '/Basket/DeleteYes',
+                                            url: '@Url.Action("DeleteYes", "Basket")',
                                             type: "POST",
-                                            data: { id: basketItemId },
+                                            data: { 'id': basketItemId },
                                             async: false,
                                             success: function (result) {
-                                                $("#chekOutBtn").attr('disabled', 'true');
-                                                $("#chekOutBtn").css('pointer-events', 'none');
+                                                basketItem.remove();
                                                 if (result) {
                                                     $.confirm({
                                                         icon: 'fas fa-check-circle',
                                                         title: 'Warehouse!',
-                                                        content: 'Product successfully removed!',
+                                                        content: "Item removed from basket",
                                                         type: 'dark',
                                                         typeAnimated: true,
                                                         buttons: {
                                                             close: {
                                                                 btnClass: "btn-dark",
                                                                 action: function () {
+                                                                    basketItem.remove();
                                                                 }
                                                             }
                                                         }
+
                                                     });
-                                                    $link.parents("tr").remove();
-                                                    $row.removeClass();
+                                                   
                                                 }
                                                 else {
                                                     $.confirm({
@@ -114,8 +114,8 @@
                                                 }
                                             }
                                         });
-                                        $row.removeClass();
-                                        $link.removeClass();
+                                        $link.removeClass("context-menu-one");
+                                        basketItemId = "";
                                     }
                                 },
                                 "sep1": "---------",
@@ -132,7 +132,7 @@
                             content: '' +
                                 '<div class="form-group">' +
                                 '<label>Change count!</label>' +
-                                '<input type="number" placeholder="0" min="1" id="countChangeInput" class="form-control" required />' +
+                                '<input type="number" placeholder="0" min="1" id="countChangeInput" class="form-control"/>' +
                                 '</div>',
                             buttons: {
                                 formSubmit: {
