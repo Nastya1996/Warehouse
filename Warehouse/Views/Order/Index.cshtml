@@ -29,13 +29,14 @@
                         if (o.OrderType == OrderType.InProgress)
                         {
                             <td>
-                                <a asp-action="Continue" asp-route-id="@o.Id">@SharedLocalizer.GetLocalizedHtmlString("Continue") /</a>
-                                <a class="deleted">@SharedLocalizer.GetLocalizedHtmlString("Delete")</a>
+                                <a class="btn continue" asp-action="Continue" asp-route-id="@o.Id">@SharedLocalizer.GetLocalizedHtmlString("Continue") <i class='fas fa-angle-right'></i></a>
+                                <span>/</span>
+                                <a class="btn deleted">@SharedLocalizer.GetLocalizedHtmlString("Delete")</a>
                             </td>
                         }
                         else if (o.OrderType == OrderType.Saled)
                         {
-                            <td><a asp-action="Back" asp-route-id="@o.Id">@SharedLocalizer.GetLocalizedHtmlString("Back")</a></td>
+                            <td><a class="btn back" asp-action="Back" asp-route-id="@o.Id"><i class='fas fa-angle-left'></i> @SharedLocalizer.GetLocalizedHtmlString("Back")</a></td>
                         }
                     }
                 </tr>

@@ -42,17 +42,17 @@
                     <td>@pt.Name</td>
                     @if (User.IsInRole("Storekeeper"))
                     {
-                        <td><a asp-action="Edit" asp-route-id="@pt.Id">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
+                        <td><a class="edited btn" asp-action="Edit" asp-route-id="@pt.Id">@SharedLocalizer.GetLocalizedHtmlString("Edit") <i class="fas fa-pen-square ml-1"></i></a></td>
                     }
                     @if (User.IsInRole("Admin"))
                     {
                         @if (pt.IsActive)
                         {
-                            <td><a class="Disable" href="#">Disable</a></td>
+                            <td><a class="Disable btn" href="#">Disable</a></td>
                         }
                         else
                         {
-                            <td><a class="Enable" href="#">Enable</a></td>
+                            <td><a class="Enable btn" href="#">Enable</a></td>
                         }
                     }
                 </tr>
@@ -161,11 +161,11 @@
                                                             }
                                                         }
                                                     });
-                                                    $link.text("Enable").css("color", "green");
+                                                    $link.attr("class", "Enable");
                                                     $row.removeClass();
                                                 }
                                                 else {
-                                                    $link.text("Disable").css("color", "red");
+                                                    $link.text("Disable").attr("class", "Disable");
                                                     $.confirm({
                                                         icon: 'fas fa-exclamation-triangle',
                                                         title: 'Warehouse',

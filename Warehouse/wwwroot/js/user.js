@@ -43,7 +43,7 @@
                                                 }
                                             }
                                         });
-                                        $link.text("Disable").css("color", "red");
+                                        $link.text("Disable").attr("class","Disable");
                                         $row.removeClass();
                                     }
                                     else {
@@ -91,7 +91,7 @@
                                                 }
                                             }
                                         });
-                                        $link.text("Enable").css("color", "green");
+                                        $link.text("Enable").css("class", "Enable");
                                         $row.removeClass();
                                     }
                                     else {

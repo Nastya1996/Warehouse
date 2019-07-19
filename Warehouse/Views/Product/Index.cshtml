@@ -75,16 +75,16 @@
                               {
                                   @if (pt.IsActive == true)
                                   {
-                                      <td><a href="#" class="Disable">@SharedLocalizer.GetLocalizedHtmlString("Disable")</a></td>
+                                      <td><a href="#" class="Disable btn">@SharedLocalizer.GetLocalizedHtmlString("Disable")</a></td>
                                   }
                                   else
                                   {
-                                      <td><a href="#" class="Enable">@SharedLocalizer.GetLocalizedHtmlString("Enable")</a></td>
+                                      <td><a href="#" class="Enable btn">@SharedLocalizer.GetLocalizedHtmlString("Enable")</a></td>
                                   }
                               }
                               else
                               {
-                                  <td><a asp-action="Edit" asp-route-id="@pt.Id">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
+                                  <td><a class="edited btn" asp-action="Edit" asp-route-id="@pt.Id">@SharedLocalizer.GetLocalizedHtmlString("Edit") <i class="fas fa-pen-square ml-1"></i></a></td>
                               }
                               @if (pt.FileModelImg != null)
                               {

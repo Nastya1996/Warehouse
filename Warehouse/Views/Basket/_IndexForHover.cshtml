@@ -32,8 +32,8 @@
                         <tr>
                             <td>@pb.Product.Name</td>
                             <td class="countOfBasketProduct">@pb.Count</td>
-                            <td><a class="changeCountOrder" href="#">Change<input type="hidden" value="@pb.Id" class="changeInputValue" /></a></td>
-                            <td><a href="#" class="deleted">Delete<input type="hidden" value="@pb.Id" class="changeInputValue" /></a></td>
+                            <td><a class="changeCountOrder edited btn" href="#">Change <i class="fas fa-pen-square ml-1"></i><input type="hidden" value="@pb.Id" class="changeInputValue" /></a></td>
+                            <td><a href="#" class="deleted btn">Delete <i class="fas fa-times ml-1"></i><input type="hidden" value="@pb.Id" class="changeInputValue" /></a></td>
                         </tr>
                     }
                 </tbody>
@@ -83,11 +83,11 @@
                                                         icon: 'fas fa-check-circle',
                                                         title: 'Warehouse!',
                                                         content: 'Product successfully removed!',
-                                                        type: 'blue',
+                                                        type: 'dark',
                                                         typeAnimated: true,
                                                         buttons: {
                                                             close: {
-                                                                btnClass: "btn-blue",
+                                                                btnClass: "btn-dark",
                                                                 action: function () {
                                                                 }
                                                             }

@@ -47,19 +47,23 @@
             {
                 if (productManager.CurrentCount != 0)
                 {
-                    <tr>
-                        <td hidden="hidden"><input id="id" type="hidden" value="@productManager.Product.Id" /></td>
-                        <td>@productManager.Product.ProductType.Name</td>
-                        <td>@productManager.Product.Name</td>
-                        <td>@productManager.Count</td>
-                        <td class="currentCount">@productManager.CurrentCount</td>
-                        <td>@productManager.Product.Unit.Name</td>
-                        @if (User.IsInRole("Worker"))
-                        {
-                            <td><a class="Added btn btn-info btn-rounded btn-waves-effect waves-light">@SharedLocalizer.GetLocalizedHtmlString("Add") <i class="fas fa-plus-square ml-1"></i></a></td>
-                        }
+                <tr>
+                    <td hidden="hidden"><input id="id" type="hidden" value="@productManager.Product.Id" /></td>
+                    <td>@productManager.Product.ProductType.Name</td>
+                    <td>@productManager.Product.Name</td>
+                    <td>@productManager.Count</td>
+                    <td class="currentCount">@productManager.CurrentCount</td>
+                    <td>@productManager.Product.Unit.Name</td>
+                    @if (User.IsInRole("Worker"))
+                    {
+                        <td><a class="Added btn btn-info btn-rounded btn-waves-effect waves-light">@SharedLocalizer.GetLocalizedHtmlString("Add") <i class="fas fa-plus-square ml-1"></i></a></td>
                         <td style="padding-top: 20px;"><a class="showik btn btn-rounded btn-waves-effect waves-light" asp-action="Show" asp-route-id="@productManager.Product.Id">Show</a></td>
-                    </tr>
+                    }
+                    else
+                    {
+                        <td style="padding-top: 12px;"><a class="showik btn btn-rounded btn-waves-effect waves-light" asp-action="Show" asp-route-id="@productManager.Product.Id">Show</a></td>
+                    }
+                </tr>
                 }
             }
         </tbody>
@@ -169,11 +173,11 @@
                                                     icon: 'fas fa-check-circle',
                                                     title: 'Warehouse!',
                                                     content: 'Product added to cart!',
-                                                    type: 'blue',
+                                                    type: 'dark',
                                                     typeAnimated: true,
                                                     buttons: {
                                                         close: {
-                                                            btnClass: "btn-blue",
+                                                            btnClass: "btn-dark",
                                                             action: function () {
                                                             }
                                                         }

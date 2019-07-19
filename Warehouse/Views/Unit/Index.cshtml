@@ -33,7 +33,7 @@
             {
                 <tr>
                     <td>@Html.DisplayFor(item => unit.Name)</td>
-                    <td><a asp-action="Edit" asp-route-id="@unit.Id">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
+                    <td><a class="edited btn" asp-action="Edit" asp-route-id="@unit.Id">@SharedLocalizer.GetLocalizedHtmlString("Edit") <i class="fas fa-pen-square ml-1"></i></a></td>
                 </tr>
             }
         }
