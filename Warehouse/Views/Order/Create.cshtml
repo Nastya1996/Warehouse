@@ -146,14 +146,6 @@
                 }
                 if (discount + e.key > 100 || discount + e.key < 0) return false;
             });
-            $(".saleOrderItem").mouseleave(function (e) {
-                var discount = $(this).val();
-                if (discount == "") $(this).val(0);
-            });
-            $(".yndamenyInp").mouseleave(function (e) {
-                var discount = $(this).val();
-                if (discount == "") $(this).val(0);
-            });
             $(".saleOrderItem").blur(function (e) {
                 var discount = $(this).val();
                 if (discount == "") $(this).val(0);
