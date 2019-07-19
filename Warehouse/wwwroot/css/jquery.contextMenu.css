@@ -221,9 +221,9 @@
 }
 
 .context-menu-item.context-menu-hover {
-  color: #fff;
-  cursor: pointer; 
-  background-color: #2980b9;
+    color: #fff;
+    cursor: pointer;
+    background-color: #566D7A;
 }
 
 .context-menu-item.context-menu-disabled {
