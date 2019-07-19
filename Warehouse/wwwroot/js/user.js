@@ -11,6 +11,7 @@
             position: function (opt, x, y) {
                 opt.$menu.css({ top: y + 10, left: x - 90 });
             },
+            className: "contextmenu - custom contextmenu-custom__highlight",
             items: {
                 "Yes": {
                     name: 'Yes', icon: 'fas fa-check-circle',
@@ -32,18 +33,18 @@
                                             icon: 'fas fa-check-circle',
                                             title: 'Warehouse!',
                                             content: 'User has been activated!',
-                                            type: 'blue',
+                                            type: 'dark',
                                             typeAnimated: true,
                                             closeAnimation: 'rotateXR',
                                             buttons: {
                                                 close: {
-                                                    btnClass: "btn-blue",
+                                                    btnClass: "btn-dark",
                                                     action: function () {
+                                                        $link.text("Disable").attr("class", "Disable btn");
                                                     }
                                                 }
                                             }
                                         });
-                                        $link.text("Disable").attr("class","Disable");
                                         $row.removeClass();
                                     }
                                     else {
@@ -58,6 +59,7 @@
                                                 close: {
                                                     btnClass: "btn-red",
                                                     action: function () {
+                                                        $link.text("Enable").attr("class", "Enable btn");
                                                     }
                                                 }
                                             }
@@ -80,18 +82,18 @@
                                             icon: 'fas fa-check-circle',
                                             title: 'Warehouse!',
                                             content: 'User has been deactivated!',
-                                            type: 'blue',
+                                            type: 'dark',
                                             typeAnimated: true,
                                             closeAnimation: 'rotateXR',
                                             buttons: {
                                                 close: {
-                                                    btnClass: "btn-blue",
+                                                    btnClass: "btn-dark",
                                                     action: function () {
+                                                        $link.text("Enable").attr("class", "Enable btn");
                                                     }
                                                 }
                                             }
                                         });
-                                        $link.text("Enable").css("class", "Enable");
                                         $row.removeClass();
                                     }
                                     else {
@@ -106,6 +108,7 @@
                                                 close: {
                                                     btnClass: "btn-red",
                                                     action: function () {
+                                                        $link.text("Disable").attr("class", "Disable btn");
                                                     }
                                                 }
                                             }
@@ -115,7 +118,6 @@
                             })
                         }
                         $row.removeClass();
-                        $link.removeClass();
                     }
                 },
                 "sep1": "---------",
