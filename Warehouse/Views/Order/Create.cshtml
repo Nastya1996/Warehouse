@@ -17,51 +17,53 @@
     </select>
     <a href="#" id="registerCustomer" class="text-info">@SharedLocalizer.GetLocalizedHtmlString("RegistrationCustomer")</a>
     <input hidden="hidden" asp-for="@Model.Id" />
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>@SharedLocalizer.GetLocalizedHtmlString("Name")</th>
-                <th>@SharedLocalizer.GetLocalizedHtmlString("Count")</th>
-                <th>@SharedLocalizer.GetLocalizedHtmlString("Price")</th>
-                <th>@SharedLocalizer.GetLocalizedHtmlString("Sale")</th>
-                <th>@SharedLocalizer.GetLocalizedHtmlString("FinallyPrice")</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (int i = 0; i < Model.ProductOrders.Count; ++i)
-            {
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
                 <tr>
-                    <td hidden="hidden"><input hidden="hidden" asp-for="@Model.ProductOrders[i].Id" /></td>
-                    <td>@Model.ProductOrders[i].Product.Name</td>
-                    <td class="countOfPO">@Model.ProductOrders[i].Count</td>
-                    <td class="price">@Model.ProductOrders[i].Price</td>
-                    <td><input class="saleOrderItem" type="number" max="100" min="0" asp-for="@Model.ProductOrders[i].Sale" /></td>
-                    <td class="SalePriceInOneProduct">@Model.ProductOrders[i].FinallyPrice</td>
+                    <th>@SharedLocalizer.GetLocalizedHtmlString("Name")</th>
+                    <th>@SharedLocalizer.GetLocalizedHtmlString("Count")</th>
+                    <th>@SharedLocalizer.GetLocalizedHtmlString("Price")</th>
+                    <th>@SharedLocalizer.GetLocalizedHtmlString("Sale")</th>
+                    <th>@SharedLocalizer.GetLocalizedHtmlString("FinallyPrice")</th>
                 </tr>
-            }
-        </tbody>
-        <tfoot>
-            <tr>
-                <td></td>
-                <td>Yndameny</td>
-                <td class="yndamenyPrice" asp-for="@Model.Price">@Model.Price</td>
-                <td><input class="yndamenyInp" type="number" max="100" min="0" asp-for="@Model.Sale" /></td>
-                <td class="Finally">@Model.FinallPrice</td>
-            </tr>
-        </tfoot>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.ProductOrders.Count; ++i)
+                {
+                    <tr>
+                        <td hidden="hidden"><input hidden="hidden" asp-for="@Model.ProductOrders[i].Id" /></td>
+                        <td>@Model.ProductOrders[i].Product.Name</td>
+                        <td class="countOfPO">@Model.ProductOrders[i].Count</td>
+                        <td class="price">@Model.ProductOrders[i].Price</td>
+                        <td><input class="saleOrderItem" type="number" max="100" min="0" asp-for="@Model.ProductOrders[i].Sale" /></td>
+                        <td class="SalePriceInOneProduct">@Model.ProductOrders[i].FinallyPrice</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td></td>
+                    <td>Yndameny</td>
+                    <td class="yndamenyPrice" asp-for="@Model.Price">@Model.Price</td>
+                    <td><input class="yndamenyInp" type="number" max="100" min="0" asp-for="@Model.Sale" /></td>
+                    <td class="Finally">@Model.FinallPrice</td>
+                </tr>
+            </tfoot>
 
 
-    </table>
-    @if (Model.ProductOrders.Count > 0)
-    {
-        <input class="btn" id="chekoutBtn" type="submit" value="Check Out" />
-        <script>$("#chekoutBtn").css('pointer-events', 'all');</script>
-    }
-    else
-    {
-        <script>$("#chekoutBtn").css('pointer-events', 'none');</script>
-        <input class="btn" type="submit" value="Check Out" disabled />
-    }
+        </table>
+        </div>
+        @if (Model.ProductOrders.Count > 0)
+        {
+            <input class="btn" id="chekoutBtn" type="submit" value="Check Out" />
+            <script>$("#chekoutBtn").css('pointer-events', 'all');</script>
+        }
+        else
+        {
+            <script>$("#chekoutBtn").css('pointer-events', 'none');</script>
+            <input class="btn" type="submit" value="Check Out" disabled />
+        }
 </form>
 @if (ViewBag.Baskets.Count > 0)
 {
@@ -108,7 +110,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <button id="register" type="submit" class="btn btn-info form-control"><i class="glyphicon glyphicon-registration-mark"></i>@SharedLocalizer.GetLocalizedHtmlString("Registration")</button>
+                        <button id="register" type="submit" class="btn btn-dark"><i class="glyphicon glyphicon-registration-mark"></i>@SharedLocalizer.GetLocalizedHtmlString("Registration")</button>
                     </div>
                 </form>
             </div>

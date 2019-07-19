@@ -10,131 +10,7 @@
     var date = DateTime.Now.ToString("yyyy-MM-dd");
 }
 
-<style type="text/css">
 
-    body {
-        font-family: 'Muli', sans-serif;
-    }
-
-    h2 {
-        font-family: 'Damion', cursive;
-        font-weight: 400;
-        color: #4caf50;
-        font-size: 35px;
-        text-align: center;
-        position: relative;
-    }
-
-        h2:before {
-            position: absolute;
-            content: '';
-            width: 100%;
-            left: 0;
-            top: 22px;
-            background: #4caf50;
-            height: 1px;
-        }
-
-        h2 i {
-            font-style: normal;
-            background: #fff;
-            position: relative;
-            padding: 10px;
-        }
-
-    :focus {
-        outline: none;
-    }
-
-    /* necessary to give position: relative to parent. */
-    input[type="text"] {
-        font: 15px/24px 'Muli', sans-serif;
-        color: #333;
-        width: 100%;
-        box-sizing: border-box;
-        letter-spacing: 1px;
-    }
-
-    :focus {
-        outline: none;
-    }
-
-    .col-3 {
-        float: left;
-        width: 27.33%;
-        margin: 20px 3%;
-        position: relative;
-    }
-    /* necessary to give position: relative to parent. */
-    input[type="text"] {
-        font: 15px/24px "Lato", Arial, sans-serif;
-        color: #333;
-        width: 100%;
-        box-sizing: border-box;
-        letter-spacing: 1px;
-    }
-
-    .effect-1{
-        border: 0;
-        padding: 7px 0;
-        border-bottom: 1px solid #ccc;
-    }
-
-        .effect-1 ~ .focus-border {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background-color: #4caf50;
-            transition: 0.4s;
-        }
-
-        .effect-1:focus ~ .focus-border {
-            width: 100%;
-            transition: 0.4s;
-        }
-
-        .effect-24 ~ .focus-bg:before,
-        .effect-24 ~ .focus-bg:after {
-            content: "";
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            width: 0;
-            height: 0;
-            background-color: #ededed;
-            transition: 0.3s;
-            z-index: -1;
-        }
-
-        .effect-24:focus ~ .focus-bg:before,
-        .has-content.effect-24 ~ .focus-bg:before {
-            transition: 0.3s;
-            width: 50%;
-            left: 0;
-            top: 0;
-            height: 100%;
-        }
-
-        .effect-24 ~ .focus-bg:after {
-            left: auto;
-            right: 50%;
-            top: auto;
-            bottom: 50%;
-        }
-
-        .effect-24:focus ~ .focus-bg:after,
-        .has-content.effect-24 ~ .focus-bg:after {
-            transition: 0.3s;
-            width: 50%;
-            height: 100%;
-            bottom: 0;
-            right: 0;
-        }
-
-
-</style>
 <div class="mahi_holder">
     <div class="container">
         <form method="get" asp-action="Index" asp-controller="Report" class="row">
@@ -148,7 +24,7 @@
                 </select>
 
                 <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Type"):</label>
-                <select asp-for="TypeId" class="effect-24" asp-items="ViewBag.Types">
+                <select asp-for="TypeId" asp-items="ViewBag.Types">
                     <option selected value="" class="effect-24">All</option>
                 </select>
                 <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Name")</label>
@@ -160,168 +36,171 @@
                 <select asp-for="UserId" asp-items="ViewBag.Users" class="effect-24">
                     <option selected value="" class="effect-24">All</option>
                 </select>
-
+                <br /><br />
                 <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("From"):</label>
-                <input class="form-control effect-24 effect-1" asp-for="DateFrom" min="01.01.2000" max="@date" type="date" />
+                <input class="form-control" asp-for="DateFrom" min="01.01.2000" max="@date" type="date" />
 
                 <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("To"):</label>
-                <input class="form-control effect-24 effect-1" asp-for="DateTo" type="date" min="01.01.2000" max="@date" />
+                <input class="form-control" asp-for="DateTo" type="date" min="01.01.2000" max="@date" />
 
                 <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
-                <input class="form-control form-inline effect-24 effect-1" asp-for="PageSize" type="number" min="1" />
-                <input type="submit" value="Filter" class="btn btn-default effect-24 effect-1" />
+                <input class="form-control" asp-for="PageSize" type="number" min="1" />
+                <input type="submit" value="Filter" class="btn btn-default" />
             </div>
         </form>
     </div>
 </div>
-<table class="table table-bordered table-hover">
-    <thead>
-        @{
-            if (ViewBag.paged == null || ViewBag.paged.Count == 0)
-            {
-                <tr>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("Name")</th>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("Type")</th>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("Count")</th>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("Price")</th>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("Date")</th>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("User")</th>
-                </tr>
-            }
-            else if (ViewBag.paged[0] is ProductManager)
-            {
-                <tr>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("ProductName")</th>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("ProductType")</th>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("ImportCount")</th>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("ReceiptPrice")</th>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("AddedDate")</th>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("User")</th>
-                </tr>
-            }
-            else if (ViewBag.paged[0] is ProductOrder)
-            {
-                <tr>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("ProductName")</th>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("ProductType")</th>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("CountOfSaled")</th>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("ReceiptPrice")</th>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("DateOfSaled")</th>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("User")</th>
-                </tr>
-            }
-            else if (ViewBag.paged[0] is WriteOut)
-            {
-                <tr>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("ProductName")</th>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("ProductType")</th>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("CountOfOut")</th>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("PriceOfOut")</th>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("DateOfWriteOut")</th>
-                    <th>@SharedLocalizer.GetLocalizedHtmlString("User")</th>
-                </tr>
-            }
-        }
-    </thead>
-    <tbody>
-        @{
-            if (ViewBag.paged == null || ViewBag.paged.Count == 0)
-            {
-                <tr><td colspan="7" align="center">No products to show!</td></tr>
-            }
-            else
-            {
-                @foreach (var pm in ViewBag.paged)
+<br />
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <thead>
+            @{
+                if (ViewBag.paged == null || ViewBag.paged.Count == 0)
                 {
                     <tr>
-                        <td>@pm.Product.Name</td>
-                        <td>@pm.Product.ProductType.Name</td>
-                        <td>@pm.Count</td>
-
-                        @if (pm is ProductManager)
-                        {
-                            <td>@pm.ReceiptPrice</td>
-                            <td>@pm.Date</td>
-                            <td>@pm.User.UserName</td>
-                        }
-                        @if (pm is ProductOrder)
-                        {
-                            <td>@pm.FinallyPrice</td>
-                            <td>@pm.Order.Date</td>
-                            <td>@pm.Order.User.UserName</td>
-                        }
-                        @if (pm is WriteOut)
-                        {
-                            <td>@pm.Price</td>
-                            <td>@pm.Date</td>
-                            <td>@pm.User.UserName</td>
-                        }
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("Name")</th>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("Type")</th>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("Count")</th>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("Price")</th>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("Date")</th>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("User")</th>
+                    </tr>
+                }
+                else if (ViewBag.paged[0] is ProductManager)
+                {
+                    <tr>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("ProductName")</th>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("ProductType")</th>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("ImportCount")</th>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("ReceiptPrice")</th>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("AddedDate")</th>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("User")</th>
+                    </tr>
+                }
+                else if (ViewBag.paged[0] is ProductOrder)
+                {
+                    <tr>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("ProductName")</th>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("ProductType")</th>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("CountOfSaled")</th>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("ReceiptPrice")</th>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("DateOfSaled")</th>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("User")</th>
+                    </tr>
+                }
+                else if (ViewBag.paged[0] is WriteOut)
+                {
+                    <tr>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("ProductName")</th>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("ProductType")</th>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("CountOfOut")</th>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("PriceOfOut")</th>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("DateOfWriteOut")</th>
+                        <th>@SharedLocalizer.GetLocalizedHtmlString("User")</th>
                     </tr>
                 }
             }
+        </thead>
+        <tbody>
+            @{
+                if (ViewBag.paged == null || ViewBag.paged.Count == 0)
+                {
+                    <tr><td colspan="7" align="center">No products to show!</td></tr>
+                }
+                else
+                {
+                    @foreach (var pm in ViewBag.paged)
+                    {
+                        <tr>
+                            <td>@pm.Product.Name</td>
+                            <td>@pm.Product.ProductType.Name</td>
+                            <td>@pm.Count</td>
 
-        }
-    </tbody>
-</table>
-<a asp-action="ExcelExport" asp-route-Deal="@Model.Deal" asp-route-DateTo="@Model.DateTo.ToString("yyyy-MM-dd")" asp-route-DateFrom="@Model.DateFrom.ToString("yyyy-MM-dd")" asp-route-UserId="@Model.UserId" asp-route-TypeId="@Model.TypeId" asp-route-ProductId="@Model.ProductId">Export to Excel</a>
-<pager list="@ViewBag.paged" asp-route-Deal="@Model.Deal" asp-route-DateTo="@Model.DateTo.ToString("yyyy-MM-dd")" asp-route-DateFrom="@Model.DateFrom.ToString("yyyy-MM-dd")" asp-route-UserId="@Model.UserId" asp-route-pageSize="@Model.PageSize" asp-route-TypeId="@Model.TypeId" asp-route-ProductId="@Model.ProductId" asp-controller="Report" asp-action="Index" />
-@section scripts{
-    <link href="~/css/chosen.min.css" rel="stylesheet" />
-    <script src="~/lib/jquery/dist/chosen.jquery.min.js"></script>
-    <script>
-        $(() => {
-            $("#Deal").chosen({
-                search_contains: true,
-                width: "10%"
-            });
-            $("#UserId").chosen({
-                search_contains: true
-            });
-            $("#ProductId").on("chosen:ready", function (evt, params) {
-                let select = $("#TypeId").children("option:selected").val();
-                let name = $("#ProductId").children("option:selected").val();
-                if (select !== "") {
-                    GetProducts(select);
-                    if (name !== "") {
-                        $("#ProductId").val(name);
-                        $('#ProductId').trigger("chosen:updated");
+                            @if (pm is ProductManager)
+                            {
+                                <td>@pm.ReceiptPrice</td>
+                                <td>@pm.Date</td>
+                                <td>@pm.User.UserName</td>
+                            }
+                            @if (pm is ProductOrder)
+                            {
+                                <td>@pm.FinallyPrice</td>
+                                <td>@pm.Order.Date</td>
+                                <td>@pm.Order.User.UserName</td>
+                            }
+                            @if (pm is WriteOut)
+                            {
+                                <td>@pm.Price</td>
+                                <td>@pm.Date</td>
+                                <td>@pm.User.UserName</td>
+                            }
+                        </tr>
                     }
                 }
-            });
-            $("#TypeId").chosen({
-                search_contains: true,
-                width: "15%"
-            });
-            $("#ProductId").chosen({
-                search_contains: true,
-                width: "15%"
-            });
-            $(() => {
-                $("#TypeId").on("change", function () {
-                    var selected = $(this).children("option:selected").val();
-                    GetProducts(selected);
 
-                });
-            });
-            function GetProducts(select) {
-                $.ajax({
-                    url: '/Products/Get',
-                    type: "POST",
-                    data: JSON.stringify(select),
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    async: false,
-                    success: function (data) {
-                        $("#ProductId").empty();
-                        $("#ProductId").append("<option selected value=''>All products</select>");
-                        data.forEach(function (element) {
-                            $("#ProductId").append("<option value=" + element.id + ">" + element.name + "</option>");
-                        });
-                        $("#ProductId").trigger("chosen:updated");
-                    }
-                })
             }
+        </tbody>
+    </table>
+</div>
+    <a class="btn btn-default" asp-action="ExcelExport" asp-route-Deal="@Model.Deal" asp-route-DateTo="@Model.DateTo.ToString("yyyy-MM-dd")" asp-route-DateFrom="@Model.DateFrom.ToString("yyyy-MM-dd")" asp-route-UserId="@Model.UserId" asp-route-TypeId="@Model.TypeId" asp-route-ProductId="@Model.ProductId">Export to Excel</a>
+    <pager list="@ViewBag.paged" asp-route-Deal="@Model.Deal" asp-route-DateTo="@Model.DateTo.ToString("yyyy-MM-dd")" asp-route-DateFrom="@Model.DateFrom.ToString("yyyy-MM-dd")" asp-route-UserId="@Model.UserId" asp-route-pageSize="@Model.PageSize" asp-route-TypeId="@Model.TypeId" asp-route-ProductId="@Model.ProductId" asp-controller="Report" asp-action="Index" />
+    @section scripts{
+        <link href="~/css/chosen.min.css" rel="stylesheet" />
+        <script src="~/lib/jquery/dist/chosen.jquery.min.js"></script>
+        <script>
+            $(() => {
+                $("#Deal").chosen({
+                    search_contains: true,
+                    width: "10%"
+                });
+                $("#UserId").chosen({
+                    search_contains: true
+                });
+                $("#ProductId").on("chosen:ready", function (evt, params) {
+                    let select = $("#TypeId").children("option:selected").val();
+                    let name = $("#ProductId").children("option:selected").val();
+                    if (select !== "") {
+                        GetProducts(select);
+                        if (name !== "") {
+                            $("#ProductId").val(name);
+                            $('#ProductId').trigger("chosen:updated");
+                        }
+                    }
+                });
+                $("#TypeId").chosen({
+                    search_contains: true,
+                    width: "15%"
+                });
+                $("#ProductId").chosen({
+                    search_contains: true,
+                    width: "15%"
+                });
+                $(() => {
+                    $("#TypeId").on("change", function () {
+                        var selected = $(this).children("option:selected").val();
+                        GetProducts(selected);
 
-        });
-    </script>
-}
+                    });
+                });
+                function GetProducts(select) {
+                    $.ajax({
+                        url: '/Products/Get',
+                        type: "POST",
+                        data: JSON.stringify(select),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        async: false,
+                        success: function (data) {
+                            $("#ProductId").empty();
+                            $("#ProductId").append("<option selected value=''>All products</select>");
+                            data.forEach(function (element) {
+                                $("#ProductId").append("<option value=" + element.id + ">" + element.name + "</option>");
+                            });
+                            $("#ProductId").trigger("chosen:updated");
+                        }
+                    })
+                }
+
+            });
+        </script>
+    }
