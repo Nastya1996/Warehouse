@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Warehouse.Data;
 
 namespace Warehouse.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190722101534_move")]
+    partial class move
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -381,10 +383,6 @@ namespace Warehouse.Data.Migrations
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<string>("ProductId");
-
-                    b.Property<string>("TypeId");
-
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
@@ -392,10 +390,6 @@ namespace Warehouse.Data.Migrations
                     b.HasIndex("AfterId");
 
                     b.HasIndex("BeforeId");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("TypeId");
 
                     b.HasIndex("UserId");
 
@@ -640,14 +634,6 @@ namespace Warehouse.Data.Migrations
                     b.HasOne("Warehouse.Models.WareHouse", "Before")
                         .WithMany()
                         .HasForeignKey("BeforeId");
-
-                    b.HasOne("Warehouse.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId");
-
-                    b.HasOne("Warehouse.Models.ProductType", "Type")
-                        .WithMany()
-                        .HasForeignKey("TypeId");
 
                     b.HasOne("Warehouse.Models.AppUser", "User")
                         .WithMany()

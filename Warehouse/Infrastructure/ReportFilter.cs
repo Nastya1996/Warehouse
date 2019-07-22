@@ -15,11 +15,9 @@ namespace Warehouse.Infrastructure
         public string Deal { get; set; }
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime DateTo { get; set; } = DateTime.Now.Date;
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime DateFrom { get; set; }
         public int Page { get; set; } = 1;
         public int PageSize { get; set; } = 10;
-        public IQueryable<ProductManager> ProductManagers { get; set; }
-        public IQueryable<ProductOrder> ProductOrders { get; set; }
-        public IQueryable<WriteOut> WriteOuts { get; set; }
     }
 }
