@@ -70,7 +70,7 @@
                 var allCount = $(this).parent().parent().children(".maxCount");
                 var countIsOkey = allCount.text() - backCount.val();
                 if (countIsOkey >= 0) {
-                    allCount.text(countIsOkey);
+                    //allCount.text(countIsOkey);
                 } else {
                     $.confirm({
                         icon: 'fas fa-exclamation-triangle',
@@ -83,18 +83,20 @@
                             close: {
                                 btnClass: "btn-red",
                                 action: function () {
+                                    $inputCount.val(0);
                                 }
                             }
                         }
                     });
-                    $inputCount.val(0);
                 }
                 $(this).parent().parent().addClass("select");
                 let $inputCount = $(".select").children().find("input[name='count']");
                 let $id = $(".select").children().children().val();
                 let $maxCount = $(".select td.maxCount").html();
                 let $quantity = $inputCount.val();
+                alert(parseInt($quantity)+"     "+ $maxCount);
                 if (parseInt($quantity) <= parseInt($maxCount) && parseInt($quantity) !== 0) {
+                    alert("Yes");
                     $(this).parent().parent().removeClass();
                     $.ajax({
                         type: 'POST',
@@ -113,11 +115,12 @@
                                         close: {
                                             btnClass: "btn-dark",
                                             action: function () {
+                                                allCount.text(countIsOkey);
+                                                $inputCount.val(0);
                                             }
                                         }
                                     }
                                 });
-                                $inputCount.val(0);
                             }
                             else {
                                 $.confirm({
@@ -150,11 +153,11 @@
                             close: {
                                 btnClass: "btn-red",
                                 action: function () {
+                                    $inputCount.val(0);
                                 }
                             }
                         }
                     });
-                    $inputCount.val(0);
                 }
                 $("input[name='count']").blur(function () {
                     $(this).css("border", "1px solid #92a8d1");

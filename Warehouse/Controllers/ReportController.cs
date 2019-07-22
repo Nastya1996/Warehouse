@@ -62,7 +62,7 @@ namespace Warehouse.Controllers
         void Import(ReportViewModel reportFilter)
         {
             var wareHouseId = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value).WarehouseId;
-            var queryImport = _context.ProductManagers.Where(pm => pm.WareHouseId == wareHouseId)
+            var queryImport = _context.ProductManagers
                                                .Include(pm => pm.Product.ProductType)
                                                .Include(pm => pm.User).AsQueryable();
             if (reportFilter.ProductId != null)
