@@ -19,6 +19,7 @@
         <input type="submit" id="send" value="Filter" class="btn btn-default" />
     </div>
 </form>
+<br />
 <div class="table-responsive">
     <table class="table table-bordered table-hover">
         <thead>
@@ -36,7 +37,7 @@
                 {
                     <th>@SharedLocalizer.GetLocalizedHtmlString("Move")</th>
                     <th>@SharedLocalizer.GetLocalizedHtmlString("Edit")</th>
-                    <td>@SharedLocalizer.GetLocalizedHtmlString("WriteOut")</td>
+                    <th>@SharedLocalizer.GetLocalizedHtmlString("WriteOut")</th>
                 }
 
             </tr>
@@ -65,10 +66,10 @@
                         @if (User.IsInRole("Storekeeper"))
                         {
                             <td>
-                                <a class="moveProduct" id="@product.Id" href="#">@SharedLocalizer.GetLocalizedHtmlString("Move")</a>
+                                <a style="background:#a83ef7" class="btn edited moveProduct" id="@product.Id" href="#"><i class="fa fa-refresh"></i></a>
                             </td>
-                            <td><a asp-action="Edit" asp-route-id="@(product.Id)">@SharedLocalizer.GetLocalizedHtmlString("Edit")</a></td>
-                            <td><a href="#">Write out</a></td>
+                            <td><a class="btn edited" asp-action="Edit" asp-route-id="@(product.Id)"><i class='fas fa-pen'></i></a></td>
+                            <td><a style="background:#e24c4c" class="btn edited" href="#"><i class='fas fa-share'></i></a></td>
                         }
                     </tr>
                 }

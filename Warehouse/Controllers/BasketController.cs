@@ -55,11 +55,17 @@ namespace Warehouse.Controllers
         [HttpPost]
         public IActionResult DeleteYes(string id)
         {
-            _context.Baskets.Remove(_context.Baskets.Find(id));
-            _context.SaveChanges();
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var baskets2 = _context.Baskets.Include(p => p.Product).Where(p => p.UserId == user.Id);
+            var obj = _context.Baskets.FirstOrDefault(b=>b.Id == id);
+            if(obj!=null)
+                _context.Baskets.Remove(obj);
+            _context.SaveChanges();
+            
             _log.LogInformation("Deleted basket item."+user);
-            return RedirectToAction("Index");
+            var baskets = _context.Baskets.Include(p => p.Product).Where(p => p.UserId == user.Id);
+            _log.LogInformation("Basket index.User: " + user);
+            return View("_IndexForHover", baskets);
         }
     }
 }

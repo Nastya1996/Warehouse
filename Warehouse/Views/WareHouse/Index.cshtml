@@ -12,17 +12,18 @@
 @inject IViewLocalizer Localizer
 <form method="get" asp-action="Index">
     <div class="form-inline form-group">
-        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("WarehouseNumber"): </label>
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("WarehouseNumber") </label>
         <input class="form-control" type="text" name="number" value="@ViewData["CurrentNumber"]" />
 
-        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("WarehouseAddress"): </label>
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("WarehouseAddress") </label>
         <input class="form-control" type="text" name="address" value="@ViewData["CurrentAddress"]" />
 
-        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize"):</label>
+        <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize")</label>
         <input class="form-control" type="number" min="1" max="100" name="pageSize" value="@ViewData["CurrentSize"]" />
         <input type="submit" value="Filter" class="btn btn-default" />
     </div>
 </form>
+<br />
 <div class="table-responsive">
     <table class="table table-bordered table-hover">
         <thead>

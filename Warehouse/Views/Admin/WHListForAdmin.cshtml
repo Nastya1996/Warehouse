@@ -4,7 +4,7 @@
     Layout = null;
 }
 
-<form method="post" asp-controller="Admin" asp-action="Move" asp-route-IdOfUser="@ViewBag.UserID">
+<form style="padding: 2% 10%;" method="post" asp-controller="Admin" asp-action="Move" asp-route-IdOfUser="@ViewBag.UserID">
     @foreach (var wh in Model)
     {
         <input class="radioWH" type="radio" name="id" value="@wh.Id" checked />
