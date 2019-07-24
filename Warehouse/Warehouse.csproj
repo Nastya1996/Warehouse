@@ -20,6 +20,8 @@
     <Compile Remove="Data\Migrations\20190621073401_writeOut.Designer.cs" />
     <Compile Remove="Data\Migrations\20190621073646_fix.cs" />
     <Compile Remove="Data\Migrations\20190621073646_fix.Designer.cs" />
+    <Compile Remove="Data\Migrations\20190722081037_move.cs" />
+    <Compile Remove="Data\Migrations\20190722081037_move.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

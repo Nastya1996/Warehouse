@@ -23,6 +23,7 @@ namespace Warehouse.Data
         public DbSet<FileModelImg> Files { get; set; }
         public DbSet<WriteOut> WriteOuts { get; set; }
         public DbSet<AppUserWareHouse> AppUserWareHouses { get; set; }
+        public DbSet<ProductMove> ProductMoves { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);

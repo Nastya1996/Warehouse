@@ -24,6 +24,7 @@ using static Microsoft.AspNetCore.Razor.Language.TagHelperMetadata;
 using Microsoft.Extensions.Options;
 using Warehouse.Resources;
 using System.Reflection;
+using Warehouse.Infrastructure;
 
 namespace Warehouse
 {
@@ -100,6 +101,7 @@ namespace Warehouse
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+            app.UseMiddleware<Middlware>();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

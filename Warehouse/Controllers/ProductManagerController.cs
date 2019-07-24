@@ -293,15 +293,58 @@ namespace Warehouse.Controllers
             var whId = _context.ProductManagers.FirstOrDefault(p => p.Id == productId).WareHouseId;
             return View("WHList",_context.Warehouses.Where(w=>w.Id != whId).ToList());
         }
-        public IActionResult Move(string id, string IdOfPM)
+
+
+
+        /// <summary>
+        /// The Move method will mix the product from one warehouse to another
+        /// </summary>
+        /// <param name="id">The id parameter is the identifier of the warehouse where the product should be moved</param>
+        /// <param name="IdOfPM">The IdOfPM parameter is the identifier of the ProductManager to be moved</param>
+        /// <param name="count">the count parameter is the number of the moved product</param>
+        /// <returns></returns>
+        public IActionResult Move(string id, string IdOfPM, string count)
         {
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var pm = _context.ProductManagers.FirstOrDefault(p => p.Id == IdOfPM);
-            var wh = _context.Warehouses.FirstOrDefault(w => w.Id == id);
-            pm.WareHouseId = wh.Id;
-            _context.ProductManagers.Update(pm);
+            var productManager = _context.ProductManagers.Include(pm=>pm.Product).FirstOrDefault(p => p.Id == IdOfPM);
+            var warehouse = _context.Warehouses.FirstOrDefault(w => w.Id == id);
+            bool isCount = uint.TryParse(count, out uint CountOfProduct);
+            if (productManager == null || warehouse == null || !isCount || CountOfProduct==0)
+                return BadRequest();
+            if (productManager.CurrentCount == CountOfProduct)
+            {
+                productManager.Count = CountOfProduct;
+                productManager.WareHouseId = id;
+            }
+            else
+            {
+                productManager.Count -=CountOfProduct;
+                productManager.CurrentCount -= CountOfProduct;
+                _context.Update(productManager);
+                _context.ProductManagers.Add(new ProductManager {
+                    Count = CountOfProduct,
+                    CurrentCount = CountOfProduct,
+                    ReceiptDate = productManager.ReceiptDate,
+                    Date = DateTime.Now,
+                    UserId = user.Id,//sa mehet eshili kariq one, ete min user texapoxuma apranqy, enmin pahestum huva yndunum?
+                    WareHouseId=id,
+                    ReceiptPrice=productManager.ReceiptPrice,
+                    SalePrice=productManager.SalePrice,
+                    ProductId=productManager.ProductId
+                });
+            }
+            _context.ProductMoves.Add(new ProductMove
+            {
+                BeforeId = user.WarehouseId,
+                AfterId = id,
+                Date = DateTime.Now,
+                UserId = user.Id,
+                Count = CountOfProduct,
+                ProductId=productManager.ProductId,
+                TypeId=productManager.Product.ProductTypeId
+            });
             _context.SaveChanges();
-            id = pm.ProductId;
+            id = productManager.ProductId;
             _log.LogInformation("Product manager move to another warehouse.User: "+user);
             return RedirectToAction("Show", "ProductManager", new { id });
         }

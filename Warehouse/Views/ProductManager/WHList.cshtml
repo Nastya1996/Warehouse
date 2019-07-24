@@ -5,6 +5,11 @@
 }
 
 <form method="post" asp-controller="ProductManager" asp-action="Move" asp-route-IdOfPM="@ViewBag.PMId">
+
+    <div class="form-group">
+        <label>Count</label>
+        <input name="count" value="" type="text" class="form-control" />
+    </div>
     @foreach (var wh in Model){
         <input type="radio" name="id" value="@wh.Id" checked />
         <label>@wh.Number</label><br />

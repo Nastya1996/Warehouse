@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Warehouse.Data;
 
 namespace Warehouse.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190722101534_move")]
+    partial class move
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -173,6 +175,8 @@ namespace Warehouse.Data.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
 
+                    b.Property<string>("WarehouseId");
+
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedEmail")
@@ -183,25 +187,9 @@ namespace Warehouse.Data.Migrations
                         .HasName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("WarehouseId");
+
                     b.ToTable("AspNetUsers");
-                });
-
-            modelBuilder.Entity("Warehouse.Models.AppUserWareHouse", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("AppUserId");
-
-                    b.Property<string>("WareHouseId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.HasIndex("WareHouseId");
-
-                    b.ToTable("AppUserWareHouses");
                 });
 
             modelBuilder.Entity("Warehouse.Models.Basket", b =>
@@ -217,15 +205,11 @@ namespace Warehouse.Data.Migrations
 
                     b.Property<string>("UserId");
 
-                    b.Property<string>("WarehouseId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("WarehouseId");
 
                     b.ToTable("Baskets");
                 });
@@ -399,10 +383,6 @@ namespace Warehouse.Data.Migrations
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<string>("ProductId");
-
-                    b.Property<string>("TypeId");
-
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
@@ -410,10 +390,6 @@ namespace Warehouse.Data.Migrations
                     b.HasIndex("AfterId");
 
                     b.HasIndex("BeforeId");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("TypeId");
 
                     b.HasIndex("UserId");
 
@@ -577,15 +553,11 @@ namespace Warehouse.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("Warehouse.Models.AppUserWareHouse", b =>
+            modelBuilder.Entity("Warehouse.Models.AppUser", b =>
                 {
-                    b.HasOne("Warehouse.Models.AppUser", "AppUser")
+                    b.HasOne("Warehouse.Models.WareHouse", "Warehouse")
                         .WithMany()
-                        .HasForeignKey("AppUserId");
-
-                    b.HasOne("Warehouse.Models.WareHouse", "WareHouse")
-                        .WithMany()
-                        .HasForeignKey("WareHouseId");
+                        .HasForeignKey("WarehouseId");
                 });
 
             modelBuilder.Entity("Warehouse.Models.Basket", b =>
@@ -597,10 +569,6 @@ namespace Warehouse.Data.Migrations
                     b.HasOne("Warehouse.Models.AppUser", "User")
                         .WithMany()
                         .HasForeignKey("UserId");
-
-                    b.HasOne("Warehouse.Models.WareHouse", "WareHouse")
-                        .WithMany()
-                        .HasForeignKey("WarehouseId");
                 });
 
             modelBuilder.Entity("Warehouse.Models.Order", b =>
@@ -666,14 +634,6 @@ namespace Warehouse.Data.Migrations
                     b.HasOne("Warehouse.Models.WareHouse", "Before")
                         .WithMany()
                         .HasForeignKey("BeforeId");
-
-                    b.HasOne("Warehouse.Models.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId");
-
-                    b.HasOne("Warehouse.Models.ProductType", "Type")
-                        .WithMany()
-                        .HasForeignKey("TypeId");
 
                     b.HasOne("Warehouse.Models.AppUser", "User")
                         .WithMany()
