@@ -37,9 +37,9 @@
                     <option>Report</option>
                 </select>
             </div>
-            <div id="HouseDiv" class="form-group">
-                <label asp-for="Input.WarehouseId"></label><br />
-                <select id="House" asp-for="Input.WarehouseId" asp-items="@ViewBag.Warehouse">
+            <div class="form-group">
+                <label asp-for="Input.Warehouses"></label><br />
+                <select id="House" asp-for="Input.Warehouses" asp-items="@ViewBag.Warehouse" multiple>
                     <option selected disabled value="">Select warehouse</option>
                 </select>
             </div>
@@ -133,10 +133,10 @@
                 HouseSpanDelete();
                 return false;
             }
-            if (house.val() == "") {
-                $("#HouseDiv").append("<span class='SelectError'>The warehouse not selected</span>")
-                return true;
-            }
+            //if (house.val() == "") {
+            //    $("#HouseDiv").append("<span class='SelectError'>The warehouse not selected</span>")
+            //    return true;
+            //}
             return false;
         }
     </script>

@@ -69,7 +69,7 @@
                                 <a style="background:#a83ef7" class="btn edited moveProduct" id="@product.Id" href="#"><i class="fa fa-refresh"></i></a>
                             </td>
                             <td><a class="btn edited" asp-action="Edit" asp-route-id="@(product.Id)"><i class='fas fa-pen'></i></a></td>
-                            <td><a style="background:#e24c4c" class="btn edited" href="#"><i class='fas fa-share'></i></a></td>
+                            <td><a style="background:#e24c4c" class="btn edited Write out" href="#"><i class='fas fa-share'></i></a></td>
                         }
                     </tr>
                 }
@@ -132,7 +132,7 @@
 
 
         $(() => {
-            $("a:contains('Write out')").on("click", function () {
+            $("a:contains('.btn edited Write out')").on("click", function () {
                 var $productManagerId = $(this).parents("tr").children("td:first").children(":input").val();
                 var thisTag = $(this).parents("tr").children("td.currentCount");
                 var $count = thisTag.html();

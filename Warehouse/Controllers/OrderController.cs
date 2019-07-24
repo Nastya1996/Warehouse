@@ -98,13 +98,13 @@ namespace Warehouse.Controllers
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var basket = _context.Baskets.Include(pb => pb.Product).Where(b => b.UserId == user.Id);
             var baskets = new List<Basket>();
-
+            //var pmId;
             var productOrderList = new List<ProductOrder>();
             foreach (var item in basket)
             {
                 var count = item.Count;
 
-                var productManager = _context.ProductManagers.Where(p => p.WareHouseId == user.WarehouseId && p.ProductId == item.ProductId && p.CurrentCount!=0).OrderBy(pm => pm.Date).ToList();
+                var productManager = _context.ProductManagers.Where(p => /*p.WareHouseId == user.WarehouseId*/ p.ProductId == item.ProductId && p.CurrentCount!=0).OrderBy(pm => pm.Date).ToList();
                 if (productManager.Sum(p => p.CurrentCount) < count)
                 {
                     baskets.Add(item);
@@ -154,7 +154,7 @@ namespace Warehouse.Controllers
                 ProductOrders = productOrderList,
                 UserId = user.Id,
                 OrderType=OrderType.InProgress,
-                WareHouseId=user.WarehouseId
+                //WareHouseId=user.WarehouseId
             };
             _context.Orders.Add(order);
             _context.SaveChanges();

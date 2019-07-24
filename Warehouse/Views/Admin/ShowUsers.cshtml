@@ -15,12 +15,12 @@
         <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("Role")</label>
         <select asp-for="RoleId" class="form-control" asp-items="@ViewBag.Roles">
             <option selected value="">All roles</option>
-        </select>
+        </select><br />
         <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("WarehouseNumber")</label>
-        <select class="form-control" asp-items="@ViewBag.Numbers" asp-for="Number">
+        <select id="Number" class="form-control" asp-items="@ViewBag.Numbers" asp-for="WareHouses" multiple>
             <option selected value="">All warehouses</option>
         </select>
-
+        <br />
         <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize")</label>
         <input class="form-control" asp-for="PageSize" type="number" min="1" max="100" name="pageSize" />
         <input type="submit" value="Filter" class="btn btn-default" />
@@ -55,9 +55,13 @@
                         <td>@user.Email</td>
                         <td>@user.PhoneNumber</td>
                         <td>
-                            @if (user.Warehouse != null)
+                            @if (user.WareHouses != null && user.WareHouses.Count!=0)
                             {
-                                <a class="moveUser">@user.Warehouse.Number / @user.Warehouse.Address<input type="hidden" value="@user.Id" /></a>
+                                <a class="moveUser">
+                                    @foreach(var item in user.WareHouses){
+                                        <span>@item.Number</span><span>/</span>
+                                    }
+                                <input type="hidden" value="@user.Id" /></a>
                             }
                             else
                             {
@@ -80,7 +84,7 @@
         </tbody>
     </table>
 </div>
-<pager list="@ViewBag.paged" asp-route-PageSize="@Model.PageSize" asp-route-Name="@Model.Name" asp-route-Number="@Model.Number" asp-route-role="@ViewData["CurrentRole"]" asp-route-name="@ViewData["CurrentName"]" asp-controller="Admin" asp-action="ShowUsers" />
+<pager list="@ViewBag.paged" asp-route-PageSize="@Model.PageSize" asp-route-Name="@Model.Name" asp-route-WareHouses="@Model.WareHouses" asp-route-role="@ViewData["CurrentRole"]" asp-route-name="@ViewData["CurrentName"]" asp-controller="Admin" asp-action="ShowUsers" />
 
 <div class="modal fade" id="modalMoveUser" role="dialog">
     <div class="modal-dialog">

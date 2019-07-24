@@ -63,8 +63,7 @@ namespace Warehouse.Areas.Identity.Pages.Account
             public DateTime Birthdate { get; set; }
             
 			[Display(Name = "Warehouse")]
-            public string WarehouseId { get; set; }
-			public WareHouse Warehouse { get; set; }
+			public IList<string> Warehouses { get; set; }
 
 			[Required]
 			[Display(Name ="Role")]
@@ -118,9 +117,9 @@ namespace Warehouse.Areas.Identity.Pages.Account
 			returnUrl = returnUrl ?? Url.Content("/Admin/ShowUsers");
             if (role == "Report")
             {
-                Input.WarehouseId = null;
+                Input.Warehouses = null;
             }
-            else if (Input.WarehouseId == null)
+            else if (Input.Warehouses.Count == 0)
                 ModelState.AddModelError("", "Warehouse not selected");
             if (ModelState.IsValid)
             {
@@ -128,7 +127,7 @@ namespace Warehouse.Areas.Identity.Pages.Account
                     Name = Input.Name,
                     SurName = Input.Surname,
                     BirthDate = Input.Birthdate,
-                    WarehouseId = Input.WarehouseId,
+                    //WarehouseId = Input.WarehouseId,
                     UserName = Input.Email,
                     Email = Input.Email,
                     PhoneNumber = Input.PhoneNumber
@@ -150,7 +149,19 @@ namespace Warehouse.Areas.Identity.Pages.Account
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
                     await _userManager.AddToRoleAsync(user, role);
 
-                   // await _signInManager.SignInAsync(user, isPersistent: false);
+                    // await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    foreach (var item in Input.Warehouses)
+                    {
+                        var userWarehouseShip = new AppUserWareHouse()
+                        {
+                            AppUserId = user.Id,
+                            WareHouseId = item
+                        };
+                        _context.AppUserWareHouses.Add(userWarehouseShip);
+                        _context.SaveChanges();
+                    }
+
                     return LocalRedirect(returnUrl);
                 }
                 foreach (var error in result.Errors)

@@ -44,12 +44,19 @@ namespace Warehouse.Controllers
         /// <returns></returns>
         public IActionResult Index(ProductManagerViewModel viewModel)
         {
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var li = new List<WareHouse>();
+            foreach (var wh in _context.AppUserWareHouses.Where(u => u.AppUserId == user.Id))
+            {
+                li.Add(_context.Warehouses.Find(wh.WareHouseId));
+            }
+            //var a = _context.Users.Include(u => u.WareHouses);
             if (!FilterValid()) return BadRequest();
-            var user= _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var query = _context.ProductManagers
-                .Where(pm => pm.WareHouseId == user.WarehouseId && pm.Product.IsActive)
-                .Include(p => p.Product.ProductType)
-                .Include(p => p.Product.Unit).AsQueryable();
+            //var userik =  _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            
+            var query = _context.ProductManagers.Include(w => w.WareHouse).Include(p => p.Product.ProductType)
+                .Include(p => p.Product.Unit).AsQueryable()
+                .Where(pm => li.Contains(_context.Warehouses.FirstOrDefault(w=>w.Id == pm.WareHouseId)) && pm.Product.IsActive);
             if (viewModel.TypeId != null)
                 if (_context.Types.Find(viewModel.TypeId) != null)
                     query = query.Where(pm => pm.Product.ProductTypeId == viewModel.TypeId);
@@ -58,6 +65,8 @@ namespace Warehouse.Controllers
                 if (_context.Products.Find(viewModel.ProductId) != null)
                     query = query.Where(pm => pm.ProductId == viewModel.ProductId);
                 else return BadRequest();
+            if (viewModel.WarehouseID != null)
+                query = query.Where(pm => pm.WareHouseId == viewModel.WarehouseID);
             var queryGroup=query.GroupBy(pm=>pm.Product).Select(item => new
                        {
                            Product = item.Key,
@@ -67,6 +76,9 @@ namespace Warehouse.Controllers
             ViewBag.paged = new PagedList<ExpandoObject>(queryGroup, viewModel.Page, viewModel.PageSize);
             ViewBag.Types = new SelectList(_context.Types.Where(pt => pt.IsActive), "Id", "Name");
             ViewBag.Products = new SelectList(_context.Products.Where(p => p.IsActive), "Id", "Name");
+            
+
+            ViewBag.WareHouses = new SelectList(li, "Id", "Number");
             _log.LogInformation("Product manager index.User: " + user);
             return View(viewModel);
         }
@@ -106,7 +118,7 @@ namespace Warehouse.Controllers
                 productManager.UserId = user.Id;
                 productManager.CurrentCount = productManager.Count;
                 productManager.Product = product;
-                productManager.WareHouseId = user.WarehouseId;
+               // productManager.WareHouseId = user.WarehouseId;
                 _context.Add(productManager);
                 _context.SaveChanges();
                 _log.LogInformation("Product manager created.User: " + user);
@@ -122,7 +134,14 @@ namespace Warehouse.Controllers
         /// </summary>
         void SelectInitial()
         {
-            ViewBag.WareHouses = new SelectList(_context.Warehouses, "Id", "Number");
+            var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var li = new List<WareHouse>();
+            foreach (var wh in _context.AppUserWareHouses.Where(u => u.AppUserId == user.Id))
+            {
+                li.Add(_context.Warehouses.Find(wh.WareHouseId));
+            }
+            
+            ViewBag.WareHouses = new SelectList(li, "Id", "Number");
             ViewBag.Products = new SelectList(_context.Products, "Id", "Name");
             ViewBag.ProductTypes = new SelectList(_context.Types, "Id", "Name");
         }
@@ -155,7 +174,7 @@ namespace Warehouse.Controllers
             var maxPrice = _context.ProductManagers.Max(p => p.SalePrice);
             var minPrice = _context.ProductManagers.Min(p => p.SalePrice);
             var products = _context.ProductManagers
-                .Where(p => p.ProductId == id && p.WareHouseId==user.WarehouseId &&
+                .Where(p => p.ProductId == id &&// p.WareHouseId==user.WarehouseId &&
                  p.SalePrice>=from && p.SalePrice<=data)
                 .Include(p=>p.Product)
                 .Include(u=>u.Product.Unit)
@@ -212,8 +231,10 @@ namespace Warehouse.Controllers
         ///// <param name="quantity">Number of products</param>
         ///// <returns></returns>
         [HttpPost]
-        public IActionResult Add(string id, string quantity)
+        public IActionResult Add(string id, string quantity, string prodManId)
         {
+            if(prodManId!=null)
+                ViewBag.BasketPMId = prodManId;
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             _log.LogInformation("Product manager add.User: " + user);
             bool correct = UInt32.TryParse(quantity, out uint count);
@@ -230,6 +251,7 @@ namespace Warehouse.Controllers
                         AddDate = DateTime.Now,
                         Count = count,
                         ProductId = id,
+                        WarehouseId = prodManId
                     };
                     _context.Baskets.Add(basket);
                     _context.SaveChanges();

@@ -16,6 +16,10 @@
             <option selected value="">All products</option>
         </select>
 
+        <select asp-for="WarehouseID" asp-items="ViewBag.Warehouses">
+            <option selected value="">All products</option>
+        </select>
+
         <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize")</label>
         <input class="form-control" type="number" min="1" asp-for="PageSize" />
 
@@ -50,7 +54,7 @@
                 {
                 <tr>
                     <td hidden="hidden"><input id="id" type="hidden" value="@productManager.Product.Id" /></td>
-                    <td>@productManager.Product.ProductType.Name</td>
+                    <td class="secondTd">@productManager.Product.ProductType.Name<input id="pmIdInp" type="hidden"  /><input type="hidden" id="basketpmId" value="@ViewBag.BasketPMId" /></td>
                     <td>@productManager.Product.Name</td>
                     <td>@productManager.Count</td>
                     <td class="currentCount">@productManager.CurrentCount</td>
@@ -70,7 +74,7 @@
         </tbody>
     </table>
  </div>
-    <pager list="@ViewBag.paged" asp-route-PageSize="@Model.PageSize" asp-route-TypeId="@Model.TypeId" asp-route-ProductId="@Model.ProductId" asp-controller="ProductManager" asp-action="Index" />
+    <pager list="@ViewBag.paged" asp-route-WarehouseID="@Model.WarehouseID" asp-route-PageSize="@Model.PageSize" asp-route-TypeId="@Model.TypeId" asp-route-ProductId="@Model.ProductId" asp-controller="ProductManager" asp-action="Index" />
 
     @section Scripts{
         <link href="~/css/jquery-confirm.min.css" rel="stylesheet" />
@@ -129,6 +133,8 @@
                     var $Id = $(this).parents("tr").children("td:first").children(":input").val();
                     var thisTag = $(this).parents("tr").children("td.currentCount");
                     var $currentCount = parseInt(thisTag.html());
+                    var pmId = $(this).parent().parent().children(".second").children("#pmIdInp").val();
+                    var basketProdManId = $(this).parent().parent().children(".second").children("#basketpmId").val();
                     $.confirm({
                         title: 'Write out!',
                         content: '' +
@@ -142,7 +148,7 @@
                                 btnClass: 'btn-dark',
                                 action: function () {
                                     var $currentQuantity = parseInt(this.$content.find('.quantity').val());
-                                    if ($currentQuantity > $currentCount || $currentQuantity == 0) {
+                                    if (($currentQuantity > $currentCount || $currentQuantity == 0) && pmId != basketProdManId) {
                                         $.confirm({
                                             icon: 'fas fa-exclamation-triangle',
                                             title: 'Warehouse!',
@@ -163,7 +169,8 @@
                                         type: "POST",
                                         data: {
                                             id: $Id,
-                                            quantity: $currentQuantity
+                                            quantity: $currentQuantity,
+                                            prodManId: pmId
                                         },
                                         async: false,
                                         url: "../../ProductManager/Add",

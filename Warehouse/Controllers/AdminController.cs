@@ -77,27 +77,56 @@ namespace Warehouse.Controllers
 
         public IActionResult ShowUsers(UsersViewModel viewModel)
         {
+            
+            foreach (var item in _context.AppUsers)
+            {
+                var li = new List<WareHouse>();
+                foreach (var wh in _context.AppUserWareHouses.Where(u=>u.AppUserId == item.Id))
+                {
+                    li.Add(_context.Warehouses.Find(wh.WareHouseId));
+                }
+                item.WareHouses = li;
+            }
+            
             if (!FilterValid()) return BadRequest();
             var userSignIn = _context.AppUsers.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var query = _context.AppUsers.Include(user => user.Warehouse).Where(u=>u.Id!=userSignIn.Id).AsQueryable();
+            var query = _context.AppUsers.Where(u => u.Id != userSignIn.Id).ToList();
             if (!string.IsNullOrEmpty(viewModel.Name))
             {
                 viewModel.Name = viewModel.Name.Trim();
                 query = query.Where(u => u.Name.Contains(viewModel.Name,StringComparison.InvariantCultureIgnoreCase)
-                                      || u.SurName.Contains(viewModel.Name,StringComparison.InvariantCultureIgnoreCase));
+                                      || u.SurName.Contains(viewModel.Name,StringComparison.InvariantCultureIgnoreCase)).ToList();
             }
-            if (viewModel.Number != null && viewModel.Number != "")
-                if (_context.Warehouses.Find(viewModel.Number) != null)
-                    query = query.Where(u => u.WarehouseId == viewModel.Number);
-                else return BadRequest();
+            
+            if (viewModel?.WareHouses?.Count != 0 && viewModel?.WareHouses!=null)
+            {
+                List<AppUser> us = new List<AppUser>();
+                foreach (var item in viewModel.WareHouses)
+                {
+                    if (item != null)
+                    {
+                        var obj = _context.AppUsers.Where(u => u.WareHouses.Contains(_context.Warehouses.FirstOrDefault(w => w.Id == item)));
+                        if (obj.Count() > 0)
+                            foreach (var objItem in obj)
+                            {
+                                us.Add(objItem);
+                            }
+                    }
+                }
+                query = us;
+                if (us.Count == 0)
+                    query = _context.AppUsers.Where(u => u.Id != userSignIn.Id).ToList();
+            }
+            
+            
             var usersId = _context.UserRoles.Where(ur => ur.RoleId == viewModel.RoleId).Select(u=>u.UserId);
             if (viewModel.RoleId != null)
                 if (_context.Roles.Find(viewModel.RoleId) != null)
-                    query = query.Where(u => usersId.Contains(u.Id));
+                    query = query.Where(u => usersId.Contains(u.Id)).ToList();
                 else return BadRequest();
             ViewBag.Roles = new SelectList(_context.Roles, "Id", "Name");
             ViewBag.Numbers = new SelectList(_context.Warehouses, "Id", "Number");
-            ViewBag.paged = new PagedList<AppUser>(query, viewModel.Page, viewModel.PageSize);
+            ViewBag.paged = new PagedList<AppUser>(query.AsQueryable(), viewModel.Page, viewModel.PageSize);
             _log.LogInformation("Show users.User: " + userSignIn);
             return View(viewModel);
         }
@@ -143,9 +172,9 @@ namespace Warehouse.Controllers
         public IActionResult WHListForAdmin(string userId)
         {
             ViewBag.UserID = userId;
-            var whIdOfUser = _context.Users.FirstOrDefault(u=>u.Id == userId).WarehouseId;
-            var wh = _context.Warehouses.Where(w=>w.Id != whIdOfUser).ToList();
-            return View("WHListForAdmin", wh);
+            //var whIdOfUser = _context.Users.FirstOrDefault(u=>u.Id == userId).WarehouseId;
+            //var wh = _context.Warehouses.Where(w=>w.Id != whIdOfUser).ToList();
+            return View("WHListForAdmin");
         }
         public IActionResult Move(string id, string IdOfUser)
         {
@@ -153,7 +182,7 @@ namespace Warehouse.Controllers
             {
                 var users = _context.AppUsers.FirstOrDefault(u => u.Id == IdOfUser);
                 var wh = _context.Warehouses.FirstOrDefault(w => w.Id == id);
-                users.WarehouseId = wh.Id;
+                //users.WarehouseId = wh.Id;
                 _context.AppUsers.Update(users);
                 _context.SaveChanges();
                 var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);

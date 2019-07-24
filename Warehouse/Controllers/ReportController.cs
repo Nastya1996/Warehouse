@@ -39,7 +39,7 @@ namespace Warehouse.Controllers
                                                 ? _context.ProductManagers.Min(d => d.Date)
                                                 : reportFilter.DateFrom;
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var wareHouseId = user.WarehouseId;
+            //var wareHouseId = user.WarehouseId;
             ViewBag.Names = new SelectList(_context.Products, "Id", "Name");
             ViewBag.Types = new SelectList(_context.Types, "Id", "Name");
             ViewBag.Users = new SelectList(_context.Users.Where(u=>u.Id!=user.Id),"Id","UserName");
@@ -61,8 +61,8 @@ namespace Warehouse.Controllers
         [NonAction]
         void Import(ReportViewModel reportFilter)
         {
-            var wareHouseId = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value).WarehouseId;
-            var queryImport = _context.ProductManagers.Where(pm => pm.WareHouseId == wareHouseId)
+            var wareHouseId = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);//.WarehouseId;
+            var queryImport = _context.ProductManagers//.Where(pm => pm.WareHouseId == wareHouseId)
                                                .Include(pm => pm.Product.ProductType)
                                                .Include(pm => pm.User).AsQueryable();
             if (reportFilter.ProductId != null)
@@ -117,17 +117,17 @@ namespace Warehouse.Controllers
                                                 ? _context.ProductManagers.Min(d => d.Date)
                                                 : reportFilter.DateFrom;
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var wareHouseId = user.WarehouseId;
+           // var wareHouseId = user.WarehouseId;
             ViewBag.Names = new SelectList(_context.Products, "Id", "Name");
             ViewBag.Types = new SelectList(_context.Types, "Id", "Name");
-            ViewBag.Users = new SelectList(_context.Users.Where(u => u.WarehouseId == wareHouseId), "Id", "UserName");
+            ViewBag.Users = new SelectList(_context.Users/*.Where(u => u.WarehouseId == wareHouseId)*/, "Id", "UserName");
             if (reportFilter.Deal == null)
             {
                 return RedirectToAction("Index", new Dictionary<string, ReportViewModel> { { "reportFilter", reportFilter } });
             }
             if (reportFilter.Deal.Equals("0"))
             {
-                var queryImport = _context.ProductManagers.Where(pm => pm.WareHouseId == wareHouseId)
+                var queryImport = _context.ProductManagers//.Where(pm => pm.WareHouseId == wareHouseId)
                                                 .Include(pm => pm.Product.ProductType)
                                                 .Include(pm => pm.User).AsQueryable();
                 if (reportFilter.ProductId != null)

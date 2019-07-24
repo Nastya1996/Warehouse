@@ -17,5 +17,8 @@ namespace Warehouse.Models
 
         public string UserId { set; get; }
         public AppUser User { get; set; }
+        public string WarehouseId { get; set; }
+        public WareHouse WareHouse { get; set; }
+ 
     }
 }

@@ -15,6 +15,10 @@
     <select id="SelectCustomer" asp-items="@ViewBag.Custemers" asp-for="@Model.CustomerId">
         <option disabled selected>@SharedLocalizer.GetLocalizedHtmlString("WithoutCustomer")</option>
     </select>
+    <br />
+    <select asp-items="@ViewBag.Warehouses" asp-for="@Model.WareHouseId">
+        <option disabled selected>@SharedLocalizer.GetLocalizedHtmlString("Warehouse")</option>
+    </select>
     <a href="#" id="registerCustomer" class="text-info">@SharedLocalizer.GetLocalizedHtmlString("RegistrationCustomer")</a>
     <input hidden="hidden" asp-for="@Model.Id" />
     <div class="table-responsive">
@@ -53,17 +57,17 @@
 
 
         </table>
-        </div>
-        @if (Model.ProductOrders.Count > 0)
-        {
-            <input class="btn" id="chekoutBtn" type="submit" value="Check Out" />
-            <script>$("#chekoutBtn").css('pointer-events', 'all');</script>
-        }
-        else
-        {
-            <script>$("#chekoutBtn").css('pointer-events', 'none');</script>
-            <input class="btn" type="submit" value="Check Out" disabled />
-        }
+    </div>
+    @if (Model.ProductOrders.Count > 0)
+    {
+        <input class="btn" id="chekoutBtn" type="submit" value="Check Out" />
+        <script>$("#chekoutBtn").css('pointer-events', 'all');</script>
+    }
+    else
+    {
+        <script>$("#chekoutBtn").css('pointer-events', 'none');</script>
+        <input class="btn" type="submit" value="Check Out" disabled />
+    }
 </form>
 @if (ViewBag.Baskets.Count > 0)
 {
