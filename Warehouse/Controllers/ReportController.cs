@@ -205,7 +205,7 @@ namespace Warehouse.Controllers
             }
             if (reportFilter.Deal.Equals("0"))
             {
-                var queryImport = _context.ProductManagers.Where(pm => pm.WareHouseId == wareHouseId)
+                var queryImport = _context.ProductManagers//.Where(pm => pm.WareHouseId == wareHouseId)
                                                 .Include(pm => pm.Product.ProductType)
                                                 .Include(pm => pm.User).AsQueryable();
                 if (reportFilter.ProductId != null)

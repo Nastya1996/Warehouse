@@ -151,16 +151,17 @@ namespace Warehouse.Areas.Identity.Pages.Account
 
                     // await _signInManager.SignInAsync(user, isPersistent: false);
 
-                    foreach (var item in Input.Warehouses)
-                    {
-                        var userWarehouseShip = new AppUserWareHouse()
+                    if(role != "Report" && Input.Warehouses!=null)
+                        foreach (var item in Input.Warehouses)
                         {
-                            AppUserId = user.Id,
-                            WareHouseId = item
-                        };
-                        _context.AppUserWareHouses.Add(userWarehouseShip);
-                        _context.SaveChanges();
-                    }
+                            var userWarehouseShip = new AppUserWareHouse()
+                            {
+                                AppUserId = user.Id,
+                                WareHouseId = item
+                            };
+                            _context.AppUserWareHouses.Add(userWarehouseShip);
+                            _context.SaveChanges();
+                        }
 
                     return LocalRedirect(returnUrl);
                 }

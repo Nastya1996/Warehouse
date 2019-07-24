@@ -335,7 +335,7 @@ namespace Warehouse.Controllers
             }
             _context.ProductMoves.Add(new ProductMove
             {
-                BeforeId = user.WarehouseId,
+                //BeforeId = user.WarehouseId,
                 AfterId = id,
                 Date = DateTime.Now,
                 UserId = user.Id,
