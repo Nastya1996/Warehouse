@@ -32,14 +32,23 @@ namespace Warehouse.Controllers
         /// </summary>
         /// <param name="reportFilter">Filtering data</param>
         /// <returns></returns>
-        public IActionResult Index(ReportViewModel reportFilter)
+        public IActionResult Index(IDictionary<string, string> data)
         {
+            
+            var a = Request.QueryString.ToString().Split('&').Where(s => s.Contains("WarehouseId")).Select(s => s.Substring(s.IndexOf('=') + 1)).ToList();
+            data.Remove("WarehouseId");
+            for(int i=0; i<a.Count(); i++)
+            {
+                data.Add($"Warehouse{i}", a[i]);
+            }
             if (!FilterValid()) return BadRequest();
+            ReportViewModel reportFilter = new ReportViewModel(data);
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var wareHouseId = user.WarehouseId;
             ViewBag.Names = new SelectList(_context.Products, "Id", "Name");
             ViewBag.Types = new SelectList(_context.Types, "Id", "Name");
             ViewBag.Users = new SelectList(_context.Users.Where(u=>u.Id!=user.Id),"Id","UserName");
+            ViewBag.Warehouses = new SelectList(_context.Warehouses, "Id", "Number");
             if (reportFilter.Deal == null)
             {
                 if (reportFilter.DateFrom == DateTime.MinValue)
@@ -58,12 +67,12 @@ namespace Warehouse.Controllers
             return View(reportFilter);
         }
 
-
         [NonAction]
         void Import(ReportViewModel reportFilter)
         {
             if (_context.ProductManagers.Count() != 0)
             {
+                ViewBag.House = reportFilter.WarehouseId;
                 var queryImport = _context.ProductManagers
                                                    .Include(pm => pm.Product.ProductType)
                                                    .Include(pm => pm.User).AsQueryable();
@@ -79,8 +88,10 @@ namespace Warehouse.Controllers
                 if (reportFilter.UserId != null)
                     if (_context.Users.Find(reportFilter.UserId) != null)
                         queryImport = queryImport.Where(x => x.UserId == reportFilter.UserId);
+                if (reportFilter.WarehouseId != null && reportFilter.WarehouseId.Count != 0)
+                    queryImport = queryImport.Where(pm => reportFilter.WarehouseId.Contains(pm.WareHouseId));
                 queryImport = queryImport.Where(pm => pm.Date.Date >= reportFilter.DateFrom.Date && pm.Date.Date <= reportFilter.DateTo.Date);
-                ViewBag.paged = new PagedList<ProductManager>(queryImport, reportFilter.Page, reportFilter.PageSize);
+                ViewBag.paged = new PagedList<ProductManager>(queryImport, reportFilter.page, reportFilter.pageSize);
             }
             else {
                 ViewBag.paged = null;
@@ -104,8 +115,10 @@ namespace Warehouse.Controllers
                     querySaled = querySaled.Where(po => po.Product.ProductTypeId == reportFilter.TypeId);
                 if (reportFilter.UserId != null)
                     querySaled = querySaled.Where(po => po.Order.UserId == reportFilter.UserId);
+                if (reportFilter.WarehouseId != null && reportFilter.WarehouseId.Count != 0)
+                    querySaled = querySaled.Where(po => reportFilter.WarehouseId.Contains(po.Order.WareHouseId));
                 querySaled = querySaled.Where(po => po.Order.Date >= reportFilter.DateFrom.Date && po.Order.Date.Date <= reportFilter.DateTo.Date);
-                ViewBag.paged = new PagedList<ProductOrder>(querySaled, reportFilter.Page, reportFilter.PageSize);
+                ViewBag.paged = new PagedList<ProductOrder>(querySaled, reportFilter.page, reportFilter.pageSize);
             }
             else {
                 ViewBag.paged = null;
@@ -131,8 +144,10 @@ namespace Warehouse.Controllers
                     productMove = productMove.Where(pm => pm.TypeId == reportFilter.TypeId);
                 if (reportFilter.UserId != null)
                     productMove = productMove.Where(pm => pm.UserId == reportFilter.UserId);
+                if (reportFilter.WarehouseId != null && reportFilter.WarehouseId.Count != 0)
+                    productMove = productMove.Where(pm => reportFilter.WarehouseId.Contains(pm.Before.Id));
                 productMove = productMove.Where(pm => pm.Date.Date >= reportFilter.DateFrom.Date && pm.Date.Date <= reportFilter.DateTo.Date);
-                ViewBag.paged = new PagedList<ProductMove>(productMove, reportFilter.Page, reportFilter.PageSize);
+                ViewBag.paged = new PagedList<ProductMove>(productMove, reportFilter.page, reportFilter.pageSize);
             }
             else
             {
@@ -158,8 +173,10 @@ namespace Warehouse.Controllers
                     queryExport = queryExport.Where(qe => qe.Product.ProductTypeId == reportFilter.TypeId);
                 if (reportFilter.UserId != null)
                     queryExport = queryExport.Where(qe => qe.UserId == reportFilter.UserId);
+                if (reportFilter.WarehouseId != null && reportFilter.WarehouseId.Count != 0)
+                    queryExport = queryExport.Where(wo => reportFilter.WarehouseId.Contains(wo.WarehouseId));
                 queryExport = queryExport.Where(qe => qe.Date.Date >= reportFilter.DateFrom.Date && qe.Date.Date <= reportFilter.DateTo.Date);
-                ViewBag.paged = new PagedList<WriteOut>(queryExport, reportFilter.Page, reportFilter.PageSize);
+                ViewBag.paged = new PagedList<WriteOut>(queryExport, reportFilter.page, reportFilter.pageSize);
             }
             else
             {
@@ -167,9 +184,16 @@ namespace Warehouse.Controllers
                 reportFilter.DateFrom = DateTime.MinValue.Date;
             }
         }
-        public IActionResult ExcelExport(ReportViewModel reportFilter)
+        public IActionResult ExcelExport(IDictionary<string, string> data)
         {
+            var a = Request.QueryString.ToString().Split('&').Where(s => s.Contains("WarehouseId")).Select(s => s.Substring(s.IndexOf('=') + 1)).ToList();
+            data.Remove("WarehouseId");
+            for (int i = 0; i < a.Count(); i++)
+            {
+                data.Add($"Warehouse{i}", a[i]);
+            }
             if (!FilterValid()) return BadRequest();
+            ReportViewModel reportFilter = new ReportViewModel(data);
             var user = _context.Users.Find(User.FindFirst(ClaimTypes.NameIdentifier).Value);
             var wareHouseId = user.WarehouseId;
             ViewBag.Names = new SelectList(_context.Products, "Id", "Name");
@@ -177,7 +201,7 @@ namespace Warehouse.Controllers
             ViewBag.Users = new SelectList(_context.Users.Where(u => u.WarehouseId == wareHouseId), "Id", "UserName");
             if (reportFilter.Deal == null)
             {
-                return RedirectToAction("Index", new Dictionary<string, ReportViewModel> { { "reportFilter", reportFilter } });
+                return RedirectToAction("Index", new Dictionary<string,string>());
             }
             if (reportFilter.Deal.Equals("0"))
             {
@@ -190,6 +214,8 @@ namespace Warehouse.Controllers
                     queryImport = queryImport.Where(x => x.Product.ProductTypeId == reportFilter.TypeId);
                 if (reportFilter.UserId != null)
                     queryImport = queryImport.Where(x => x.UserId == reportFilter.UserId);
+                if (reportFilter.WarehouseId != null && reportFilter.WarehouseId.Count != 0)
+                    queryImport = queryImport.Where(pm => reportFilter.WarehouseId.Contains(pm.WareHouseId));
                 queryImport = queryImport.Where(pm => pm.Date.Date >= reportFilter.DateFrom.Date && pm.Date.Date <= reportFilter.DateTo.Date);
                 return ExportProductManager(queryImport.ToList());
             }
@@ -203,6 +229,8 @@ namespace Warehouse.Controllers
                     querySaled = querySaled.Where(po => po.Product.ProductTypeId == reportFilter.TypeId);
                 if (reportFilter.UserId != null)
                     querySaled = querySaled.Where(po => po.Order.UserId == reportFilter.UserId);
+                if (reportFilter.WarehouseId != null && reportFilter.WarehouseId.Count != 0)
+                    querySaled = querySaled.Where(po => reportFilter.WarehouseId.Contains(po.Order.WareHouseId));
                 querySaled = querySaled.Where(po => po.Order.Date.Date >= reportFilter.DateFrom.Date && po.Order.Date.Date <= reportFilter.DateTo.Date);
                 return ExportProductOrder(querySaled.ToList());
             }
@@ -217,6 +245,8 @@ namespace Warehouse.Controllers
                     queryExport = queryExport.Where(qe => qe.Product.ProductTypeId == reportFilter.TypeId);
                 if (reportFilter.UserId != null)
                     queryExport = queryExport.Where(qe => qe.UserId == reportFilter.UserId);
+                if (reportFilter.WarehouseId != null && reportFilter.WarehouseId.Count != 0)
+                    queryExport = queryExport.Where(wo => reportFilter.WarehouseId.Contains(wo.WarehouseId));
                 queryExport = queryExport.Where(qe => qe.Date.Date >= reportFilter.DateFrom.Date && qe.Date.Date <= reportFilter.DateTo.Date);
                 return ExportWriteOut(queryExport.ToList());
             }
@@ -232,10 +262,12 @@ namespace Warehouse.Controllers
                     queryMoved = queryMoved.Where(qe => qe.Product.ProductTypeId == reportFilter.TypeId);
                 if (reportFilter.UserId != null)
                     queryMoved = queryMoved.Where(qe => qe.UserId == reportFilter.UserId);
+                if (reportFilter.WarehouseId != null && reportFilter.WarehouseId.Count != 0)
+                    queryMoved = queryMoved.Where(pm => reportFilter.WarehouseId.Contains(pm.Before.Id));
                 queryMoved = queryMoved.Where(qe => qe.Date.Date >= reportFilter.DateFrom.Date && qe.Date.Date <= reportFilter.DateTo.Date);
                 return ExportMoved(queryMoved.ToList());
             }
-            return RedirectToAction("Index", new Dictionary<string, ReportViewModel> { { "reportFilter", reportFilter } });
+            return RedirectToAction("Index", new Dictionary<string, string>());
 
         }
         [NonAction]
@@ -329,14 +361,14 @@ namespace Warehouse.Controllers
             {
                 var keys = Request.Query.Keys;
                 DateTime date=DateTime.MinValue;
-                if(keys.Contains("PageSize"))
-                    if (!byte.TryParse(Request.Query["PageSize"], out byte size) && size>0 && size<101) return false;
+                if(keys.Contains("pageSize"))
+                    if (!(byte.TryParse(Request.Query["PageSize"], out byte size) && size>0 && size<101)) return false;
                 if(keys.Contains("DateTo"))
                     if (!DateTime.TryParse(Request.Query["DateTo"], out date)) return false;
                 if(keys.Contains("DateFrom"))
                     if (!DateTime.TryParse(Request.Query["DateFrom"], out date)) return false;
-                if (keys.Contains("Page"))
-                    if (!(uint.TryParse(Request.Query["Page"], out uint page) && page>0) ) return false;
+                if (keys.Contains("page"))
+                    if (!(uint.TryParse(Request.Query["page"], out uint page) && page>0) ) return false;
             }
             return true;
         }

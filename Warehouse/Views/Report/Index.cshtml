@@ -39,6 +39,10 @@
                     <option selected value="" class="effect-24">All</option>
                 </select>
                 <br /><br />
+                <select asp-for="WarehouseId" data-placeholder="Select the warehouse" asp-items="ViewBag.Warehouses" class="effect-24" multiple="multiple">
+                </select>
+
+
                 <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("From")</label>
                 <input class="form-control" asp-for="DateFrom" type="date" min="01.01.2000" max="@date" value="@datefrom" />
 
@@ -46,7 +50,7 @@
                 <input class="form-control" asp-for="DateTo" type="date" min="01.01.2000" max="@date" />
 
                 <label class="control-label">@SharedLocalizer.GetLocalizedHtmlString("PageSize")</label>
-                <input class="form-control" asp-for="PageSize" type="number" min="1" />
+                <input class="form-control" asp-for="pageSize" type="number" min="1" />
                 <input type="submit" value="Filter" class="btn btn-default" />
             </div>
         </form>
@@ -148,8 +152,8 @@
                         }
                         else if (pm is ProductMove)
                         {
-                            <td>@pm.Before.Number</td>
-                            <td>@pm.After.Number</td>
+                            <td>@(pm.Before.Number) / @(pm.Before.Address)</td>
+                            <td>@(pm.After.Number) / @(pm.After.Address)</td>
                             <td>@pm.Date</td>
                             <td>@pm.User.UserName</td>
                         }
@@ -160,8 +164,19 @@
         </tbody>
     </table>
 </div>
-<a class="btn btn-default" asp-action="ExcelExport" asp-route-Deal="@Model.Deal" asp-route-DateTo="@Model.DateTo.ToString("yyyy-MM-dd")" asp-route-DateFrom="@Model.DateFrom.ToString("yyyy-MM-dd")" asp-route-UserId="@Model.UserId" asp-route-TypeId="@Model.TypeId" asp-route-ProductId="@Model.ProductId">Export to Excel</a>
-<pager list="@ViewBag.paged" asp-route-Deal="@Model.Deal" asp-route-DateTo="@Model.DateTo.ToString("yyyy-MM-dd")" asp-route-DateFrom="@Model.DateFrom.ToString("yyyy-MM-dd")" asp-route-UserId="@Model.UserId" asp-route-pageSize="@Model.PageSize" asp-route-TypeId="@Model.TypeId" asp-route-ProductId="@Model.ProductId" asp-controller="Report" asp-action="Index" />
+@{
+    var values = new Dictionary<string, string>();
+    if (Model.WarehouseId != null)
+    {
+        for(int i=0; i<Model.WarehouseId.Count(); i++)
+        {
+            values[$"Warehouse{i}"] = Model.WarehouseId[i];
+        }
+    }
+}
+<a class="btn btn-default" asp-all-route-data="@values" asp-action="ExcelExport" asp-route-Deal="@Model.Deal" asp-route-DateTo="@Model.DateTo.ToString("yyyy-MM-dd")" asp-route-DateFrom="@Model.DateFrom.ToString("yyyy-MM-dd")" asp-route-UserId="@Model.UserId" asp-route-TypeId="@Model.TypeId" asp-route-ProductId="@Model.ProductId">Export to Excel</a>
+@*<pager list="@ViewBag.paged"  asp-route-Deal="@Model.Deal" asp-route-DateTo="@Model.DateTo.ToString("yyyy-MM-dd")" asp-route-DateFrom="@Model.DateFrom.ToString("yyyy-MM-dd")" asp-route-UserId="@Model.UserId" asp-route-pageSize="@Model.PageSize" asp-route-TypeId="@Model.TypeId" asp-route-ProductId="@Model.ProductId" asp-controller="Report" asp-action="Index" />*@
+<pager list="@ViewBag.paged" asp-all-route-data="@values" asp-controller="Report" asp-action="Index" asp-route-Deal="@Model.Deal" asp-route-DateTo="@Model.DateTo.ToString("yyyy-MM-dd")" asp-route-DateFrom="@Model.DateFrom.ToString("yyyy-MM-dd")" asp-route-UserId="@Model.UserId" asp-route-pageSize="@Model.pageSize" asp-route-TypeId="@Model.TypeId" asp-route-ProductId="@Model.ProductId" />
 @section scripts{
     <link href="~/css/chosen.min.css" rel="stylesheet" />
     <script src="~/lib/jquery/dist/chosen.jquery.min.js"></script>
@@ -173,6 +188,10 @@
             });
             $("#UserId").chosen({
                 search_contains: true
+            });
+            $("#WarehouseId").chosen({
+                search_contains: true,
+                width: "100%"
             });
             $("#ProductId").on("chosen:ready", function (evt, params) {
                 let select = $("#TypeId").children("option:selected").val();
